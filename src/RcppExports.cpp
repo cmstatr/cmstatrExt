@@ -10,6 +10,16 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// runTests
+int runTests();
+RcppExport SEXP _cmstatrExt_runTests() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(runTests());
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP _cmstatrExt_rcpp_hello_world() {
@@ -22,6 +32,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cmstatrExt_runTests", (DL_FUNC) &_cmstatrExt_runTests, 0},
     {"_cmstatrExt_rcpp_hello_world", (DL_FUNC) &_cmstatrExt_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };
