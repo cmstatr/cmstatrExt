@@ -7,10 +7,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 int runTests() {
   doctest::Context context;
-  
-  // context.applyCommandLine(argc, argv);
-  
-  
+
   // overrides
   // don't break in the debugger when assertions fail
   context.setOption("no-breaks", true);
