@@ -14,7 +14,6 @@ int root(std::function<double(const double)> const& f,
   int i;
   double f0, f_prime_0, x1;
   
-  
   for(i=0; i < max_itt; ++i) {
     f0 = f(x0);
     if (fabs(f0) <= abstol)
@@ -56,8 +55,19 @@ int bisection(std::function<double(const double)> const& f,
   double f2 = f(x2);
   double fm;
   
-  if (f1 * f2 > 0) {
-    throw("Endpoints do not have opposite signs");
+  double delta_1 = 0.05 * fmax(1e-4, fabs(x1));
+  double delta_2 = 0.05 * fmax(1e-4, fabs(x2));
+  
+  for(i = 0; f1 * f2 > 0 && i < max_itt; ++i) {
+    x1 -= delta_1;
+    x2 += delta_2;
+    f1 = f(x1);
+    f2 = f(x2);
+    delta_1 *= 2;
+    delta_2 *= 2;
+  }
+  if (i == max_itt) {
+    throw("Endpoints do not have opposite signs and failed to extend interval");
   }
   if (fabs(f1) <= abstol) {
     *root = x1;
