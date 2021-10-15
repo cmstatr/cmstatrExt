@@ -37,7 +37,7 @@ protected:
   double alpha;
   IntegrationDblInf a_int;
 };
-/*
+
 class AcceptanceNew :
   public AcceptanceBase {
   
@@ -48,9 +48,10 @@ public:
   double dfw(const double w);
   double dfv(const double v);
   double cpi(const double r1);
+  double calc_r2(const double r1, const double cpi_val);
   
 protected:
   double n;
 };
-*/
+
 #endif

@@ -141,7 +141,7 @@ TEST_CASE("Acceptance Vangel") {
   }
 }
 
-/*
+
 AcceptanceNew::AcceptanceNew(const double n, const double m,
                              const double alpha) :
   AcceptanceBase(m, alpha) {
@@ -153,12 +153,12 @@ double AcceptanceNew::dfw(const double w) {
   
   return pow(k, k / 2) * pow(w, k - 1) *
     exp(-k * pow(w, 2) / 2) / (
-        gamma(k / 2) * pow(2., k / 2 - 1)
+        R::gammafn(k / 2) * pow(2., k / 2 - 1)
     );
 }
 
 double AcceptanceNew::dfv(const double v) {
-  return dnorm(v * sqrt(n), false) * sqrt(n);
+  return DNORM(v * sqrt(n), false) * sqrt(n);
 }
 
 double AcceptanceNew::cpi(const double r1) {
@@ -167,7 +167,7 @@ double AcceptanceNew::cpi(const double r1) {
       IntegrationOneInf inner_int = IntegrationOneInf(
         [r1, v, this](const double w) {
           return (1. - pow(
-              pnorm(v - r1 * w, false, false),
+              PNORM(v - r1 * w, false, false),
               m)
           ) * dfw(w);
         },
@@ -180,4 +180,42 @@ double AcceptanceNew::cpi(const double r1) {
   );
   return outer_int.result;
 }
-*/
+
+double AcceptanceNew::calc_r2(const double r1, const double cpi_val) {
+  return R::qt(1 - cpi_val, n - 1., 1, 0) * sqrt(1 / m + 1 / n);
+}
+
+TEST_CASE("AcceptanceNew") {
+  SUBCASE("dfw & dfv, n=10") {
+    AcceptanceNew an = AcceptanceNew(10, 5, 0.05);
+    CHECK_ALMOST_EQ(an.dfw(0.5), 0.1896797, 1e-6);
+    CHECK_ALMOST_EQ(an.dfw(1), 1.661563, 1e-6);
+    CHECK_ALMOST_EQ(an.dfw(2), 0.0005831514, 1e-6);
+    
+    CHECK_ALMOST_EQ(an.dfv(0), 1.261566, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(0.5), 0.3614448, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(-0.5), 0.3614448, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(1), 0.008500367, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(-1), 0.008500367, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(2), 2.600282e-09, 1e-9);
+    CHECK_ALMOST_EQ(an.dfv(-2), 2.600282e-09, 1e-9);
+  }
+  SUBCASE("dfw & dfv, n=20") {
+    AcceptanceNew an = AcceptanceNew(20, 5, 0.05);
+    CHECK_ALMOST_EQ(an.dfw(0.5), 0.01155585, 1e-6);
+    CHECK_ALMOST_EQ(an.dfw(1), 2.437775, 1e-6);
+    CHECK_ALMOST_EQ(an.dfw(2), 2.680037e-07, 1e-10);
+    
+    CHECK_ALMOST_EQ(an.dfv(0.5), 0.1464498, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(-0.5), 0.1464498, 1e-6);
+    CHECK_ALMOST_EQ(an.dfv(1), 8.099911e-05, 1e-10);
+  }
+  SUBCASE("cpi, n=18, m=5") {
+    AcceptanceNew an = AcceptanceNew(18, 5, 0.05);
+    CHECK_ALMOST_EQ(an.cpi(2.605), 0.05008773, 1e-6);
+  }
+  SUBCASE("cpi, n=5, m=18") {
+    AcceptanceNew an = AcceptanceNew(5, 18, 0.05);
+    CHECK_ALMOST_EQ(an.cpi(2.605), 0.2946645, 1e-6);
+  }
+}
