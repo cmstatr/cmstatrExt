@@ -60,7 +60,7 @@ double AcceptanceBase::calc_lambda(const double t1,
 double AcceptanceVangel::calc_f_joint(const double t1, const double t2) {
   const auto a_m = [this](const double t) { return a_fcn(t); };
   const auto f1 = [this, t2](const double t) {
-    return PNORM(-sqrt(m) * t2, true, false);
+    return 1.;
   };
   const auto f2 = [this, t1](const double t) {
     return PNORM(
@@ -74,7 +74,8 @@ double AcceptanceVangel::calc_f_joint(const double t1, const double t2) {
   const IntegrationMultInf num1 = IntegrationMultInf(a_m, f1, &a_int, -1., lam);
   const IntegrationMultInf num2 = IntegrationMultInf(a_m, f2, &a_int, +1., lam);
   
-  return (num1.result + num2.result) / a_int.result;
+  return (PNORM(-sqrt(m) * t2, true, false) * num1.result + num2.result) /
+    a_int.result;
 }
 
 double AcceptanceVangel::calc_f_min(const double t1) {
@@ -158,7 +159,8 @@ double AcceptanceNew::dfw(const double w) {
 }
 
 double AcceptanceNew::dfv(const double v) {
-  return DNORM(v * sqrt(n), false) * sqrt(n);
+  const double sqn = sqrt(n);
+  return DNORM(v * sqn, false) * sqn;
 }
 
 double AcceptanceNew::cpi(const double r1) {
