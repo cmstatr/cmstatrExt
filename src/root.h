@@ -7,6 +7,7 @@
 #define ROOT_RESULT_SUCCESS 0
 #define ROOT_RESULT_MAX_ITT 1
 #define ROOT_RESULT_X_CHANGE_TOO_SMALL 2
+#define ROOT_FAILED_TO_BRACKET_ROOT 3
 
 
 int root(std::function<double(const double)> const& f,

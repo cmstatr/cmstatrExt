@@ -67,7 +67,7 @@ int bisection(std::function<double(const double)> const& f,
     delta_2 *= 2;
   }
   if (i == max_itt) {
-    throw("Endpoints do not have opposite signs and failed to extend interval");
+    return ROOT_FAILED_TO_BRACKET_ROOT;
   }
   if (fabs(f1) <= abstol) {
     *root = x1;
