@@ -5,8 +5,3 @@ runTests <- function() {
     .Call(`_cmstatrExt_runTests`)
 }
 
-#' @export
-rcpp_hello_world <- function() {
-    .Call(`_cmstatrExt_rcpp_hello_world`)
-}
-

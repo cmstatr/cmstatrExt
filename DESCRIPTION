@@ -1,12 +1,20 @@
 Package: cmstatrExt
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
-Version: 1.0
+Title: More Statistical Methods for Composite Material Data
+Version: 0.0.1.9000
 Date: 2021-10-12
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one or more full sentences.
-License: GPL (>= 2)
+Authors@R: c(
+    person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
+      role = c("aut", "cre"))
+  )
+Description: A companion package to
+  cmstatr <https://cran.r-project.org/package=cmstatr>. cmstatr contains
+  statistical methods that are published in th eComposite Materials Handbook,
+  Volume 1 (2012, ISBN: 978-0-7680-7811-4), which cmstatrExt contains
+  statistical methods that are not included in that handbook.
+URL: https://github.com/cmstatr/cmstatrExt
+BugReports: https://github.com/cmstatr/cmstatrExt/issues
+License: AGPL-3
 Imports: 
     Rcpp
 LinkingTo: Rcpp
@@ -17,4 +25,5 @@ RoxygenNote: 7.1.2
 Suggests: 
     testthat (>= 3.0.0),
     lintr
+Config/testthat/parallel: true
 Config/testthat/edition: 3
