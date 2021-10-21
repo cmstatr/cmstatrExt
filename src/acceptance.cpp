@@ -7,8 +7,9 @@
 #include "doctest-ext.h"
 
 
-AcceptanceBase::AcceptanceBase(const double m, const double alpha) {
-  this->m = m;
+AcceptanceBase::AcceptanceBase(const double m, const double alpha) :
+  m(m),
+  a_int(IntegrationDblInf([this](const double t) { return a_fcn(t); }, true)) {
   this->alpha = alpha;
 }
 
@@ -29,7 +30,7 @@ double AcceptanceBase::a_fcn(const double t) {
 double AcceptanceBase::calc_lambda(const double t1,
                                    const double t2, const double x0) {
   const auto f = [this, t1, t2](const double lam) {
-    return (m - 1.) / m * (h(lam) - lam) + t2 - t1;
+    return (m - 1.) / m * (h(lam) - lam) - t2 + t1;
   };
   const auto dfdlam = [this](const double lam) {
     const double pn = PNORM(lam, false, false);
@@ -42,12 +43,12 @@ double AcceptanceBase::calc_lambda(const double t1,
   
   double result = 0.;
   int retval;
-  
+
   retval = root(f, dfdlam, x0, &result);
   
   if (retval != ROOT_RESULT_SUCCESS)
   {
-    const int retval_bisection = bisection(f, -1000, 1000, &result);
+    const int retval_bisection = bisection(f, -1000, 1000, &result, 1000);
     if (retval_bisection != ROOT_RESULT_SUCCESS) {
       ::Rf_error("Root failed. (Newton code=%i, bisection code=%i)",
                  retval, retval_bisection);
@@ -57,38 +58,37 @@ double AcceptanceBase::calc_lambda(const double t1,
   return result;
 }
 
-double AcceptanceVangel::calc_f_joint(const double t1, const double t2) {
+double AcceptanceBase::calc_f_joint_vangel(const double t1, const double t2) {
   const auto a_m = [this](const double t) { return a_fcn(t); };
   const auto f1 = [this, t2](const double t) {
     return 1.;
   };
   const auto f2 = [this, t1](const double t) {
     return PNORM(
-      sqrt(m) * (-t1 + (m - 1.) / m * (h(t) - t)),
+      sqrt(m) * (t1 + (m - 1.) / m * (h(t) - t)),
       true, false
     );
   };
   
-  const double lam = calc_lambda(t1, t2, 0.);  // TODO: Change x0
+  const double lam = calc_lambda(t1, t2, 0.);
   
   const IntegrationMultInf num1 = IntegrationMultInf(a_m, f1, &a_int, -1., lam);
   const IntegrationMultInf num2 = IntegrationMultInf(a_m, f2, &a_int, +1., lam);
   
-  return (PNORM(-sqrt(m) * t2, true, false) * num1.result + num2.result) /
+  return (PNORM(sqrt(m) * t2, true, false) * num1.result + num2.result) /
     a_int.result;
 }
 
 double AcceptanceVangel::calc_f_min(const double t1) {
-  return 1. - pow(PNORM(-t1, false, false), m);
+  return 1. - pow(PNORM(t1, false, false), m);
 }
 
 double AcceptanceVangel::calc_f_mean(const double t2) {
-  return PNORM(-sqrt(m) * t2, true, false);
+  return PNORM(sqrt(m) * t2, true, false);
 }
 
 AcceptanceVangel::AcceptanceVangel(const double m, const double alpha)
-  : AcceptanceBase(m, alpha),
-    a_int(IntegrationDblInf([this](const double t) { return a_fcn(t); }, true)) {
+  : AcceptanceBase(m, alpha) {
   
   auto calc_t2 = [this](const double t1) {
     return -QNORM(
@@ -99,9 +99,9 @@ AcceptanceVangel::AcceptanceVangel(const double m, const double alpha)
   
   auto f = [this, calc_t2, alpha](const double t1) {
     double t2 = calc_t2(t1);
-    const double fx1 = calc_f_min(t1);
-    const double fxbar = calc_f_mean(t2);
-    const double fjoint = calc_f_joint(t1, t2);
+    const double fx1 = calc_f_min(-t1);
+    const double fxbar = calc_f_mean(-t2);
+    const double fjoint = calc_f_joint_vangel(-t1, -t2);
     return fx1 + fxbar - fjoint - alpha;
   };
   
@@ -144,9 +144,23 @@ TEST_CASE("Acceptance Vangel") {
 
 
 AcceptanceNew::AcceptanceNew(const double n, const double m,
-                             const double alpha) :
+                             const double alpha, const bool skip_computation) :
   AcceptanceBase(m, alpha) {
   this->n = n;
+  
+  auto f = [this, alpha](const double r1) {
+    const double cpi_val = cpi(r1);
+    const double cpm_val = cpi_val;
+    const double r2 = calc_r2(cpm_val);
+    const double fjoint = calc_f_joint(r1, r2);
+    return cpi_val + cpm_val - fjoint - alpha;
+  };
+  
+  if (!skip_computation) {
+    int retval = bisection(f, 2, 5, &k1, 500);
+    const double cpi_val = cpi(k1);
+    k2 = calc_r2(cpi_val);
+  }
 }
 
 double AcceptanceNew::dfw(const double w) {
@@ -183,13 +197,30 @@ double AcceptanceNew::cpi(const double r1) {
   return outer_int.result;
 }
 
-double AcceptanceNew::calc_r2(const double r1, const double cpi_val) {
-  return R::qt(1 - cpi_val, n - 1., 1, 0) * sqrt(1 / m + 1 / n);
+double AcceptanceNew::calc_r2(const double cpi_val) {
+  const double result = R::qt(1 - cpi_val, n - 1., 1, 0) * sqrt(1 / m + 1 / n);
+  return result;
+}
+
+double AcceptanceNew::calc_f_joint(const double r1, const double r2) {
+  IntegrationDblInf outer_int = IntegrationDblInf(
+    [r1, r2, this](const double v) {
+      IntegrationOneInf inner_int = IntegrationOneInf(
+        [r1, r2, v, this](const double w) {
+          return calc_f_joint_vangel(v - r1 * w, v - r2 * w) * dfw(w);
+        },
+        +1, 0., false // integration from 0 to +Inf without oversampling
+      );
+      return inner_int.result * dfv(v);
+    },
+    false // no oversampling
+  );
+  return outer_int.result;
 }
 
 TEST_CASE("AcceptanceNew") {
   SUBCASE("dfw & dfv, n=10") {
-    AcceptanceNew an = AcceptanceNew(10, 5, 0.05);
+    AcceptanceNew an = AcceptanceNew(10, 5, 0.05, true);
     CHECK_ALMOST_EQ(an.dfw(0.5), 0.1896797, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(1), 1.661563, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(2), 0.0005831514, 1e-6);
@@ -203,7 +234,7 @@ TEST_CASE("AcceptanceNew") {
     CHECK_ALMOST_EQ(an.dfv(-2), 2.600282e-09, 1e-9);
   }
   SUBCASE("dfw & dfv, n=20") {
-    AcceptanceNew an = AcceptanceNew(20, 5, 0.05);
+    AcceptanceNew an = AcceptanceNew(20, 5, 0.05, true);
     CHECK_ALMOST_EQ(an.dfw(0.5), 0.01155585, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(1), 2.437775, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(2), 2.680037e-07, 1e-10);
@@ -213,11 +244,16 @@ TEST_CASE("AcceptanceNew") {
     CHECK_ALMOST_EQ(an.dfv(1), 8.099911e-05, 1e-10);
   }
   SUBCASE("cpi, n=18, m=5") {
-    AcceptanceNew an = AcceptanceNew(18, 5, 0.05);
+    AcceptanceNew an = AcceptanceNew(18, 5, 0.05, true);
     CHECK_ALMOST_EQ(an.cpi(2.605), 0.05008773, 1e-6);
   }
   SUBCASE("cpi, n=5, m=18") {
-    AcceptanceNew an = AcceptanceNew(5, 18, 0.05);
+    AcceptanceNew an = AcceptanceNew(5, 18, 0.05, true);
     CHECK_ALMOST_EQ(an.cpi(2.605), 0.2946645, 1e-6);
+  }
+  SUBCASE("factors match prototype R code") {
+    AcceptanceNew an = AcceptanceNew(18, 5, 0.05);
+    CHECK_ALMOST_EQ(an.k1, 2.867903, 1e-3);
+    CHECK_ALMOST_EQ(an.k2, 1.019985, 1e-3);
   }
 }
