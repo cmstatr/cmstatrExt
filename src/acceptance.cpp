@@ -143,12 +143,14 @@ TEST_CASE("Acceptance Vangel") {
 }
 
 
-AcceptanceNew::AcceptanceNew(const double n, const double m,
-                             const double alpha, const bool skip_computation) :
+AcceptanceSample::AcceptanceSample(const double n, const double m,
+                             const double alpha) :
   AcceptanceBase(m, alpha) {
   this->n = n;
-  
-  auto f = [this, alpha](const double r1) {
+}
+
+void AcceptanceSample::calculate_factors() {
+  auto f = [this](const double r1) {
     const double cpi_val = cpi(r1);
     const double cpm_val = cpi_val;
     const double r2 = calc_r2(cpm_val);
@@ -156,14 +158,12 @@ AcceptanceNew::AcceptanceNew(const double n, const double m,
     return cpi_val + cpm_val - fjoint - alpha;
   };
   
-  if (!skip_computation) {
-    int retval = bisection(f, 2, 5, &k1, 500);
-    const double cpi_val = cpi(k1);
-    k2 = calc_r2(cpi_val);
-  }
+  int retval = bisection(f, 2, 5, &k1, 500);
+  const double cpi_val = cpi(k1);
+  k2 = calc_r2(cpi_val);
 }
 
-double AcceptanceNew::dfw(const double w) {
+double AcceptanceSample::dfw(const double w) {
   const double k = n - 1;
   
   return pow(k, k / 2) * pow(w, k - 1) *
@@ -172,12 +172,12 @@ double AcceptanceNew::dfw(const double w) {
     );
 }
 
-double AcceptanceNew::dfv(const double v) {
+double AcceptanceSample::dfv(const double v) {
   const double sqn = sqrt(n);
   return DNORM(v * sqn, false) * sqn;
 }
 
-double AcceptanceNew::cpi(const double r1) {
+double AcceptanceSample::cpi(const double r1) {
   IntegrationDblInf outer_int = IntegrationDblInf(
     [r1, this](const double v) {
       IntegrationOneInf inner_int = IntegrationOneInf(
@@ -197,12 +197,12 @@ double AcceptanceNew::cpi(const double r1) {
   return outer_int.result;
 }
 
-double AcceptanceNew::calc_r2(const double cpi_val) {
+double AcceptanceSample::calc_r2(const double cpi_val) {
   const double result = R::qt(1 - cpi_val, n - 1., 1, 0) * sqrt(1 / m + 1 / n);
   return result;
 }
 
-double AcceptanceNew::calc_f_joint(const double r1, const double r2) {
+double AcceptanceSample::calc_f_joint(const double r1, const double r2) {
   IntegrationDblInf outer_int = IntegrationDblInf(
     [r1, r2, this](const double v) {
       IntegrationOneInf inner_int = IntegrationOneInf(
@@ -218,9 +218,25 @@ double AcceptanceNew::calc_f_joint(const double r1, const double r2) {
   return outer_int.result;
 }
 
-TEST_CASE("AcceptanceNew") {
+//'@export
+// [[Rcpp::export]]
+Rcpp::NumericVector k_equiv_sample(int n, int m, double alpha) {
+  if (n < 3 || m < 3) {
+    ::Rf_error("Both n and m must be 3 or greater");
+  }
+  
+  AcceptanceSample an = AcceptanceSample(n, m, alpha);
+  an.calculate_factors();
+  
+  return Rcpp::NumericVector::create(
+    an.k1,
+    an.k2
+  );
+}
+
+TEST_CASE("AcceptanceSample") {
   SUBCASE("dfw & dfv, n=10") {
-    AcceptanceNew an = AcceptanceNew(10, 5, 0.05, true);
+    AcceptanceSample an = AcceptanceSample(10, 5, 0.05);
     CHECK_ALMOST_EQ(an.dfw(0.5), 0.1896797, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(1), 1.661563, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(2), 0.0005831514, 1e-6);
@@ -234,7 +250,7 @@ TEST_CASE("AcceptanceNew") {
     CHECK_ALMOST_EQ(an.dfv(-2), 2.600282e-09, 1e-9);
   }
   SUBCASE("dfw & dfv, n=20") {
-    AcceptanceNew an = AcceptanceNew(20, 5, 0.05, true);
+    AcceptanceSample an = AcceptanceSample(20, 5, 0.05);
     CHECK_ALMOST_EQ(an.dfw(0.5), 0.01155585, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(1), 2.437775, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(2), 2.680037e-07, 1e-10);
@@ -244,15 +260,16 @@ TEST_CASE("AcceptanceNew") {
     CHECK_ALMOST_EQ(an.dfv(1), 8.099911e-05, 1e-10);
   }
   SUBCASE("cpi, n=18, m=5") {
-    AcceptanceNew an = AcceptanceNew(18, 5, 0.05, true);
+    AcceptanceSample an = AcceptanceSample(18, 5, 0.05);
     CHECK_ALMOST_EQ(an.cpi(2.605), 0.05008773, 1e-6);
   }
   SUBCASE("cpi, n=5, m=18") {
-    AcceptanceNew an = AcceptanceNew(5, 18, 0.05, true);
+    AcceptanceSample an = AcceptanceSample(5, 18, 0.05);
     CHECK_ALMOST_EQ(an.cpi(2.605), 0.2946645, 1e-6);
   }
   SUBCASE("factors match prototype R code") {
-    AcceptanceNew an = AcceptanceNew(18, 5, 0.05);
+    AcceptanceSample an = AcceptanceSample(18, 5, 0.05);
+    an.calculate_factors();
     CHECK_ALMOST_EQ(an.k1, 2.867903, 1e-3);
     CHECK_ALMOST_EQ(an.k2, 1.019985, 1e-3);
   }

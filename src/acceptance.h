@@ -36,18 +36,19 @@ public:
 
 };
 
-class AcceptanceNew :
+class AcceptanceSample :
   public AcceptanceBase {
   
 public:
-  AcceptanceNew(const double n, const double m,
-                const double alpha, const bool skip_computation = false);
+  AcceptanceSample(const double n, const double m,
+                   const double alpha);
   
   double dfw(const double w);
   double dfv(const double v);
   double cpi(const double r1);
   double calc_r2(const double cpi_val);
   double calc_f_joint(const double r1, const double r2);
+  void calculate_factors();
   
 public:
   double k1;

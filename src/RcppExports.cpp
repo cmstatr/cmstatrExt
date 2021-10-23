@@ -10,6 +10,19 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// k_equiv_sample
+Rcpp::NumericVector k_equiv_sample(int n, int m, double alpha);
+RcppExport SEXP _cmstatrExt_k_equiv_sample(SEXP nSEXP, SEXP mSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(k_equiv_sample(n, m, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
 // runTests
 int runTests();
 RcppExport SEXP _cmstatrExt_runTests() {
@@ -22,6 +35,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cmstatrExt_k_equiv_sample", (DL_FUNC) &_cmstatrExt_k_equiv_sample, 3},
     {"_cmstatrExt_runTests", (DL_FUNC) &_cmstatrExt_runTests, 0},
     {NULL, NULL, 0}
 };
