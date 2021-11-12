@@ -166,10 +166,12 @@ void AcceptanceSample::calculate_factors() {
 double AcceptanceSample::dfw(const double w) {
   const double k = n - 1;
   
-  return pow(k, k / 2) * pow(w, k - 1) *
-    exp(-k * pow(w, 2) / 2) / (
-        R::gammafn(k / 2) * pow(2., k / 2 - 1)
-    );
+  return exp(
+    (k / 2) * log(k)
+    + (k - 1) * log(w)
+    - k * pow(w, 2) / 2
+    - (R::lgammafn(k / 2) + (k / 2 - 1) * log(2.))
+  );
 }
 
 double AcceptanceSample::dfv(const double v) {
@@ -198,7 +200,8 @@ double AcceptanceSample::cpi(const double r1) {
 }
 
 double AcceptanceSample::calc_r2(const double cpi_val) {
-  const double result = R::qt(1 - cpi_val, n - 1., 1, 0) * sqrt(1 / m + 1 / n);
+  const double result = R::qt(cpi_val, n - 1., false, false)
+    * sqrt(1 / m + 1 / n);
   return result;
 }
 
