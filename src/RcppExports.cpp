@@ -15,7 +15,6 @@ Rcpp::NumericVector k_equiv_sample(int n, int m, double alpha);
 RcppExport SEXP _cmstatrExt_k_equiv_sample(SEXP nSEXP, SEXP mSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
@@ -28,7 +27,6 @@ int runTests();
 RcppExport SEXP _cmstatrExt_runTests() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(runTests());
     return rcpp_result_gen;
 END_RCPP

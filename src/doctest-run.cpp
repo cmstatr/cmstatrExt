@@ -4,7 +4,7 @@ using namespace Rcpp;
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 int runTests() {
   doctest::Context context;
 

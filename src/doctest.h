@@ -745,7 +745,6 @@ struct ContextOptions //!OCLINT too many fields
     // == parameters from the command line
     String   out;       // output filename
     String   order_by;  // how tests should be ordered
-    unsigned rand_seed; // the seed for rand ordering
 
     unsigned first; // the first (matching) test to be executed
     unsigned last;  // the last (matching) test to be executed
@@ -5097,7 +5096,6 @@ namespace {
             // only the consequential ones (TODO: filters)
             xml.scopedElement("Options")
                     .writeAttribute("order_by", opt.order_by.c_str())
-                    .writeAttribute("rand_seed", opt.rand_seed)
                     .writeAttribute("first", opt.first)
                     .writeAttribute("last", opt.last)
                     .writeAttribute("abort_after", opt.abort_after)
@@ -5684,8 +5682,6 @@ namespace {
             s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ob,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "order-by=<string>             "
               << Whitespace(sizePrefixDisplay*1) << "how the tests should be ordered\n";
             s << Whitespace(sizePrefixDisplay*3) << "                                       <string> - [file/suite/name/rand/none]\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "rs,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "rand-seed=<int>               "
-              << Whitespace(sizePrefixDisplay*1) << "seed for random ordering\n";
             s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "f,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "first=<int>                   "
               << Whitespace(sizePrefixDisplay*1) << "the first test passing the filters to\n";
             s << Whitespace(sizePrefixDisplay*3) << "                                       execute - for range-based execution\n";
@@ -6192,7 +6188,6 @@ void Context::parseArgs(int argc, const char* const* argv, bool withDefaults) {
     // clang-format off
     DOCTEST_PARSE_STR_OPTION("out", "o", out, "");
     DOCTEST_PARSE_STR_OPTION("order-by", "ob", order_by, "file");
-    DOCTEST_PARSE_INT_OPTION("rand-seed", "rs", rand_seed, 0);
 
     DOCTEST_PARSE_INT_OPTION("first", "f", first, 0);
     DOCTEST_PARSE_INT_OPTION("last", "l", last, UINT_MAX);

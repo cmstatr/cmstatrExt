@@ -222,7 +222,7 @@ double AcceptanceSample::calc_f_joint(const double r1, const double r2) {
 }
 
 //'@export
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 Rcpp::NumericVector k_equiv_sample(int n, int m, double alpha) {
   if (n < 3 || m < 3) {
     ::Rf_error("Both n and m must be 3 or greater");
