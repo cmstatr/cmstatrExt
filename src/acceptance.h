@@ -36,11 +36,11 @@ public:
 
 };
 
-class AcceptanceSample :
+class AcceptanceTwoSample :
   public AcceptanceBase {
   
 public:
-  AcceptanceSample(const double n, const double m,
+  AcceptanceTwoSample(const double n, const double m,
                    const double alpha);
   
   double dfw(const double w);
