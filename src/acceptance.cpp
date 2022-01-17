@@ -105,7 +105,7 @@ AcceptanceVangel::AcceptanceVangel(const double m, const double alpha)
     return fx1 + fxbar - fjoint - alpha;
   };
   
-  int retval = bisection(f, -0.1, 1, &k1, 100);
+  bisection(f, -0.1, 1, &k1, 100);
   k2 = calc_t2(k1);
 }
 
@@ -158,7 +158,7 @@ void AcceptanceTwoSample::calculate_factors() {
     return cpi_val + cpm_val - fjoint - alpha;
   };
   
-  int retval = bisection(f, 2, 5, &k1, 500);
+  bisection(f, 2, 5, &k1, 500);
   const double cpi_val = cpi(k1);
   k2 = calc_r2(cpi_val);
 }
