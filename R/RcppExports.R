@@ -2,6 +2,20 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' Calculate the factors for a two-sample acceptance test
+#' 
+#' @description
+#' Calculates the factors k1 and k2, which are used for setting acceptance
+#' values for lot acceptance. These factors consider both the
+#' size of the qualification sample (`n`)
+#' and the size of acceptance sample (`m`).
+#' This test is detailed in a forthcoming paper.
+#' 
+#' @param n the size of the qualification sample
+#' @param m the size of the acceptance sample
+#' @param alpha the desired probability of Type 1 error
+#' 
+#' @return
+#' A vector of length 2 with the contents `c(k1, k2)`
 #'
 #' @export
 k_equiv_two_sample <- function(n, m, alpha) {

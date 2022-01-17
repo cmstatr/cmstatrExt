@@ -6,6 +6,20 @@
 \usage{
 k_equiv_two_sample(n, m, alpha)
 }
+\arguments{
+\item{n}{the size of the qualification sample}
+
+\item{m}{the size of the acceptance sample}
+
+\item{alpha}{the desired probability of Type 1 error}
+}
+\value{
+A vector of length 2 with the contents \code{c(k1, k2)}
+}
 \description{
-Calculate the factors for a two-sample acceptance test
+Calculates the factors k1 and k2, which are used for setting acceptance
+values for lot acceptance. These factors consider both the
+size of the qualification sample (\code{n})
+and the size of acceptance sample (\code{m}).
+This test is detailed in a forthcoming paper.
 }
