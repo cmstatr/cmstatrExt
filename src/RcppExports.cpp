@@ -10,6 +10,18 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// p_equiv
+Rcpp::NumericVector p_equiv(int m, double k1, double k2);
+RcppExport SEXP _cmstatrExt_p_equiv(SEXP mSEXP, SEXP k1SEXP, SEXP k2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type k1(k1SEXP);
+    Rcpp::traits::input_parameter< double >::type k2(k2SEXP);
+    rcpp_result_gen = Rcpp::wrap(p_equiv(m, k1, k2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // k_equiv_two_sample
 Rcpp::NumericVector k_equiv_two_sample(int n, int m, double alpha);
 RcppExport SEXP _cmstatrExt_k_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP alphaSEXP) {
@@ -19,6 +31,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(k_equiv_two_sample(n, m, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// p_equiv_two_sample
+Rcpp::NumericVector p_equiv_two_sample(int n, int m, double k1, double k2);
+RcppExport SEXP _cmstatrExt_p_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP k1SEXP, SEXP k2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type k1(k1SEXP);
+    Rcpp::traits::input_parameter< double >::type k2(k2SEXP);
+    rcpp_result_gen = Rcpp::wrap(p_equiv_two_sample(n, m, k1, k2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -33,7 +58,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cmstatrExt_p_equiv", (DL_FUNC) &_cmstatrExt_p_equiv, 3},
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
+    {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
     {"_cmstatrExt_runTests", (DL_FUNC) &_cmstatrExt_runTests, 0},
     {NULL, NULL, 0}
 };

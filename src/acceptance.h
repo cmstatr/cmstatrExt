@@ -29,6 +29,8 @@ public:
   AcceptanceVangel(const double m, const double alpha);
   double calc_f_min(const double t1);
   double calc_f_mean(const double t2);
+  void calculate_factors();
+  double calc_p_value(const double r1, const double r2);
   
 public:
   double k1;
@@ -49,6 +51,7 @@ public:
   double calc_r2(const double cpi_val);
   double calc_f_joint(const double r1, const double r2);
   void calculate_factors();
+  double calc_p_value(const double r1, const double r2);
   
 public:
   double k1;

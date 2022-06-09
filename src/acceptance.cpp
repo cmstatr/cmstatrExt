@@ -89,7 +89,9 @@ double AcceptanceVangel::calc_f_mean(const double t2) {
 
 AcceptanceVangel::AcceptanceVangel(const double m, const double alpha)
   : AcceptanceBase(m, alpha) {
-  
+}
+
+void AcceptanceVangel::calculate_factors() {
   auto calc_t2 = [this](const double t1) {
     return -QNORM(
         1. - pow(PNORM(-t1, false, false), this->m),
@@ -97,50 +99,84 @@ AcceptanceVangel::AcceptanceVangel(const double m, const double alpha)
     ) / sqrt(this->m);
   };
   
-  auto f = [this, calc_t2, alpha](const double t1) {
+  auto f = [this, calc_t2](const double t1) {
     double t2 = calc_t2(t1);
     const double fx1 = calc_f_min(-t1);
     const double fxbar = calc_f_mean(-t2);
     const double fjoint = calc_f_joint_vangel(-t1, -t2);
-    return fx1 + fxbar - fjoint - alpha;
+    return fx1 + fxbar - fjoint - this->alpha;
   };
   
   bisection(f, -0.1, 1, &k1, 100);
   k2 = calc_t2(k1);
 }
 
+double AcceptanceVangel::calc_p_value(const double r1, const double r2) {
+  const double fx1 = calc_f_min(-r1);
+  const double fxbar = calc_f_mean(-r2);
+  const double fjoint = calc_f_joint_vangel(-r1, -r2);
+  return fx1 + fxbar - fjoint;
+}
+
 TEST_CASE("Acceptance Vangel") {
   SUBCASE("m=5, alpha=0.05") {
     AcceptanceVangel ag = AcceptanceVangel(5, 0.05);
+    ag.calculate_factors();
     CHECK_ALMOST_EQ(ag.k1, 2.5286, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.8525, 0.001);
+    CHECK_ALMOST_EQ(ag.calc_p_value(2.5286, 0.8525), 0.05, 1e-5);
   }
   SUBCASE("m=10, alpha=0.05") {
     AcceptanceVangel ag = AcceptanceVangel(10, 0.05);
+    ag.calculate_factors();
     CHECK_ALMOST_EQ(ag.k1, 2.7772, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.6089, 0.001);
+    CHECK_ALMOST_EQ(ag.calc_p_value(2.7772, 0.6089), 0.05, 1e-5);
   }
   SUBCASE("m=5, alpha=0.5") {
     AcceptanceVangel ag = AcceptanceVangel(5, 0.5);
+    ag.calculate_factors();
     CHECK_ALMOST_EQ(ag.k1, 1.3498, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.1473, 0.001);
+    CHECK_ALMOST_EQ(ag.calc_p_value(1.3498, 0.1473), 0.5, 1e-5);
   }
   SUBCASE("m=10, alpha=0.5") {
     AcceptanceVangel ag = AcceptanceVangel(10, 0.5);
+    ag.calculate_factors();
     CHECK_ALMOST_EQ(ag.k1, 1.7258, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.1217, 0.001);
+    CHECK_ALMOST_EQ(ag.calc_p_value(1.7258, 0.1217), 0.5, 1e-4);
   }
   SUBCASE("m=5, alpha=0.0005") {
     AcceptanceVangel ag = AcceptanceVangel(5, 0.0005);
+    ag.calculate_factors();
     CHECK_ALMOST_EQ(ag.k1, 3.8864, 0.05);
     CHECK_ALMOST_EQ(ag.k2, 1.5546, 0.05);
+    CHECK_ALMOST_EQ(ag.calc_p_value(3.8864, 1.5546), 0.0005, 1e-6);
   }
   SUBCASE("m=10, alpha=0.0005") {
     AcceptanceVangel ag = AcceptanceVangel(10, 0.0005);
+    ag.calculate_factors();
     CHECK_ALMOST_EQ(ag.k1, 4.0541, 0.05);
     CHECK_ALMOST_EQ(ag.k2, 1.1002, 0.05);
+    CHECK_ALMOST_EQ(ag.calc_p_value(4.0541, 1.1002), 0.0005, 1e-6);
   }
 }
+
+
+//' @export
+// [[Rcpp::export(rng = false)]]
+Rcpp::NumericVector p_equiv(int m, double k1, double k2) {
+  if (m < 3) {
+    ::Rf_error("Both m must be 3 or greater");
+  }
+  
+  AcceptanceVangel an = AcceptanceVangel(m, 0.05); // alpha is not used
+  return Rcpp::NumericVector::create(
+    an.calc_p_value(k1, k2)
+  );
+}
+
 
 
 AcceptanceTwoSample::AcceptanceTwoSample(const double n, const double m,
@@ -161,6 +197,18 @@ void AcceptanceTwoSample::calculate_factors() {
   bisection(f, 2, 5, &k1, 500);
   const double cpi_val = cpi(k1);
   k2 = calc_r2(cpi_val);
+}
+
+double AcceptanceTwoSample::calc_p_value(const double r1, const double r2) {
+  const double cpi_val = cpi(r1);
+  const double cpm_val = R::pt(
+    r2 / sqrt(1. / this->n + 1. / this->m),
+    this->n - 1,
+    0,  // lower.tail = false
+    0   // log.p = false
+  );
+  const double cpjoint = calc_f_joint(r1, r2);
+  return cpi_val + cpm_val - cpjoint;
 }
 
 double AcceptanceTwoSample::dfw(const double w) {
@@ -253,6 +301,19 @@ Rcpp::NumericVector k_equiv_two_sample(int n, int m, double alpha) {
   );
 }
 
+//' @export
+// [[Rcpp::export(rng = false)]]
+Rcpp::NumericVector p_equiv_two_sample(int n, int m, double k1, double k2) {
+  if (n < 3 || m < 3) {
+    ::Rf_error("Both n and m must be 3 or greater");
+  }
+  
+  AcceptanceTwoSample an = AcceptanceTwoSample(n, m, 0.05); // alpha is not used
+  return Rcpp::NumericVector::create(
+    an.calc_p_value(k1, k2)
+  );
+}
+
 TEST_CASE("AcceptanceSample") {
   SUBCASE("dfw & dfv, n=10") {
     AcceptanceTwoSample an = AcceptanceTwoSample(10, 5, 0.05);
@@ -291,5 +352,10 @@ TEST_CASE("AcceptanceSample") {
     an.calculate_factors();
     CHECK_ALMOST_EQ(an.k1, 2.867903, 1e-3);
     CHECK_ALMOST_EQ(an.k2, 1.019985, 1e-3);
+  }
+  SUBCASE("p-value matches prototype R code") {
+    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5, 0.05);
+    const double p = an.calc_p_value(2.867903, 1.019985);
+    CHECK_ALMOST_EQ(p, 0.05, 1e-6);
   }
 }
