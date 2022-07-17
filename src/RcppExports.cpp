@@ -11,48 +11,48 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // p_equiv
-Rcpp::NumericVector p_equiv(int m, double k1, double k2);
-RcppExport SEXP _cmstatrExt_p_equiv(SEXP mSEXP, SEXP k1SEXP, SEXP k2SEXP) {
+Rcpp::NumericVector p_equiv(int m, Rcpp::NumericVector t1, Rcpp::NumericVector t2);
+RcppExport SEXP _cmstatrExt_p_equiv(SEXP mSEXP, SEXP t1SEXP, SEXP t2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    Rcpp::traits::input_parameter< double >::type k1(k1SEXP);
-    Rcpp::traits::input_parameter< double >::type k2(k2SEXP);
-    rcpp_result_gen = Rcpp::wrap(p_equiv(m, k1, k2));
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type t1(t1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type t2(t2SEXP);
+    rcpp_result_gen = Rcpp::wrap(p_equiv(m, t1, t2));
     return rcpp_result_gen;
 END_RCPP
 }
 // k_equiv_two_sample
-Rcpp::NumericVector k_equiv_two_sample(int n, int m, double alpha);
-RcppExport SEXP _cmstatrExt_k_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP alphaSEXP) {
+Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m);
+RcppExport SEXP _cmstatrExt_k_equiv_two_sample(SEXP alphaSEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    rcpp_result_gen = Rcpp::wrap(k_equiv_two_sample(n, m, alpha));
+    rcpp_result_gen = Rcpp::wrap(k_equiv_two_sample(alpha, n, m));
     return rcpp_result_gen;
 END_RCPP
 }
 // p_equiv_two_sample
-Rcpp::NumericVector p_equiv_two_sample(int n, int m, double k1, double k2);
-RcppExport SEXP _cmstatrExt_p_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP k1SEXP, SEXP k2SEXP) {
+Rcpp::NumericVector p_equiv_two_sample(int n, int m, Rcpp::NumericVector t1, Rcpp::NumericVector t2);
+RcppExport SEXP _cmstatrExt_p_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP t1SEXP, SEXP t2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    Rcpp::traits::input_parameter< double >::type k1(k1SEXP);
-    Rcpp::traits::input_parameter< double >::type k2(k2SEXP);
-    rcpp_result_gen = Rcpp::wrap(p_equiv_two_sample(n, m, k1, k2));
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type t1(t1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type t2(t2SEXP);
+    rcpp_result_gen = Rcpp::wrap(p_equiv_two_sample(n, m, t1, t2));
     return rcpp_result_gen;
 END_RCPP
 }
-// runTests
-int runTests();
-RcppExport SEXP _cmstatrExt_runTests() {
+// run_tests
+int run_tests();
+RcppExport SEXP _cmstatrExt_run_tests() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    rcpp_result_gen = Rcpp::wrap(runTests());
+    rcpp_result_gen = Rcpp::wrap(run_tests());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,7 +61,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cmstatrExt_p_equiv", (DL_FUNC) &_cmstatrExt_p_equiv, 3},
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
     {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
-    {"_cmstatrExt_runTests", (DL_FUNC) &_cmstatrExt_runTests, 0},
+    {"_cmstatrExt_run_tests", (DL_FUNC) &_cmstatrExt_run_tests, 0},
     {NULL, NULL, 0}
 };
 

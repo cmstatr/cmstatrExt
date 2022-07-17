@@ -5,7 +5,7 @@ using namespace Rcpp;
 #include "doctest.h"
 
 // [[Rcpp::export(rng = false)]]
-int runTests() {
+int run_tests() {
   doctest::Context context;
 
   // overrides

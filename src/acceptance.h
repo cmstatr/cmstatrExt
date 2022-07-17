@@ -10,7 +10,7 @@
 
 class AcceptanceBase {
 public:
-  AcceptanceBase(const double m, const double alpha);
+  AcceptanceBase(const double m);
   double calc_f_joint_vangel(const double t1, const double t2);
   
 protected:
@@ -19,17 +19,16 @@ protected:
   double h(const double t);
   double a_fcn(const double t);
   double m;
-  double alpha;
   IntegrationDblInf a_int;
 };
 
 class AcceptanceVangel :
   public AcceptanceBase {
 public:
-  AcceptanceVangel(const double m, const double alpha);
+  AcceptanceVangel(const double m);
   double calc_f_min(const double t1);
   double calc_f_mean(const double t2);
-  void calculate_factors();
+  void calculate_factors(const double alpha);
   double calc_p_value(const double r1, const double r2);
   
 public:
@@ -42,15 +41,14 @@ class AcceptanceTwoSample :
   public AcceptanceBase {
   
 public:
-  AcceptanceTwoSample(const double n, const double m,
-                   const double alpha);
+  AcceptanceTwoSample(const double n, const double m);
   
   double dfw(const double w);
   double dfv(const double v);
   double cpi(const double r1);
   double calc_r2(const double cpi_val);
   double calc_f_joint(const double r1, const double r2);
-  void calculate_factors();
+  void calculate_factors(const double alpha);
   double calc_p_value(const double r1, const double r2);
   
 public:

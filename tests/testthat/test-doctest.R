@@ -1,3 +1,3 @@
 test_that("C++ doctest", {
-  expect_equal(runTests(), 0)
+  expect_equal(run_tests(), 0)
 })

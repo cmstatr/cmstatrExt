@@ -7,10 +7,9 @@
 #include "doctest-ext.h"
 
 
-AcceptanceBase::AcceptanceBase(const double m, const double alpha) :
+AcceptanceBase::AcceptanceBase(const double m) :
   m(m),
   a_int(IntegrationDblInf([this](const double t) { return a_fcn(t); }, true)) {
-  this->alpha = alpha;
 }
 
 double AcceptanceBase::h(const double t) {
@@ -87,11 +86,11 @@ double AcceptanceVangel::calc_f_mean(const double t2) {
   return PNORM(sqrt(m) * t2, true, false);
 }
 
-AcceptanceVangel::AcceptanceVangel(const double m, const double alpha)
-  : AcceptanceBase(m, alpha) {
+AcceptanceVangel::AcceptanceVangel(const double m)
+  : AcceptanceBase(m) {
 }
 
-void AcceptanceVangel::calculate_factors() {
+void AcceptanceVangel::calculate_factors(const double alpha) {
   auto calc_t2 = [this](const double t1) {
     return -QNORM(
         1. - pow(PNORM(-t1, false, false), this->m),
@@ -99,12 +98,12 @@ void AcceptanceVangel::calculate_factors() {
     ) / sqrt(this->m);
   };
   
-  auto f = [this, calc_t2](const double t1) {
+  auto f = [this, calc_t2, alpha](const double t1) {
     double t2 = calc_t2(t1);
     const double fx1 = calc_f_min(-t1);
     const double fxbar = calc_f_mean(-t2);
     const double fjoint = calc_f_joint_vangel(-t1, -t2);
-    return fx1 + fxbar - fjoint - this->alpha;
+    return fx1 + fxbar - fjoint - alpha;
   };
   
   bisection(f, -0.1, 1, &k1, 100);
@@ -120,43 +119,43 @@ double AcceptanceVangel::calc_p_value(const double r1, const double r2) {
 
 TEST_CASE("Acceptance Vangel") {
   SUBCASE("m=5, alpha=0.05") {
-    AcceptanceVangel ag = AcceptanceVangel(5, 0.05);
-    ag.calculate_factors();
+    AcceptanceVangel ag = AcceptanceVangel(5);
+    ag.calculate_factors(0.05);
     CHECK_ALMOST_EQ(ag.k1, 2.5286, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.8525, 0.001);
     CHECK_ALMOST_EQ(ag.calc_p_value(2.5286, 0.8525), 0.05, 1e-5);
   }
   SUBCASE("m=10, alpha=0.05") {
-    AcceptanceVangel ag = AcceptanceVangel(10, 0.05);
-    ag.calculate_factors();
+    AcceptanceVangel ag = AcceptanceVangel(10);
+    ag.calculate_factors(0.05);
     CHECK_ALMOST_EQ(ag.k1, 2.7772, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.6089, 0.001);
     CHECK_ALMOST_EQ(ag.calc_p_value(2.7772, 0.6089), 0.05, 1e-5);
   }
   SUBCASE("m=5, alpha=0.5") {
-    AcceptanceVangel ag = AcceptanceVangel(5, 0.5);
-    ag.calculate_factors();
+    AcceptanceVangel ag = AcceptanceVangel(5);
+    ag.calculate_factors(0.5);
     CHECK_ALMOST_EQ(ag.k1, 1.3498, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.1473, 0.001);
     CHECK_ALMOST_EQ(ag.calc_p_value(1.3498, 0.1473), 0.5, 1e-5);
   }
   SUBCASE("m=10, alpha=0.5") {
-    AcceptanceVangel ag = AcceptanceVangel(10, 0.5);
-    ag.calculate_factors();
+    AcceptanceVangel ag = AcceptanceVangel(10);
+    ag.calculate_factors(0.5);
     CHECK_ALMOST_EQ(ag.k1, 1.7258, 0.001);
     CHECK_ALMOST_EQ(ag.k2, 0.1217, 0.001);
     CHECK_ALMOST_EQ(ag.calc_p_value(1.7258, 0.1217), 0.5, 1e-4);
   }
   SUBCASE("m=5, alpha=0.0005") {
-    AcceptanceVangel ag = AcceptanceVangel(5, 0.0005);
-    ag.calculate_factors();
+    AcceptanceVangel ag = AcceptanceVangel(5);
+    ag.calculate_factors(0.0005);
     CHECK_ALMOST_EQ(ag.k1, 3.8864, 0.05);
     CHECK_ALMOST_EQ(ag.k2, 1.5546, 0.05);
     CHECK_ALMOST_EQ(ag.calc_p_value(3.8864, 1.5546), 0.0005, 1e-6);
   }
   SUBCASE("m=10, alpha=0.0005") {
-    AcceptanceVangel ag = AcceptanceVangel(10, 0.0005);
-    ag.calculate_factors();
+    AcceptanceVangel ag = AcceptanceVangel(10);
+    ag.calculate_factors(0.0005);
     CHECK_ALMOST_EQ(ag.k1, 4.0541, 0.05);
     CHECK_ALMOST_EQ(ag.k2, 1.1002, 0.05);
     CHECK_ALMOST_EQ(ag.calc_p_value(4.0541, 1.1002), 0.0005, 1e-6);
@@ -164,29 +163,66 @@ TEST_CASE("Acceptance Vangel") {
 }
 
 
+//' p-Value for one-sample equivalency
+//'
+//' @description
+//' Calculates the p-Value for a one-sample acceptance test
+//' based on Vangel (2002).
+//' This test considers the sample size of the acceptance sample (`m`).
+//'
+//' Two test statistics are required:
+//'
+//' t1 = (mu - Y_min) / sigma
+//'
+//' t2 = (mu - Y_mean) / sigma
+//'
+//' Where:
+//' - mu is the mean of the population
+//' - sigma is the standard deviation of the population
+//' - Y_min is the minimum from the acceptance sample
+//' - Y_mean is the mean of the acceptance sample
+//'
+//' @param m the size of the acceptance sample
+//' @param t1 the test statistic described above. May be a vector.
+//' @param t2 the test statistic described above. May be a vector.
+//'
+//' @return a vector of p-Values of the same length as t1 and t2
+//'
 //' @export
 // [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector p_equiv(int m, double k1, double k2) {
+Rcpp::NumericVector p_equiv(int m,
+                            Rcpp::NumericVector t1, Rcpp::NumericVector t2) {
   if (m < 3) {
     ::Rf_error("Both m must be 3 or greater");
   }
   
-  AcceptanceVangel an = AcceptanceVangel(m, 0.05); // alpha is not used
-  return Rcpp::NumericVector::create(
-    an.calc_p_value(k1, k2)
-  );
+  if (t1.size() != t2.size()) {
+    ::Rf_error("t1 and t2 must be of the same length");
+  }
+  const int num_vals = t1.size();
+  for(int i = 0; i < num_vals; ++i) {
+    if(t1[i] < t2[i]) {
+      ::Rf_error("t2 must be less than t1");
+    }
+  }
+  AcceptanceVangel an = AcceptanceVangel(m);
+  Rcpp::NumericVector result = Rcpp::NumericVector(num_vals);
+  
+  for(int i = 0; i < num_vals; ++i) {
+    result[i] = an.calc_p_value(t1[i], t2[i]);
+  }
+  return result;
 }
 
 
 
-AcceptanceTwoSample::AcceptanceTwoSample(const double n, const double m,
-                             const double alpha) :
-  AcceptanceBase(m, alpha) {
+AcceptanceTwoSample::AcceptanceTwoSample(const double n, const double m) :
+  AcceptanceBase(m) {
   this->n = n;
 }
 
-void AcceptanceTwoSample::calculate_factors() {
-  auto f = [this](const double r1) {
+void AcceptanceTwoSample::calculate_factors(const double alpha) {
+  auto f = [this, alpha](const double r1) {
     const double cpi_val = cpi(r1);
     const double cpm_val = cpi_val;
     const double r2 = calc_r2(cpm_val);
@@ -249,7 +285,7 @@ double AcceptanceTwoSample::cpi(const double r1) {
 
 double AcceptanceTwoSample::calc_r2(const double cpi_val) {
   const double result = R::qt(cpi_val, n - 1., false, false)
-    * sqrt(1 / m + 1 / n);
+    * sqrt(1. / m + 1. / n);
   return result;
 }
 
@@ -270,30 +306,30 @@ double AcceptanceTwoSample::calc_f_joint(const double r1, const double r2) {
 }
 
 //' Calculate the factors for a two-sample acceptance test
-//' 
+//'
 //' @description
 //' Calculates the factors k1 and k2, which are used for setting acceptance
 //' values for lot acceptance. These factors consider both the
 //' size of the qualification sample (`n`)
 //' and the size of acceptance sample (`m`).
 //' This test is detailed in a forthcoming paper.
-//' 
+//'
+//' @param alpha the desired probability of Type 1 error
 //' @param n the size of the qualification sample
 //' @param m the size of the acceptance sample
-//' @param alpha the desired probability of Type 1 error
-//' 
+//'
 //' @return
 //' A vector of length 2 with the contents `c(k1, k2)`
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector k_equiv_two_sample(int n, int m, double alpha) {
+Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m) {
   if (n < 3 || m < 3) {
     ::Rf_error("Both n and m must be 3 or greater");
   }
   
-  AcceptanceTwoSample an = AcceptanceTwoSample(n, m, alpha);
-  an.calculate_factors();
+  AcceptanceTwoSample an = AcceptanceTwoSample(n, m);
+  an.calculate_factors(alpha);
   
   return Rcpp::NumericVector::create(
     an.k1,
@@ -301,22 +337,63 @@ Rcpp::NumericVector k_equiv_two_sample(int n, int m, double alpha) {
   );
 }
 
+//' p-Value for two-sample equivalency
+//'
+//' @description
+//' Calculates the p-Value for a two-sample acceptance test.
+//' This test considers the sample size of the qualification
+//' sample (`n`) and the acceptance sample (`m`).
+//'
+//' Two test statistics are required:
+//'
+//' t1 = (X_mean - Y_min) / S
+//'
+//' t2 = (X_mean - Y_mean) / S
+//'
+//' Where:
+//' - X_mean is the mean of the qualification sample
+//' - S is the standard deviation of the qualification sample
+//' - Y_min is the minimum from the acceptance sample
+//' - Y_mean is the mean of the acceptance sample
+//'
+//' @param n the size of the qualification sample
+//' @param m the size of the acceptance sample
+//' @param t1 the test statistic described above. May be a vector.
+//' @param t2 the test statistic described above. May be a vector.
+//'
+//' @return a vector of p-Values of the same length as t1 and t2
+//'
 //' @export
 // [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector p_equiv_two_sample(int n, int m, double k1, double k2) {
+Rcpp::NumericVector p_equiv_two_sample(int n, int m,
+                                       Rcpp::NumericVector t1,
+                                       Rcpp::NumericVector t2) {
   if (n < 3 || m < 3) {
     ::Rf_error("Both n and m must be 3 or greater");
   }
   
-  AcceptanceTwoSample an = AcceptanceTwoSample(n, m, 0.05); // alpha is not used
-  return Rcpp::NumericVector::create(
-    an.calc_p_value(k1, k2)
-  );
+  if (t1.size() != t2.size()) {
+    ::Rf_error("t1 and t2 must be of the same length");
+  }
+  const int num_vals = t1.size();
+  for(int i = 0; i < num_vals; ++i) {
+    if(t1[i] < t2[i]) {
+      ::Rf_error("t2 must be less than t1");
+    }
+  }
+  AcceptanceTwoSample an = AcceptanceTwoSample(n, m);
+  Rcpp::NumericVector result = Rcpp::NumericVector(num_vals);
+  
+  for(int i = 0; i < num_vals; ++i) {
+    result[i] = an.calc_p_value(t1[i], t2[i]);
+  }
+
+  return result;
 }
 
 TEST_CASE("AcceptanceSample") {
   SUBCASE("dfw & dfv, n=10") {
-    AcceptanceTwoSample an = AcceptanceTwoSample(10, 5, 0.05);
+    AcceptanceTwoSample an = AcceptanceTwoSample(10, 5);
     CHECK_ALMOST_EQ(an.dfw(0.5), 0.1896797, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(1), 1.661563, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(2), 0.0005831514, 1e-6);
@@ -330,7 +407,7 @@ TEST_CASE("AcceptanceSample") {
     CHECK_ALMOST_EQ(an.dfv(-2), 2.600282e-09, 1e-9);
   }
   SUBCASE("dfw & dfv, n=20") {
-    AcceptanceTwoSample an = AcceptanceTwoSample(20, 5, 0.05);
+    AcceptanceTwoSample an = AcceptanceTwoSample(20, 5);
     CHECK_ALMOST_EQ(an.dfw(0.5), 0.01155585, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(1), 2.437775, 1e-6);
     CHECK_ALMOST_EQ(an.dfw(2), 2.680037e-07, 1e-10);
@@ -340,21 +417,21 @@ TEST_CASE("AcceptanceSample") {
     CHECK_ALMOST_EQ(an.dfv(1), 8.099911e-05, 1e-10);
   }
   SUBCASE("cpi, n=18, m=5") {
-    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5, 0.05);
+    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
     CHECK_ALMOST_EQ(an.cpi(2.605), 0.05008773, 1e-6);
   }
   SUBCASE("cpi, n=5, m=18") {
-    AcceptanceTwoSample an = AcceptanceTwoSample(5, 18, 0.05);
+    AcceptanceTwoSample an = AcceptanceTwoSample(5, 18);
     CHECK_ALMOST_EQ(an.cpi(2.605), 0.2946645, 1e-6);
   }
   SUBCASE("factors match prototype R code") {
-    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5, 0.05);
-    an.calculate_factors();
+    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
+    an.calculate_factors(0.05);
     CHECK_ALMOST_EQ(an.k1, 2.867903, 1e-3);
     CHECK_ALMOST_EQ(an.k2, 1.019985, 1e-3);
   }
   SUBCASE("p-value matches prototype R code") {
-    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5, 0.05);
+    AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
     const double p = an.calc_p_value(2.867903, 1.019985);
     CHECK_ALMOST_EQ(p, 0.05, 1e-6);
   }

@@ -4,14 +4,14 @@
 \alias{k_equiv_two_sample}
 \title{Calculate the factors for a two-sample acceptance test}
 \usage{
-k_equiv_two_sample(n, m, alpha)
+k_equiv_two_sample(alpha, n, m)
 }
 \arguments{
+\item{alpha}{the desired probability of Type 1 error}
+
 \item{n}{the size of the qualification sample}
 
 \item{m}{the size of the acceptance sample}
-
-\item{alpha}{the desired probability of Type 1 error}
 }
 \value{
 A vector of length 2 with the contents \code{c(k1, k2)}

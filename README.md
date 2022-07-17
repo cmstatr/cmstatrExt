@@ -3,10 +3,28 @@
 
 # What it Does
 
-NOTE: This package is under active development. Its API and the results
-that it produces may change at any time without notice.
+*NOTE: This package is under active development. Its API and the results
+that it produces may change at any time without notice.*
+
+`cmstatrExt` provides statistical methods intended for composite
+material data that are not included in CMH-17-1G.
+
+# Installation
+
+This package is not yet ready to be submitted to CRAN. You can, however,
+install it from GitHub using the following code:
+
+``` r
+devtools::install_github("cmstatr/cmstatrExt")
+```
 
 # Development
+
+This package is under active development. If you have a suggestion or
+question, please create an [issue on
+GitHub](https://github.com/cmstatr/cmstatrExt/issues).
+
+If you want to contribute to this package, Pull Requests are welcome!
 
 ## Debugging C++ Source
 
