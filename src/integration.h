@@ -11,14 +11,14 @@
 
 class Segment {
 public:
-  double result;
-  double resabs;
-  double resasc;
-  double abserr;
-  double a;
-  double b;
-  double x[NK];
-  double fv[NK];
+  double result{};
+  double resabs{};
+  double resasc{};
+  double abserr{};
+  double a{};
+  double b{};
+  double x[NK]{};
+  double fv[NK]{};
 };
 
 class IntegrationBase {
@@ -108,14 +108,14 @@ public:
 
 class IntegrationOneInf : public IntegrationBase {
 public:
-  IntegrationOneInf(std::function<double(const double)> const& f, int inf_side,
-                    double c, bool oversample = false);
+  void init(std::function<double(const double)> const& f, int inf_side,
+            double c, bool oversample = false);
 };
 
 class IntegrationDblInf : public IntegrationBase {
 public:
-  IntegrationDblInf(std::function<double(const double)> const& f,
-                    bool oversample = false);
+  void init(std::function<double(const double)> const& f,
+            bool oversample = false);
 };
 
 class IntegrationMult : public IntegrationBase {
@@ -125,11 +125,18 @@ public:
                   Integration *f_result, double a, double b);
 };
 
-class IntegrationMultInf : public IntegrationBase {
+class IntegrationMultOneInf : public IntegrationBase {
 public:
-  IntegrationMultInf(const std::function<double(const double)>& f,
-                     const std::function<double(const double)>& g,
-                     IntegrationDblInf *f_result, int inf_side, double c);
+  IntegrationMultOneInf(const std::function<double(const double)>& f,
+                        const std::function<double(const double)>& g,
+                        IntegrationBase *f_result, int inf_side, double c);
+};
+
+class IntegrationMultDblInf : public IntegrationBase {
+public:
+  IntegrationMultDblInf(const std::function<double(const double)>& f,
+                        const std::function<double(const double)>& g,
+                        IntegrationBase *f_result);
 };
 
 #endif //C_CODE_INTEGRATION_H

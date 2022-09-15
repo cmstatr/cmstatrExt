@@ -8,8 +8,9 @@
 
 
 AcceptanceBase::AcceptanceBase(const double m) :
-  m(m),
-  a_int(IntegrationDblInf([this](const double t) { return a_fcn(t); }, true)) {
+  m{m},
+  a_int{} {
+  a_int.init([this](const double t) { return a_fcn(t); }, true);
 }
 
 double AcceptanceBase::h(const double t) {
@@ -71,8 +72,10 @@ double AcceptanceBase::calc_f_joint_vangel(const double t1, const double t2) {
   
   const double lam = calc_lambda(t1, t2, 0.);
   
-  const IntegrationMultInf num1 = IntegrationMultInf(a_m, f1, &a_int, -1., lam);
-  const IntegrationMultInf num2 = IntegrationMultInf(a_m, f2, &a_int, +1., lam);
+  const IntegrationMultOneInf num1 = IntegrationMultOneInf(
+    a_m, f1, &a_int, -1., lam);
+  const IntegrationMultOneInf num2 = IntegrationMultOneInf(
+    a_m, f2, &a_int, +1., lam);
   
   return (PNORM(sqrt(m) * t2, true, false) * num1.result + num2.result) /
     a_int.result;
@@ -219,6 +222,14 @@ Rcpp::NumericVector p_equiv(int m,
 AcceptanceTwoSample::AcceptanceTwoSample(const double n, const double m) :
   AcceptanceBase(m) {
   this->n = n;
+  this->dfv_int.init(
+      [this](const double v) { return dfv(v); },
+      false
+  );
+  this->dfw_int.init(
+      [this](const double w) { return dfw(w); },
+      +1, 0., false // integration from 0 to +Inf without oversampling
+  );
 }
 
 void AcceptanceTwoSample::calculate_factors(const double alpha) {
@@ -264,21 +275,25 @@ double AcceptanceTwoSample::dfv(const double v) {
 }
 
 double AcceptanceTwoSample::cpi(const double r1) {
-  IntegrationDblInf outer_int = IntegrationDblInf(
+  IntegrationMultDblInf outer_int = IntegrationMultDblInf(
+    [this](const double v) { return dfv(v); },
     [r1, this](const double v) {
-      IntegrationOneInf inner_int = IntegrationOneInf(
+      IntegrationMultOneInf inner_int = IntegrationMultOneInf(
+        [this](const double w) {
+          return dfw(w);
+        },
         [r1, v, this](const double w) {
           return (1. - pow(
               PNORM(v - r1 * w, false, false),
               m)
-          ) * dfw(w);
+          );
         },
-        +1, 0., false // integration from 0 to +Inf without oversampling
+        &dfw_int,
+        +1, 0.
       );
-      
-      return inner_int.result * dfv(v);
+      return inner_int.result;
     },
-    false // no oversampling
+    &dfv_int
   );
   return outer_int.result;
 }
@@ -290,17 +305,22 @@ double AcceptanceTwoSample::calc_r2(const double cpi_val) {
 }
 
 double AcceptanceTwoSample::calc_f_joint(const double r1, const double r2) {
-  IntegrationDblInf outer_int = IntegrationDblInf(
+  IntegrationMultDblInf outer_int = IntegrationMultDblInf(
+    [this](const double v) { return dfv(v); },
     [r1, r2, this](const double v) {
-      IntegrationOneInf inner_int = IntegrationOneInf(
-        [r1, r2, v, this](const double w) {
-          return calc_f_joint_vangel(v - r1 * w, v - r2 * w) * dfw(w);
+      IntegrationMultOneInf inner_int = IntegrationMultOneInf(
+        [this](const double w) {
+          return dfw(w);
         },
-        +1, 0., false // integration from 0 to +Inf without oversampling
+        [r1, r2, v, this](const double w) {
+          return calc_f_joint_vangel(v - r1 * w, v - r2 * w);
+        },
+        &dfw_int,
+        +1, 0.
       );
-      return inner_int.result * dfv(v);
+      return inner_int.result;
     },
-    false // no oversampling
+    &dfv_int
   );
   return outer_int.result;
 }
