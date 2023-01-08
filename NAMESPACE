@@ -3,5 +3,6 @@
 export(k_equiv_two_sample)
 export(p_equiv)
 export(p_equiv_two_sample)
+export(power_sim)
 importFrom(Rcpp,sourceCpp)
 useDynLib(cmstatrExt, .registration = TRUE)
