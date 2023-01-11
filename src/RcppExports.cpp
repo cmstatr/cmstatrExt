@@ -56,23 +56,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// power_sim
-DataFrame power_sim(const int n_qual, const int m_equiv, const int rep_qual, const int rep_equiv, const double mu_qual, const double sigma_qual, NumericVector mu_equiv, NumericVector sigma_equiv, const double k1, const double k2);
-RcppExport SEXP _cmstatrExt_power_sim(SEXP n_qualSEXP, SEXP m_equivSEXP, SEXP rep_qualSEXP, SEXP rep_equivSEXP, SEXP mu_qualSEXP, SEXP sigma_qualSEXP, SEXP mu_equivSEXP, SEXP sigma_equivSEXP, SEXP k1SEXP, SEXP k2SEXP) {
+// power_sim_dual_generic
+DataFrame power_sim_dual_generic(const int n_qual, const int m_equiv, NumericVector replicates, std::string distribution, Function dist_function, DataFrame param_qual, DataFrame param_equiv, const double k1, const double k2);
+RcppExport SEXP _cmstatrExt_power_sim_dual_generic(SEXP n_qualSEXP, SEXP m_equivSEXP, SEXP replicatesSEXP, SEXP distributionSEXP, SEXP dist_functionSEXP, SEXP param_qualSEXP, SEXP param_equivSEXP, SEXP k1SEXP, SEXP k2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const int >::type n_qual(n_qualSEXP);
     Rcpp::traits::input_parameter< const int >::type m_equiv(m_equivSEXP);
-    Rcpp::traits::input_parameter< const int >::type rep_qual(rep_qualSEXP);
-    Rcpp::traits::input_parameter< const int >::type rep_equiv(rep_equivSEXP);
-    Rcpp::traits::input_parameter< const double >::type mu_qual(mu_qualSEXP);
-    Rcpp::traits::input_parameter< const double >::type sigma_qual(sigma_qualSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mu_equiv(mu_equivSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type sigma_equiv(sigma_equivSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type replicates(replicatesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type distribution(distributionSEXP);
+    Rcpp::traits::input_parameter< Function >::type dist_function(dist_functionSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type param_qual(param_qualSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type param_equiv(param_equivSEXP);
     Rcpp::traits::input_parameter< const double >::type k1(k1SEXP);
     Rcpp::traits::input_parameter< const double >::type k2(k2SEXP);
-    rcpp_result_gen = Rcpp::wrap(power_sim(n_qual, m_equiv, rep_qual, rep_equiv, mu_qual, sigma_qual, mu_equiv, sigma_equiv, k1, k2));
+    rcpp_result_gen = Rcpp::wrap(power_sim_dual_generic(n_qual, m_equiv, replicates, distribution, dist_function, param_qual, param_equiv, k1, k2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -82,7 +81,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
     {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
     {"_cmstatrExt_run_tests", (DL_FUNC) &_cmstatrExt_run_tests, 0},
-    {"_cmstatrExt_power_sim", (DL_FUNC) &_cmstatrExt_power_sim, 10},
+    {"_cmstatrExt_power_sim_dual_generic", (DL_FUNC) &_cmstatrExt_power_sim_dual_generic, 9},
     {NULL, NULL, 0}
 };
 

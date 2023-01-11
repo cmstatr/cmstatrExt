@@ -87,8 +87,7 @@ run_tests <- function() {
     .Call(`_cmstatrExt_run_tests`)
 }
 
-#' @export
-power_sim <- function(n_qual, m_equiv, rep_qual, rep_equiv, mu_qual, sigma_qual, mu_equiv, sigma_equiv, k1, k2) {
-    .Call(`_cmstatrExt_power_sim`, n_qual, m_equiv, rep_qual, rep_equiv, mu_qual, sigma_qual, mu_equiv, sigma_equiv, k1, k2)
+power_sim_dual_generic <- function(n_qual, m_equiv, replicates, distribution, dist_function, param_qual, param_equiv, k1, k2) {
+    .Call(`_cmstatrExt_power_sim_dual_generic`, n_qual, m_equiv, replicates, distribution, dist_function, param_qual, param_equiv, k1, k2)
 }
 
