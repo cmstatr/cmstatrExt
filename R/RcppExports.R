@@ -83,10 +83,6 @@ p_equiv_two_sample <- function(n, m, t1, t2) {
     .Call(`_cmstatrExt_p_equiv_two_sample`, n, m, t1, t2)
 }
 
-run_tests <- function() {
-    .Call(`_cmstatrExt_run_tests`)
-}
-
 power_sim_dual_generic <- function(n_qual, m_equiv, replicates, distribution, dist_function, param_qual, param_equiv, k1, k2) {
     .Call(`_cmstatrExt_power_sim_dual_generic`, n_qual, m_equiv, replicates, distribution, dist_function, param_qual, param_equiv, k1, k2)
 }
