@@ -47,21 +47,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// run_tests
-int run_tests();
-RcppExport SEXP _cmstatrExt_run_tests() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    rcpp_result_gen = Rcpp::wrap(run_tests());
-    return rcpp_result_gen;
-END_RCPP
-}
+
+RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cmstatrExt_p_equiv", (DL_FUNC) &_cmstatrExt_p_equiv, 3},
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
     {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
-    {"_cmstatrExt_run_tests", (DL_FUNC) &_cmstatrExt_run_tests, 0},
+    {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 1},
     {NULL, NULL, 0}
 };
 

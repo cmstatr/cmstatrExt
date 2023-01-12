@@ -83,7 +83,3 @@ p_equiv_two_sample <- function(n, m, t1, t2) {
     .Call(`_cmstatrExt_p_equiv_two_sample`, n, m, t1, t2)
 }
 
-run_tests <- function() {
-    .Call(`_cmstatrExt_run_tests`)
-}
-
