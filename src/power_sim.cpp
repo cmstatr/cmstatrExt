@@ -12,13 +12,6 @@ void check_columns(DataFrame param, std::string name,
   }
 }
 
-// TODO: Add tests
-/*
- * Ideas:
- * - take parameter for distribution that can be matched to "norm",
- *   "weibull", etc., or an R function name.
- */
-
 // [[Rcpp::export]]
 DataFrame power_sim_dual_generic(
     const int n_qual, const int m_equiv,
