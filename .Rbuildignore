@@ -6,3 +6,7 @@
 ^.lintr
 ^.vscode/*
 ^baseline-power-speed.R$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
