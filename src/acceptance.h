@@ -57,6 +57,8 @@ public:
   
 protected:
   double n;
+  IntegrationDblInf dfv_int{};
+  IntegrationOneInf dfw_int{};
 };
 
 #endif

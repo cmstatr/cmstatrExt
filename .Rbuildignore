@@ -3,3 +3,10 @@
 ^README.Rmd$
 ^profiling.R$
 ^NEWS.md$
+^.lintr
+^.vscode/*
+^baseline-power-speed.R$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

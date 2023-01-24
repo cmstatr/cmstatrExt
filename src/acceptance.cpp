@@ -3,13 +3,14 @@
 #include "root.h"
 #include "integration.h"
 #include "acceptance.h"
-#include "doctest.h"
-#include "doctest-ext.h"
+#include <testthat.h>
+#include "testthat-exp.h"
 
 
 AcceptanceBase::AcceptanceBase(const double m) :
-  m(m),
-  a_int(IntegrationDblInf([this](const double t) { return a_fcn(t); }, true)) {
+  m{m},
+  a_int{} {
+  a_int.init([this](const double t) { return a_fcn(t); }, true);
 }
 
 double AcceptanceBase::h(const double t) {
@@ -71,8 +72,10 @@ double AcceptanceBase::calc_f_joint_vangel(const double t1, const double t2) {
   
   const double lam = calc_lambda(t1, t2, 0.);
   
-  const IntegrationMultInf num1 = IntegrationMultInf(a_m, f1, &a_int, -1., lam);
-  const IntegrationMultInf num2 = IntegrationMultInf(a_m, f2, &a_int, +1., lam);
+  const IntegrationMultOneInf num1 = IntegrationMultOneInf(
+    a_m, f1, &a_int, -1., lam);
+  const IntegrationMultOneInf num2 = IntegrationMultOneInf(
+    a_m, f2, &a_int, +1., lam);
   
   return (PNORM(sqrt(m) * t2, true, false) * num1.result + num2.result) /
     a_int.result;
@@ -117,51 +120,51 @@ double AcceptanceVangel::calc_p_value(const double r1, const double r2) {
   return fx1 + fxbar - fjoint;
 }
 
-TEST_CASE("Acceptance Vangel") {
-  SUBCASE("m=5, alpha=0.05") {
+context("Acceptance Vangel") {
+  test_that("m=5, alpha=0.05") {
     AcceptanceVangel ag = AcceptanceVangel(5);
     ag.calculate_factors(0.05);
-    CHECK_ALMOST_EQ(ag.k1, 2.5286, 0.001);
-    CHECK_ALMOST_EQ(ag.k2, 0.8525, 0.001);
-    CHECK_ALMOST_EQ(ag.calc_p_value(2.5286, 0.8525), 0.05, 1e-5);
+    
+    expect_almost_eq(ag.k1, 2.5286, 0.001);
+    expect_almost_eq(ag.k2, 0.8525, 0.001);
+    expect_almost_eq(ag.calc_p_value(2.5286, 0.8525), 0.05, 1e-5);
   }
-  SUBCASE("m=10, alpha=0.05") {
+  test_that("m=10, alpha=0.05") {
     AcceptanceVangel ag = AcceptanceVangel(10);
     ag.calculate_factors(0.05);
-    CHECK_ALMOST_EQ(ag.k1, 2.7772, 0.001);
-    CHECK_ALMOST_EQ(ag.k2, 0.6089, 0.001);
-    CHECK_ALMOST_EQ(ag.calc_p_value(2.7772, 0.6089), 0.05, 1e-5);
+    expect_almost_eq(ag.k1, 2.7772, 0.001);
+    expect_almost_eq(ag.k2, 0.6089, 0.001);
+    expect_almost_eq(ag.calc_p_value(2.7772, 0.6089), 0.05, 1e-5);
   }
-  SUBCASE("m=5, alpha=0.5") {
+  test_that("m=5, alpha=0.5") {
     AcceptanceVangel ag = AcceptanceVangel(5);
     ag.calculate_factors(0.5);
-    CHECK_ALMOST_EQ(ag.k1, 1.3498, 0.001);
-    CHECK_ALMOST_EQ(ag.k2, 0.1473, 0.001);
-    CHECK_ALMOST_EQ(ag.calc_p_value(1.3498, 0.1473), 0.5, 1e-5);
+    expect_almost_eq(ag.k1, 1.3498, 0.001);
+    expect_almost_eq(ag.k2, 0.1473, 0.001);
+    expect_almost_eq(ag.calc_p_value(1.3498, 0.1473), 0.5, 1e-5);
   }
-  SUBCASE("m=10, alpha=0.5") {
+  test_that("m=10, alpha=0.5") {
     AcceptanceVangel ag = AcceptanceVangel(10);
     ag.calculate_factors(0.5);
-    CHECK_ALMOST_EQ(ag.k1, 1.7258, 0.001);
-    CHECK_ALMOST_EQ(ag.k2, 0.1217, 0.001);
-    CHECK_ALMOST_EQ(ag.calc_p_value(1.7258, 0.1217), 0.5, 1e-4);
+    expect_almost_eq(ag.k1, 1.7258, 0.001);
+    expect_almost_eq(ag.k2, 0.1217, 0.001);
+    expect_almost_eq(ag.calc_p_value(1.7258, 0.1217), 0.5, 1e-4);
   }
-  SUBCASE("m=5, alpha=0.0005") {
+  test_that("m=5, alpha=0.0005") {
     AcceptanceVangel ag = AcceptanceVangel(5);
     ag.calculate_factors(0.0005);
-    CHECK_ALMOST_EQ(ag.k1, 3.8864, 0.05);
-    CHECK_ALMOST_EQ(ag.k2, 1.5546, 0.05);
-    CHECK_ALMOST_EQ(ag.calc_p_value(3.8864, 1.5546), 0.0005, 1e-6);
+    expect_almost_eq(ag.k1, 3.8864, 0.05);
+    expect_almost_eq(ag.k2, 1.5546, 0.05);
+    expect_almost_eq(ag.calc_p_value(3.8864, 1.5546), 0.0005, 1e-6);
   }
-  SUBCASE("m=10, alpha=0.0005") {
+  test_that("m=10, alpha=0.0005") {
     AcceptanceVangel ag = AcceptanceVangel(10);
     ag.calculate_factors(0.0005);
-    CHECK_ALMOST_EQ(ag.k1, 4.0541, 0.05);
-    CHECK_ALMOST_EQ(ag.k2, 1.1002, 0.05);
-    CHECK_ALMOST_EQ(ag.calc_p_value(4.0541, 1.1002), 0.0005, 1e-6);
+    expect_almost_eq(ag.k1, 4.0541, 0.05);
+    expect_almost_eq(ag.k2, 1.1002, 0.05);
+    expect_almost_eq(ag.calc_p_value(4.0541, 1.1002), 0.0005, 1e-6);
   }
 }
-
 
 //' p-Value for one-sample equivalency
 //'
@@ -219,6 +222,14 @@ Rcpp::NumericVector p_equiv(int m,
 AcceptanceTwoSample::AcceptanceTwoSample(const double n, const double m) :
   AcceptanceBase(m) {
   this->n = n;
+  this->dfv_int.init(
+      [this](const double v) { return dfv(v); },
+      false
+  );
+  this->dfw_int.init(
+      [this](const double w) { return dfw(w); },
+      +1, 0., false // integration from 0 to +Inf without oversampling
+  );
 }
 
 void AcceptanceTwoSample::calculate_factors(const double alpha) {
@@ -264,21 +275,25 @@ double AcceptanceTwoSample::dfv(const double v) {
 }
 
 double AcceptanceTwoSample::cpi(const double r1) {
-  IntegrationDblInf outer_int = IntegrationDblInf(
+  IntegrationMultDblInf outer_int = IntegrationMultDblInf(
+    [this](const double v) { return dfv(v); },
     [r1, this](const double v) {
-      IntegrationOneInf inner_int = IntegrationOneInf(
+      IntegrationMultOneInf inner_int = IntegrationMultOneInf(
+        [this](const double w) {
+          return dfw(w);
+        },
         [r1, v, this](const double w) {
           return (1. - pow(
               PNORM(v - r1 * w, false, false),
               m)
-          ) * dfw(w);
+          );
         },
-        +1, 0., false // integration from 0 to +Inf without oversampling
+        &dfw_int,
+        +1, 0.
       );
-      
-      return inner_int.result * dfv(v);
+      return inner_int.result;
     },
-    false // no oversampling
+    &dfv_int
   );
   return outer_int.result;
 }
@@ -290,17 +305,22 @@ double AcceptanceTwoSample::calc_r2(const double cpi_val) {
 }
 
 double AcceptanceTwoSample::calc_f_joint(const double r1, const double r2) {
-  IntegrationDblInf outer_int = IntegrationDblInf(
+  IntegrationMultDblInf outer_int = IntegrationMultDblInf(
+    [this](const double v) { return dfv(v); },
     [r1, r2, this](const double v) {
-      IntegrationOneInf inner_int = IntegrationOneInf(
-        [r1, r2, v, this](const double w) {
-          return calc_f_joint_vangel(v - r1 * w, v - r2 * w) * dfw(w);
+      IntegrationMultOneInf inner_int = IntegrationMultOneInf(
+        [this](const double w) {
+          return dfw(w);
         },
-        +1, 0., false // integration from 0 to +Inf without oversampling
+        [r1, r2, v, this](const double w) {
+          return calc_f_joint_vangel(v - r1 * w, v - r2 * w);
+        },
+        &dfw_int,
+        +1, 0.
       );
-      return inner_int.result * dfv(v);
+      return inner_int.result;
     },
-    false // no oversampling
+    &dfv_int
   );
   return outer_int.result;
 }
@@ -391,48 +411,49 @@ Rcpp::NumericVector p_equiv_two_sample(int n, int m,
   return result;
 }
 
-TEST_CASE("AcceptanceSample") {
-  SUBCASE("dfw & dfv, n=10") {
+  
+context("AcceptanceSample") {
+  test_that("dfw & dfv, n=10") {
     AcceptanceTwoSample an = AcceptanceTwoSample(10, 5);
-    CHECK_ALMOST_EQ(an.dfw(0.5), 0.1896797, 1e-6);
-    CHECK_ALMOST_EQ(an.dfw(1), 1.661563, 1e-6);
-    CHECK_ALMOST_EQ(an.dfw(2), 0.0005831514, 1e-6);
+    expect_almost_eq(an.dfw(0.5), 0.1896797, 1e-6);
+    expect_almost_eq(an.dfw(1), 1.661563, 1e-6);
+    expect_almost_eq(an.dfw(2), 0.0005831514, 1e-6);
     
-    CHECK_ALMOST_EQ(an.dfv(0), 1.261566, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(0.5), 0.3614448, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(-0.5), 0.3614448, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(1), 0.008500367, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(-1), 0.008500367, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(2), 2.600282e-09, 1e-9);
-    CHECK_ALMOST_EQ(an.dfv(-2), 2.600282e-09, 1e-9);
+    expect_almost_eq(an.dfv(0), 1.261566, 1e-6);
+    expect_almost_eq(an.dfv(0.5), 0.3614448, 1e-6);
+    expect_almost_eq(an.dfv(-0.5), 0.3614448, 1e-6);
+    expect_almost_eq(an.dfv(1), 0.008500367, 1e-6);
+    expect_almost_eq(an.dfv(-1), 0.008500367, 1e-6);
+    expect_almost_eq(an.dfv(2), 2.600282e-09, 1e-9);
+    expect_almost_eq(an.dfv(-2), 2.600282e-09, 1e-9);
   }
-  SUBCASE("dfw & dfv, n=20") {
+  test_that("dfw & dfv, n=20") {
     AcceptanceTwoSample an = AcceptanceTwoSample(20, 5);
-    CHECK_ALMOST_EQ(an.dfw(0.5), 0.01155585, 1e-6);
-    CHECK_ALMOST_EQ(an.dfw(1), 2.437775, 1e-6);
-    CHECK_ALMOST_EQ(an.dfw(2), 2.680037e-07, 1e-10);
+    expect_almost_eq(an.dfw(0.5), 0.01155585, 1e-6);
+    expect_almost_eq(an.dfw(1), 2.437775, 1e-6);
+    expect_almost_eq(an.dfw(2), 2.680037e-07, 1e-10);
     
-    CHECK_ALMOST_EQ(an.dfv(0.5), 0.1464498, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(-0.5), 0.1464498, 1e-6);
-    CHECK_ALMOST_EQ(an.dfv(1), 8.099911e-05, 1e-10);
+    expect_almost_eq(an.dfv(0.5), 0.1464498, 1e-6);
+    expect_almost_eq(an.dfv(-0.5), 0.1464498, 1e-6);
+    expect_almost_eq(an.dfv(1), 8.099911e-05, 1e-10);
   }
-  SUBCASE("cpi, n=18, m=5") {
+  test_that("cpi, n=18, m=5") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
-    CHECK_ALMOST_EQ(an.cpi(2.605), 0.05008773, 1e-6);
+    expect_almost_eq(an.cpi(2.605), 0.05008773, 1e-6);
   }
-  SUBCASE("cpi, n=5, m=18") {
+  test_that("cpi, n=5, m=18") {
     AcceptanceTwoSample an = AcceptanceTwoSample(5, 18);
-    CHECK_ALMOST_EQ(an.cpi(2.605), 0.2946645, 1e-6);
+    expect_almost_eq(an.cpi(2.605), 0.2946645, 1e-6);
   }
-  SUBCASE("factors match prototype R code") {
+  test_that("factors match prototype R code") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
     an.calculate_factors(0.05);
-    CHECK_ALMOST_EQ(an.k1, 2.867903, 1e-3);
-    CHECK_ALMOST_EQ(an.k2, 1.019985, 1e-3);
+    expect_almost_eq(an.k1, 2.867903, 1e-3);
+    expect_almost_eq(an.k2, 1.019985, 1e-3);
   }
-  SUBCASE("p-value matches prototype R code") {
+  test_that("p-value matches prototype R code") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
     const double p = an.calc_p_value(2.867903, 1.019985);
-    CHECK_ALMOST_EQ(p, 0.05, 1e-6);
+    expect_almost_eq(p, 0.05, 1e-6);
   }
 }

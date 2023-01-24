@@ -1,8 +1,8 @@
 #include "root.h"
 #include <cmath>
 #include <cfloat>
-#include "doctest.h"
-#include "doctest-ext.h"
+#include <testthat.h>
+#include "testthat-exp.h"
 
 
 int root(std::function<double(const double)> const& f,
@@ -34,16 +34,18 @@ int root(std::function<double(const double)> const& f,
   return ROOT_RESULT_MAX_ITT;
 }
 
-TEST_CASE("root") {
-  double result = 0.;
-  auto f = [](const double x) { return x * x - 4; };
-  auto f_prime = [](const double x) { return 2. * x; };
-  
-  root(f, f_prime, 0.5, &result);
-  CHECK_ALMOST_EQ(result, 2., 1e-6);
-  
-  root(f, f_prime, -0.5, &result);
-  CHECK_ALMOST_EQ(result, -2., 1e-6);
+context("root") {
+  test_that("root") {
+    double result = 0.;
+    auto f = [](const double x) { return x * x - 4; };
+    auto f_prime = [](const double x) { return 2. * x; };
+    
+    root(f, f_prime, 0.5, &result);
+    expect_almost_eq(result, 2., 1e-6);
+    
+    root(f, f_prime, -0.5, &result);
+    expect_almost_eq(result, -2., 1e-6);
+  }
 }
 
 int bisection(std::function<double(const double)> const& f,
@@ -95,13 +97,15 @@ int bisection(std::function<double(const double)> const& f,
   return ROOT_RESULT_MAX_ITT;
 }
 
-TEST_CASE("bisection") {
-  double result;
-  auto f = [](const double x) { return x * x - 4; };
-  
-  bisection(f, 0.5, 10., &result, 100);
-  CHECK_ALMOST_EQ(result, 2., 1e-5);
-  
-  bisection(f, -0.5, -10., &result, 100);
-  CHECK_ALMOST_EQ(result, -2., 1e-5);
+context("bisection") {
+  test_that("bisection") {
+    double result;
+    auto f = [](const double x) { return x * x - 4; };
+    
+    bisection(f, 0.5, 10., &result, 100);
+    expect_almost_eq(result, 2., 1e-5);
+    
+    bisection(f, -0.5, -10., &result, 100);
+    expect_almost_eq(result, -2., 1e-5);
+  }
 }

@@ -4,8 +4,8 @@
 #include <cmath>
 #include <cfloat>
 #include <Rcpp.h>
-#include "doctest.h"
-#include "doctest-ext.h"
+#include <testthat.h>
+#include "testthat-exp.h"
 
 double IntegrationBase::rescale_error(double err, double result_abs,
                                       double result_asc) {
@@ -264,19 +264,19 @@ Integration::Integration(std::function<double(const double)> const& f,
   qags(f, oversample);
 }
 
-TEST_CASE("Basic quadrature") {
-  SUBCASE("Basic integration of cos") {
+context("Basic quadrature") {
+  test_that("Basic integration of cos") {
     Integration res = Integration(cos, 0, M_PI / 2.);
-    CHECK_ALMOST_EQ(res.result, 1, 1e-6);
+    expect_almost_eq(res.result, 1, 1e-6);
   }
   
-  SUBCASE("Integration of cos with oversampling") {
+  test_that("Integration of cos with oversampling") {
     Integration res = Integration(cos, 0, M_PI / 2., true);
-    CHECK_ALMOST_EQ(res.result, 1, 1e-6);
+    expect_almost_eq(res.result, 1, 1e-6);
   }
 }
 
-IntegrationOneInf::IntegrationOneInf(
+void IntegrationOneInf::init(
   std::function<double(const double)> const& f, int inf_side,
   double c, bool oversample) {
   
@@ -302,29 +302,33 @@ IntegrationOneInf::IntegrationOneInf(
   qags(f_prime, oversample);
 }
 
-TEST_CASE("Quadrature with one infinite bound") {
+context("Quadrature with one infinite bound") {
   auto fn = [](const double t) { return R::dnorm4(t, 0, 1, 0); };
   
-  SUBCASE("From -Inf to a negative number") {
-    IntegrationOneInf res_m = IntegrationOneInf(fn, -1, -0.5);
-    CHECK_ALMOST_EQ(res_m.result, 0.3085375, 1e-6);
+  test_that("From -Inf to a negative number") {
+    IntegrationOneInf res_m = IntegrationOneInf();
+    res_m.init(fn, -1, -0.5);
+    expect_almost_eq(res_m.result, 0.3085375, 1e-6);
   }
-  SUBCASE("From -Inf to a positive number") {
-    IntegrationOneInf res_m = IntegrationOneInf(fn, -1, 0.5);
-    CHECK_ALMOST_EQ(res_m.result, 0.6914625, 1e-6);
+  test_that("From -Inf to a positive number") {
+    IntegrationOneInf res_m = IntegrationOneInf();
+    res_m.init(fn, -1, 0.5);
+    expect_almost_eq(res_m.result, 0.6914625, 1e-6);
   }
-  SUBCASE("From a negative number to Inf") {
-    IntegrationOneInf res_m = IntegrationOneInf(fn, 1, -0.5);
-    CHECK_ALMOST_EQ(res_m.result, 0.6914625, 1e-6);
+  test_that("From a negative number to Inf") {
+    IntegrationOneInf res_m = IntegrationOneInf();
+    res_m.init(fn, 1, -0.5);
+    expect_almost_eq(res_m.result, 0.6914625, 1e-6);
   }
-  SUBCASE("From a positive number to Inf") {
-    IntegrationOneInf res_m = IntegrationOneInf(fn, 1, 0.5);
-    CHECK_ALMOST_EQ(res_m.result, 0.3085375, 1e-6);
+  test_that("From a positive number to Inf") {
+    IntegrationOneInf res_m = IntegrationOneInf();
+    res_m.init(fn, 1, 0.5);
+    expect_almost_eq(res_m.result, 0.3085375, 1e-6);
   }
 }
 
-IntegrationDblInf::IntegrationDblInf(
-  std::function<double(const double)> const& f, bool oversample) {
+void IntegrationDblInf::init(
+    std::function<double(const double)> const& f, bool oversample) {
   
   auto f_prime = [f](const double t) {
     return f(tan(t)) * pow(cos(t), -2.);
@@ -336,7 +340,7 @@ IntegrationDblInf::IntegrationDblInf(
   qags(f_prime, oversample);
 }
 
-TEST_CASE("Quadrature with infinite bounds") {
+context("Quadrature with infinite bounds") {
   auto h = [](double t) {
     return exp(R::dnorm4(t, 0, 1, 1) - R::pnorm5(t, 0, 1, 0, 1));
   };
@@ -352,14 +356,16 @@ TEST_CASE("Quadrature with infinite bounds") {
   
   auto a_10 = [a_fcn](double t) { return a_fcn(t, 10); };
   
-  SUBCASE("Integration of A") {
-    IntegrationDblInf res = IntegrationDblInf(a_10);
-    CHECK_ALMOST_EQ(res.result, 1038.764, 0.01);
+  test_that("Integration of A") {
+    IntegrationDblInf res = IntegrationDblInf();
+    res.init(a_10);
+    expect_almost_eq(res.result, 1038.764, 0.01);
   }
   
-  SUBCASE("Integration of A with oversampling") {
-    IntegrationDblInf res = IntegrationDblInf(a_10, true);
-    CHECK_ALMOST_EQ(res.result, 1038.764, 0.01);
+  test_that("Integration of A with oversampling") {
+    IntegrationDblInf res = IntegrationDblInf();
+    res.init(a_10, true);
+    expect_almost_eq(res.result, 1038.764, 0.01);
   }
 }
 
@@ -372,7 +378,7 @@ IntegrationMult::IntegrationMult(const std::function<double(const double)>& f,
   qags_mult(f, g, a, b, f_result);
 }
 
-TEST_CASE("Mult quadrature") {
+context("Mult quadrature") {
   auto h = [](double t) {
     return exp(R::dnorm4(t, 0, 1, 1) - R::pnorm5(t, 0, 1, 0, 1));
   };
@@ -391,45 +397,45 @@ TEST_CASE("Mult quadrature") {
   
   auto g = [](double t) { return 1.; };
   
-  SUBCASE("Basic integration of A") {
+  test_that("Basic integration of A") {
     IntegrationMult res2 = IntegrationMult(a_10, g, &res, -100, 100);
-    CHECK_ALMOST_EQ(res2.result, 1038.763750, 0.001);
+    expect_almost_eq(res2.result, 1038.763750, 0.001);
   }
   
-  SUBCASE("Partial range") {
+  test_that("Partial range") {
     auto sin_lambda = [](double t) { return sin(t); };
     Integration int_sin = Integration(sin_lambda, -M_PI, M_PI, true);
-    CHECK_ALMOST_EQ(int_sin.result, 0., 1e-6);  // should be zero
+    expect_almost_eq(int_sin.result, 0., 1e-6);  // should be zero
     
     IntegrationMult res2 = IntegrationMult(sin_lambda, g, &int_sin,
                                            -M_PI, M_PI);
-    CHECK_ALMOST_EQ(res2.result, 0., 1e-6);  // should be 0 still
+    expect_almost_eq(res2.result, 0., 1e-6);  // should be 0 still
     
     res2 = IntegrationMult(sin_lambda, g, &int_sin, 0, M_PI);
-    CHECK_ALMOST_EQ(res2.result, 2, 1e-6);  // should be 2
+    expect_almost_eq(res2.result, 2, 1e-6);  // should be 2
     
     res2 = IntegrationMult(sin_lambda, g, &int_sin, -M_PI, 0);
-    CHECK_ALMOST_EQ(res2.result, -2, 1e-6);  // should be -2
+    expect_almost_eq(res2.result, -2, 1e-6);  // should be -2
     
     res2 = IntegrationMult(sin_lambda, g, &int_sin, 0, 1);
-    CHECK_ALMOST_EQ(res2.result, 0.45970, 1e-4);
+    expect_almost_eq(res2.result, 0.45970, 1e-4);
   }
   
-  SUBCASE("Partial range with many segments") {
+  test_that("Partial range with many segments") {
     auto lambda = [](double t) { return R::pnorm5(t, 0, 1, 1, 0) * t; };
     Integration res1 = Integration(lambda, -100., 100.);
-    CHECK(res1.num_segments > 4);
-    CHECK_ALMOST_EQ(res1.result, 4999.491, 1);
+    expect_true(res1.num_segments > 4);
+    expect_almost_eq(res1.result, 4999.491, 1);
     
     IntegrationMult res_m = IntegrationMult(lambda, g, &res1, -10, 0);
-    CHECK_ALMOST_EQ(res_m.result, -0.25, 1e-6);
+    expect_almost_eq(res_m.result, -0.25, 1e-6);
   }
 }
 
-IntegrationMultInf::IntegrationMultInf(
+IntegrationMultOneInf::IntegrationMultOneInf(
   const std::function<double(const double)>& f,
   const std::function<double(const double)>& g,
-  IntegrationDblInf *f_result, int inf_side, double c) {
+  IntegrationBase *f_result, int inf_side, double c) {
   
   auto f_prime = [f](const double t) {
     return f(tan(t)) * pow(cos(t), -2.);
@@ -454,7 +460,7 @@ IntegrationMultInf::IntegrationMultInf(
   
 }
 
-TEST_CASE("Mult Quadrature Infinte Range") {
+context("Mult Quadrature Infinte Range") {
   auto h = [](double t) {
     return exp(R::dnorm4(t, 0, 1, 1) - R::pnorm5(t, 0, 1, 0, 1));
   };
@@ -469,25 +475,59 @@ TEST_CASE("Mult Quadrature Infinte Range") {
   };
   
   auto a_10 = [a_fcn](double t) { return a_fcn(t, 10); };
-  IntegrationDblInf res = IntegrationDblInf(a_10);
+  IntegrationDblInf res = IntegrationDblInf();
+  res.init(a_10);
   auto g = [](double t) { return 1.; };
   
-  CHECK_ALMOST_EQ(res.result, 1038.764, 0.02);
+  expect_almost_eq(res.result, 1038.764, 0.02);
   
-  SUBCASE("From -Inf to a negative number") {
-    IntegrationMultInf res_m = IntegrationMultInf(a_10, g, &res, -1, -1.);
-    CHECK_ALMOST_EQ(res_m.result, 797.074, 0.02);
+  test_that("From -Inf to a negative number") {
+    IntegrationMultOneInf res_m = IntegrationMultOneInf(a_10, g, &res, -1, -1.);
+    expect_almost_eq(res_m.result, 797.074, 0.02);
   }
-  SUBCASE("From -Inf to a positive number") {
-    IntegrationMultInf res_m = IntegrationMultInf(a_10, g, &res, -1, 1.);
-    CHECK_ALMOST_EQ(res_m.result, 1037.554, 0.02);
+  test_that("From -Inf to a positive number") {
+    IntegrationMultOneInf res_m = IntegrationMultOneInf(a_10, g, &res, -1, 1.);
+    expect_almost_eq(res_m.result, 1037.554, 0.02);
   }
-  SUBCASE("From a negative number to Inf") {
-    IntegrationMultInf res_m = IntegrationMultInf(a_10, g, &res, 1, -1.);
-    CHECK_ALMOST_EQ(res_m.result, 241.6897, 0.02);
+  test_that("From a negative number to Inf") {
+    IntegrationMultOneInf res_m = IntegrationMultOneInf(a_10, g, &res, 1, -1.);
+    expect_almost_eq(res_m.result, 241.6897, 0.02);
   }
-  SUBCASE("From a positive number to Inf") {
-    IntegrationMultInf res_m = IntegrationMultInf(a_10, g, &res, 1, 1.);
-    CHECK_ALMOST_EQ(res_m.result, 1.20975, 0.02);
+  test_that("From a positive number to Inf") {
+    IntegrationMultOneInf res_m = IntegrationMultOneInf(a_10, g, &res, 1, 1.);
+    expect_almost_eq(res_m.result, 1.20975, 0.02);
+  }
+}
+
+IntegrationMultDblInf::IntegrationMultDblInf(
+  const std::function<double(const double)>& f,
+  const std::function<double(const double)>& g,
+  IntegrationBase *f_result) {
+  
+  auto f_prime = [f](const double t) {
+    return f(tan(t)) * pow(cos(t), -2.);
+  };
+  // f_prime includes the sec^2(t) factor, but g_prime does not so that we can
+  // multiply these together
+  auto g_prime = [g](const double t) {
+    return g(tan(t));
+  };
+  
+  message = f_result->message;
+  num_segments = 0;
+  
+  qags_mult(f_prime, g_prime, -M_PI / 2., M_PI / 2., f_result);
+
+}
+
+context("Mult Quadrature Double Infinte Range") {
+  auto f = [](const double x){ return R::dnorm4(x, 0, 1, 0); };
+  IntegrationDblInf f_int = IntegrationDblInf();
+  f_int.init(f);
+  
+  test_that("From a positive number to Inf") {
+    auto g = [](const double x){ return 2.; };
+    IntegrationMultDblInf res_m = IntegrationMultDblInf(f, g, &f_int);
+    expect_almost_eq(res_m.result, 2, 0.0002);
   }
 }
