@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/404.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/authors.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/index.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/reference/cmstatrExt-package.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/reference/k_equiv_two_sample.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/reference/p_equiv.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/reference/p_equiv_two_sample.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatr.github.io/cmstatrExt/reference/power_sim_dual.html</loc>
+  </url>
+</urlset>
