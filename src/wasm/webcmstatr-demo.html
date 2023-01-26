@@ -101,7 +101,7 @@
         };
       };
     </script>
-    <script src=webcmstatr.js async></script>
+    <script src=webcmstatrExt.js async></script>
     <br />
 
     <label for="int-n">Qualification Sample Size (n):</label>
@@ -189,11 +189,12 @@
           const factor_offset = Module._malloc(8 * 2);
           const factor_array = Module.HEAPF64.subarray(factor_offset/8, factor_offset/8 + 2)
           const result = Module.ccall(
-              "twosample", // name of C function
+              "k_equiv_two_sample", // name of C function
               "number", // return type
               ["number", "number", "number", "number"], // argument types
               [iN, iM, fA, factor_offset] // arguments
           );
+          // TODO: error handling if result < 0
           k1 = factor_array[0];
           k2 = factor_array[1];
           outArea.value =
