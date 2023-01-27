@@ -124,8 +124,9 @@
     <textarea id="output" readonly style="width: 400px; height: 100px;"></textarea>
     <br />
 
+    <label for="keep-power">Keep Power Curves</label>
+    <input type="checkbox" id="keep-power" checked="true" />
     <br />
-
     <div id="power-plot" style="width:600px;height:300px;"></div>
     
     <br />
@@ -141,6 +142,8 @@
       document.getElementById("double-alpha").addEventListener("input",
         (e) => validateSignificance(e.target));
 
+      let power_curves = [];
+      
       document.getElementById("mybutton").addEventListener("click", async () => {
         let k1 = 0.;
         let k2 = 0.;
@@ -162,8 +165,12 @@
           const factor_result = k_equiv_two_sample(Module, iN, iM, fA);
           k1 = factor_result.k1;
           k2 = factor_result.k2;
+          
+          // demonstrate p-value function
+          const p_value = p_equiv_two_sample(Module, iN, iM, k1, k2);
+          
           outArea.value =
-            `n=${iN}\nm=${iM}\nalpha=${fA}\nk1=${k1.toFixed(4)}\nk2=${k2.toFixed(4)}`;
+            `n=${iN}\nm=${iM}\nalpha=${fA}\nk1=${k1.toFixed(4)}\nk2=${k2.toFixed(4)}\np-value=${p_value.toFixed(4)}`;
 
           const power_result = power_mean(Module, iN, iM, k1, k2);
 
@@ -173,7 +180,12 @@
             type: 'lines+markers',
             name: `n=${iN}, m=${iM}, alpha=${fA}`
           };
-          var data = [trace1];
+          
+          const keep_power_elm = document.getElementById("keep-power");
+          if(keep_power_elm.checked !== true) {
+            power_curves = [];
+          }
+          power_curves.push(trace1);
           var layout = {
             title: 'Power',
             xaxis: {
@@ -183,14 +195,14 @@
               title: 'Rejection Rate'
             }
           };
-          Plotly.newPlot('power-plot', data, layout);
+          Plotly.newPlot('power-plot', power_curves, layout);
 
           Module.setStatus("");
         },
         0);
       });
       
-      document.getElementById("do-test").addEventListener("click", do_tests);
+      document.getElementById("do-test").addEventListener("click", () => { do_tests(Module); });
     </script>
   </body>
 </html>

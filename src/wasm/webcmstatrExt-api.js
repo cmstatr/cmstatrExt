@@ -56,7 +56,7 @@ const k_equiv_two_sample = (Module, n, m, alpha) => {
 
 
 const power_mean = (Module, n, m, k1, k2) => {
-  const steps = 10;
+  const steps = 11;
   const mu_1 = 0.;
   const mu_2 = -2.;
   
@@ -78,7 +78,7 @@ const power_mean = (Module, n, m, k1, k2) => {
     "power_mean",
     "number",  // return type
     ["number", "number", "number", "number", "number", "number", "number"], // arg types
-    [n,        n,        k1,       k2,       steps,    mu_equiv_offset, rejection_rate_offset]
+    [n,        m,        k1,       k2,       steps,    mu_equiv_offset, rejection_rate_offset]
   );
   
   for (let i = 0; i < steps; i++) {
@@ -94,7 +94,19 @@ const power_mean = (Module, n, m, k1, k2) => {
   };
 };
 
-const do_tests = async () => {
+
+const p_equiv_two_sample = (Module, n, m, t1, t2) => {
+  const result = Module.ccall(
+    "p_equiv_two_sample",
+    "number",  // return type
+    ["number", "number", "number", "number"], // arg types
+    [n,        m,        t1,       t2]
+  );
+  return result;
+};
+
+
+const do_tests = async (Module) => {
   const result = Module.ccall(
     "do_tests",
     "number",  // return type

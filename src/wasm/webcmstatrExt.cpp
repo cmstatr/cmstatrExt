@@ -81,3 +81,23 @@ EXTERN EMSCRIPTEN_KEEPALIVE int power_mean(int n, int m, double k1, double k2,
   }
   return result;
 }
+
+#ifdef __cplusplus
+#define EXTERN extern "C"
+#else
+#define EXTERN
+#endif
+EXTERN EMSCRIPTEN_KEEPALIVE double p_equiv_two_sample(int n, int m,
+                                                      double t1, double t2) {
+  if (n < 3 || m < 3) {
+    //::Rf_error("Both n and m must be 3 or greater");
+    return -1.;
+  }
+  
+  if(t1 < t2) {
+    //::Rf_error("t2 must be less than t1");
+    return -1.;
+  }
+  AcceptanceTwoSample an = AcceptanceTwoSample(n, m);
+  return an.calc_p_value(t1, t2);
+}

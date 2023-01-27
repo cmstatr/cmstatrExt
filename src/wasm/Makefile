@@ -57,7 +57,8 @@ webcmstatrExt.js: $(SRC) $(HEADERS) $(NMATH_SRC)
 			-sSTACK_SIZE=1310720 \
 			-s "EXPORTED_RUNTIME_METHODS=['ccall']" \
 			-s EXPORTED_FUNCTIONS="['_malloc', '_free', '_main', '_do_tests', \
-			                        '_k_equiv_two_sample', '_power_mean']" \
+			                        '_k_equiv_two_sample', '_power_mean', \
+			                        '_p_equiv_two_sample']" \
 	)
 
 devserver:
