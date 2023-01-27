@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <float.h>
 
+#include "../Rf_error.h"
+
 namespace R {
 
 #define Rboolean bool
@@ -162,30 +164,30 @@ namespace R {
    if(x > ME_DOMAIN) { \
        switch(x) { \
        case ME_DOMAIN: \
-	   printf("argument out of domain in '%s'\n", s);	\
+         Rf_error("argument out of domain in '%s'\n", s);	\
 	   break; \
        case ME_RANGE: \
-	   printf("value out of range in '%s'\n", s);	\
+         Rf_error("value out of range in '%s'\n", s);	\
 	   break; \
        case ME_NOCONV: \
-	   printf("convergence failed in '%s'\n", s);	\
+         Rf_error("convergence failed in '%s'\n", s);	\
 	   break; \
        case ME_PRECISION: \
-	   printf("full precision may not have been achieved in '%s'\n", s); \
+         Rf_error("full precision may not have been achieved in '%s'\n", s); \
 	   break; \
        case ME_UNDERFLOW: \
-	   printf("underflow occurred in '%s'\n", s);	\
+         Rf_error("underflow occurred in '%s'\n", s);	\
 	   break; \
        } \
    } \
 }
 #define ML_WARN_return_NAN { ML_WARNING(ME_DOMAIN, ""); return ML_NAN; }
 
-#define MATHLIB_WARNING(x1, x2) printf(x1,x2)
-#define MATHLIB_WARNING2(x1, x2, x3) printf(x1,x2,x3)
-#define MATHLIB_WARNING3(x1, x2, x3, x4) printf(x1,x2,x3,x4)
-#define MATHLIB_WARNING4(x1, x2, x3, x4, x5) printf(x1,x2,x3,x4,x5)
-#define MATHLIB_WARNING5(x1, x2, x3, x4, x5, x6) printf(x1,x2,x3,x4,x5, x6)
+#define MATHLIB_WARNING(x1, x2) Rf_error(x1,x2)
+#define MATHLIB_WARNING2(x1, x2, x3) Rf_error(x1,x2,x3)
+#define MATHLIB_WARNING3(x1, x2, x3, x4) Rf_error(x1,x2,x3,x4)
+#define MATHLIB_WARNING4(x1, x2, x3, x4, x5) Rf_error(x1,x2,x3,x4,x5)
+#define MATHLIB_WARNING5(x1, x2, x3, x4, x5, x6) Rf_error(x1,x2,x3,x4,x5, x6)
 
 
 int Rf_i1mach(int i);

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <math.h>
 #include "nmath/nmath.h"
+#include "Rf_error.h"
 
 
 std::vector<double> rnorm3(const int n, const double mu, const double sigma) {
@@ -51,23 +52,27 @@ bool power_sim_dual_normal(
     std::vector<double> &reject_rate) {
   
   if(n_qual <= 0 || m_equiv <= 0) {
-    printf("n_qual and m_equiv must both be at least 1\n");
+    Rf_error("n_qual and m_equiv must both be at least 1 (are %i and %i)\n",
+             n_qual, m_equiv);
     return false;
   }
   int rep_qual = 0;
   int rep_equiv = 0;
   if(replicates <= 0) {
-    printf("Number of replicates must be greater than zero\n");
+    Rf_error("Number of replicates must be greater than zero (is %i)\n",
+             replicates);
     return false;
   }
   rep_qual = replicates;
   rep_equiv = replicates;
   if(mu_pop_equiv.size() != sd_pop_equiv.size()) {
-    printf("mu_pop_equiv and sd_pop_equiv must be the same length\n");
+    Rf_error("mu_pop_equiv and sd_pop_equiv must be the same length (%i != %i)\n",
+             mu_pop_equiv.size(), sd_pop_equiv.size());
     return false;
   }
   if(reject_rate.size() != mu_pop_equiv.size()) {
-    printf("reject_rate is the wrong size.\n");
+    Rf_error("reject_rate is the wrong size(%i != %i).\n",
+             reject_rate.size(), mu_pop_equiv.size());
     return false;
   }
   

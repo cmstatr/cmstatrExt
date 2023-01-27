@@ -23,9 +23,11 @@ HEADERS=\
 	catch.hpp \
 	testthat_catch.h \
 	power_sim.h \
+	Rf_error.h \
 	../root.h \
 	../integration.h \
-	../acceptance.h
+	../acceptance.h \
+	nmath/common.h nmath/dpq.h nmath/nmath.h
 	
 #webcmstatr.o: $(SRC)
 #	clang++ \

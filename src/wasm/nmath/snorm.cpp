@@ -32,6 +32,7 @@
 #include "common.h"
 #include "nmath.h"
 #include <random>
+#include "../Rf_error.h"
 
 using namespace R;
 
@@ -326,7 +327,7 @@ double norm_rand(void)
 		return (u2<u3) ? tt : -tt;
 	}
     default:
-	printf(("norm_rand(): invalid N01_kind: %d\n"), N01_kind);
+	Rf_error(("norm_rand(): invalid N01_kind: %d\n"), N01_kind);
 	    return 0.0;/*- -Wall */
     }/*switch*/
 }
