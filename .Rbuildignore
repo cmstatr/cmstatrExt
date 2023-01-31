@@ -12,3 +12,4 @@
 ^\.github$
 ^src/wasm/*
 ^vignettes/articles$
+^logo.svg$

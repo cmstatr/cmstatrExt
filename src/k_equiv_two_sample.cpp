@@ -21,6 +21,11 @@
 //'
 //' @return
 //' A vector of length 2 with the contents `c(k1, k2)`
+//' 
+//' @references
+//' Kloppenborg, S. (2023). Lot acceptance testing using sample mean and
+//' extremum with finite qualification samples. Journal of Quality Technology,
+//' https://doi.org/10.1080/00224065.2022.2147884
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
