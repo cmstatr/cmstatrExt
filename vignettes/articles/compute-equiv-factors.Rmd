@@ -1,0 +1,254 @@
+---
+title: "Equivalency Factor Calculator"
+resource_files:
+- webcmstatrExt.js
+- webcmstatrExt.wasm
+- webcmstatrExt-api.js
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This page provides an online calculator to determine two-sample equivalency
+factors. This calculator gives the factors $k_1$ and $k_2$ as well as
+determining the power of the test for detecting reduction in mean.
+The basis of this method is the following paper. More details are given
+at the bottom of this page.
+
+S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with finite qualification samples," Journal of Quality Technology, 2023.
+[DOI: 10.1080/00224065.2022.2147884](https://doi.org/10.1080/00224065.2022.2147884)
+
+## Calculator
+### Input
+<style>
+  .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+  textarea.emscripten { font-family: monospace; width: 80%; }
+  div.emscripten { text-align: center; }
+  div.emscripten_border { border: 1px solid black; }
+  /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+  canvas.emscripten { border: 0px none; background-color: black; }
+
+  .spinner {
+    height: 50px;
+    width: 50px;
+    margin: 0px auto;
+    -webkit-animation: rotation .8s linear infinite;
+    -moz-animation: rotation .8s linear infinite;
+    -o-animation: rotation .8s linear infinite;
+    animation: rotation 0.8s linear infinite;
+    border-left: 10px solid rgb(0,150,240);
+    border-right: 10px solid rgb(0,150,240);
+    border-bottom: 10px solid rgb(0,150,240);
+    border-top: 10px solid rgb(100,0,200);
+    border-radius: 100%;
+    background-color: rgb(200,100,250);
+  }
+  @-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+  }
+  @-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(360deg);}
+  }
+  @-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(360deg);}
+  }
+  @keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
+
+</style>
+<script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script>
+
+<label for="int-n">Qualification Sample Size ($n$):</label>
+<input type="number" id="int-n" min="3" value="18" step="1" required 
+  onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
+
+<label for="int-m">Acceptance Sample Size ($m$):</label>
+<input type="number" id="int-m" min="3" value="8" step="1" required
+  onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
+
+<label for="double-alpha">Significance ($\alpha$):</label>
+<input type="number" id="double-alpha"
+  value="0.05" step="0.01" required
+  onchange="this.value = Math.max(0.0001, Math.min(0.5, parseFloat(this.value)));" /><br />
+
+<figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
+<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten">
+  <progress value="0" max="100" id="progress" hidden=1></progress>  
+</div>
+<script type='text/javascript'>
+  var statusElement = document.getElementById('status');
+  var progressElement = document.getElementById('progress');
+  var spinnerElement = document.getElementById('spinner');
+
+  var Module = {
+    preRun: [],
+    postRun: [],
+    print: (function() {})(),
+    canvas: (function() {})(),
+    setStatus: function(text) {
+      if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+      if (text === Module.setStatus.last.text) return;
+      var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+      var now = Date.now();
+      if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+      Module.setStatus.last.time = now;
+      Module.setStatus.last.text = text;
+      if (m) {
+        text = m[1];
+        progressElement.value = parseInt(m[2])*100;
+        progressElement.max = parseInt(m[4])*100;
+        progressElement.hidden = false;
+        spinnerElement.hidden = false;
+      } else {
+        progressElement.value = null;
+        progressElement.max = null;
+        progressElement.hidden = true;
+        if (!text) spinnerElement.hidden = true;
+      }
+      statusElement.innerHTML = text;
+    },
+    totalDependencies: 0,
+    monitorRunDependencies: function(left) {
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+    }
+  };
+  Module.setStatus('Downloading...');
+  window.onerror = function() {
+    Module.setStatus('Exception thrown, see JavaScript console');
+    spinnerElement.style.display = 'none';
+    Module.setStatus = function(text) {
+      if (text) console.error('[post-exception status] ' + text);
+    };
+  };
+</script>
+<script src=webcmstatrExt.js async></script>
+<script src="webcmstatrExt-api.js"></script>
+
+<button id="compute-factors">Compute Factors</button><br />
+
+### Factors
+
+<textarea id="output" readonly style="width: 400px; height: 100px;"></textarea>
+<br />
+
+### Power for Reduction in Mean
+
+<label for="keep-power">Keep Power Curves</label>
+<input type="checkbox" id="keep-power" checked="true" />
+<br />
+<div id="power-plot" style="width:600px;height:300px;"></div>
+
+<script type='text/javascript'>
+  document.getElementById("int-n").addEventListener("input",
+    (e) => validateSampleSize(e.target));
+  document.getElementById("int-m").addEventListener("input",
+    (e) => validateSampleSize(e.target));
+  document.getElementById("double-alpha").addEventListener("input",
+    (e) => validateSignificance(e.target));
+
+  let power_curves = [];
+  
+  document.getElementById("compute-factors").addEventListener("click", async () => {
+    let k1 = 0.;
+    let k2 = 0.;
+    const outArea = document.getElementById("output");
+    const iN = validateSampleSize(document.getElementById("int-n"));
+    const iM = validateSampleSize(document.getElementById("int-m"));
+    const fA = validateSignificance(document.getElementById("double-alpha"));
+
+    outArea.value = "";
+    if(iN === "invalid" || iM === "invalid" || fA === "invalid") {
+      console.log("Invalid input");
+      return;
+    }
+
+    Module.setStatus("Calculating factors... (1/2)");
+
+    // run the rest asyncronously
+    setTimeout(function () {
+      const factor_result = k_equiv_two_sample(Module, iN, iM, fA);
+      k1 = factor_result.k1;
+      k2 = factor_result.k2;
+      
+      // demonstrate p-value function
+      const p_value = p_equiv_two_sample(Module, iN, iM, k1, k2);
+      
+      outArea.value =
+        `Factirs for: alpha = ${fA}, n = ${iN}, m = ${iM}\nk1 = ${k1.toFixed(4)}\nk2 = ${k2.toFixed(4)}`;
+
+      const power_result = power_mean(Module, iN, iM, k1, k2);
+
+      var trace1 = {
+        x: power_result.power_x,
+        y: power_result.power_y,
+        type: 'lines+markers',
+        name: `n=${iN}, m=${iM}, alpha=${fA}`
+      };
+      
+      const keep_power_elm = document.getElementById("keep-power");
+      if(keep_power_elm.checked !== true) {
+        power_curves = [];
+      }
+      power_curves.push(trace1);
+      var layout = {
+        xaxis: {
+          title: 'Reduction in Mean (x SD)'
+        },
+        yaxis: {
+          title: 'Rejection Rate'
+        }
+      };
+      Plotly.newPlot('power-plot', power_curves, layout);
+
+      Module.setStatus("");
+    },
+    0);
+  });
+</script>
+
+
+## Details {.tabset}
+### Method Details
+Based on a user selected qualification sample size ($n$), acceptance
+sample size ($m$) and significance level ($\alpha$), the factors
+$k_1$ and $k_2$ are calculated. Acceptance limits are set as:
+
+$$
+W_{min\,indiv} = \bar{x} - k_1 \cdot s \\
+W_{avg} = \bar{x} - k_2 \cdot s
+$$
+
+The power of this acceptance criteria is investigated through simulation.
+In this simulation, 2500 qualification samples are drawn from a standard
+normal distribution ($N(\mu, \sigma)$) and acceptance limits are computed
+based on each qualification sample.
+Next 2500 acceptance samples are drawn from a
+$N(\mu-\delta\sigma, \sigma)$ distribution.
+Each of the acceptance samples are compared against each of the acceptance
+limits and the proportion of acceptance samples rejected are reported.
+Thus, a total of 6,250,000 comparisons are made. This is repeated for several
+values of $\delta$. 
+
+### Software Details
+The functionality of this page is provided by the same C++ code that is used
+by the `cmstatrExt` R package. This code is compiled to WebAssembly so that
+it can run inside a web browser without the user installing any special
+software. This software is licensed under the
+[AGPL-3](https://www.r-project.org/Licenses/AGPL-3) license.
+Source code is available [here](https://github.com/cmstatr/cmstatrExt).
+
+Graphing is provided by the
+[Plotly JavaScript library](https://plotly.com/javascript/), which is
+licensed under the MIT license.
+

@@ -11,3 +11,4 @@
 ^pkgdown$
 ^\.github$
 ^src/wasm/*
+^vignettes/articles$

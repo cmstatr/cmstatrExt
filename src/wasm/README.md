@@ -22,6 +22,9 @@ the WASM code, you'll need to run a web server from your computer
 (due to browser security restrictions). You can run `make devserver`
 to do so (this requires that you have `python` in your path).
 
+When you're ready to use the resulting web assembly code on the website,
+run `make deploy` to copy to the `vignettes/articles` folder.
+
 
 ## Development Setup
 ### Installing `emsdk`

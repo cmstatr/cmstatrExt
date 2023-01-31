@@ -63,7 +63,12 @@ webcmstatrExt.js: $(SRC) $(HEADERS) $(NMATH_SRC)
 			                        '_p_equiv_two_sample']" \
 	)
 
+deploy: webcmstatrExt.js webcmstatrExt.wasm webcmstatrExt-api.js
+	cp webcmstatrExt.js ../../vignettes/articles
+	cp webcmstatrExt.wasm ../../vignettes/articles
+	cp webcmstatrExt-api.js ../../vignettes/articles
+
 devserver:
 	python3 -m http.server
 
-.PHONY: devserver
+.PHONY: devserver deploy
