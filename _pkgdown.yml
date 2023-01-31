@@ -1,4 +1,13 @@
-url: https://cmstatr.github.io/cmstatrExt/
+url: https://cmstatrExt.cmstatr.net
 template:
   bootstrap: 5
+  params:
+    bootswatch: cosmo
+  opengraph:
+    image:
+      src: "man/figures/logo-240x278.png"
+      alt: "More statistical methods for composite material data: cmstatrExt"
 
+authors:
+  Stefan Kloppenborg:
+    href: https://www.kloppenborg.ca
