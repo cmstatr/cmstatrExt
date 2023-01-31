@@ -1,7 +1,14 @@
 #include "root.h"
 #include <cmath>
 #include <cfloat>
+
+#ifndef WASM
 #include <testthat.h>
+#else // WASM
+#include "wasm/catch.hpp"
+#include "wasm/testthat_catch.h"
+#endif // WASM
+
 #include "testthat-exp.h"
 
 

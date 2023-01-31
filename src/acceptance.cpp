@@ -1,9 +1,21 @@
-#include <Rcpp.h>
 #include <cmath>
 #include "root.h"
 #include "integration.h"
 #include "acceptance.h"
+
+#ifndef WASM
+#include <Rcpp.h>
 #include <testthat.h>
+
+#else // WASM
+
+#include "wasm/nmath/nmath.h"
+#include "wasm/catch.hpp"
+#include "wasm/testthat_catch.h"
+#include "wasm/Rf_error.h"
+
+#endif // WASM
+
 #include "testthat-exp.h"
 
 
@@ -50,8 +62,8 @@ double AcceptanceBase::calc_lambda(const double t1,
   {
     const int retval_bisection = bisection(f, -1000, 1000, &result, 1000);
     if (retval_bisection != ROOT_RESULT_SUCCESS) {
-      ::Rf_error("Root failed. (Newton code=%i, bisection code=%i)",
-                 retval, retval_bisection);
+      Rf_error("Root failed. (Newton code=%i, bisection code=%i)",
+               retval, retval_bisection);
     }
   }
   
@@ -166,58 +178,6 @@ context("Acceptance Vangel") {
   }
 }
 
-//' p-Value for one-sample equivalency
-//'
-//' @description
-//' Calculates the p-Value for a one-sample acceptance test
-//' based on Vangel (2002).
-//' This test considers the sample size of the acceptance sample (`m`).
-//'
-//' Two test statistics are required:
-//'
-//' t1 = (mu - Y_min) / sigma
-//'
-//' t2 = (mu - Y_mean) / sigma
-//'
-//' Where:
-//' - mu is the mean of the population
-//' - sigma is the standard deviation of the population
-//' - Y_min is the minimum from the acceptance sample
-//' - Y_mean is the mean of the acceptance sample
-//'
-//' @param m the size of the acceptance sample
-//' @param t1 the test statistic described above. May be a vector.
-//' @param t2 the test statistic described above. May be a vector.
-//'
-//' @return a vector of p-Values of the same length as t1 and t2
-//'
-//' @export
-// [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector p_equiv(int m,
-                            Rcpp::NumericVector t1, Rcpp::NumericVector t2) {
-  if (m < 3) {
-    ::Rf_error("Both m must be 3 or greater");
-  }
-  
-  if (t1.size() != t2.size()) {
-    ::Rf_error("t1 and t2 must be of the same length");
-  }
-  const int num_vals = t1.size();
-  for(int i = 0; i < num_vals; ++i) {
-    if(t1[i] < t2[i]) {
-      ::Rf_error("t2 must be less than t1");
-    }
-  }
-  AcceptanceVangel an = AcceptanceVangel(m);
-  Rcpp::NumericVector result = Rcpp::NumericVector(num_vals);
-  
-  for(int i = 0; i < num_vals; ++i) {
-    result[i] = an.calc_p_value(t1[i], t2[i]);
-  }
-  return result;
-}
-
-
 
 AcceptanceTwoSample::AcceptanceTwoSample(const double n, const double m) :
   AcceptanceBase(m) {
@@ -323,92 +283,6 @@ double AcceptanceTwoSample::calc_f_joint(const double r1, const double r2) {
     &dfv_int
   );
   return outer_int.result;
-}
-
-//' Calculate the factors for a two-sample acceptance test
-//'
-//' @description
-//' Calculates the factors k1 and k2, which are used for setting acceptance
-//' values for lot acceptance. These factors consider both the
-//' size of the qualification sample (`n`)
-//' and the size of acceptance sample (`m`).
-//' This test is detailed in a forthcoming paper.
-//'
-//' @param alpha the desired probability of Type 1 error
-//' @param n the size of the qualification sample
-//' @param m the size of the acceptance sample
-//'
-//' @return
-//' A vector of length 2 with the contents `c(k1, k2)`
-//'
-//' @export
-// [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m) {
-  if (n < 3 || m < 3) {
-    ::Rf_error("Both n and m must be 3 or greater");
-  }
-  
-  AcceptanceTwoSample an = AcceptanceTwoSample(n, m);
-  an.calculate_factors(alpha);
-  
-  return Rcpp::NumericVector::create(
-    an.k1,
-    an.k2
-  );
-}
-
-//' p-Value for two-sample equivalency
-//'
-//' @description
-//' Calculates the p-Value for a two-sample acceptance test.
-//' This test considers the sample size of the qualification
-//' sample (`n`) and the acceptance sample (`m`).
-//'
-//' Two test statistics are required:
-//'
-//' t1 = (X_mean - Y_min) / S
-//'
-//' t2 = (X_mean - Y_mean) / S
-//'
-//' Where:
-//' - X_mean is the mean of the qualification sample
-//' - S is the standard deviation of the qualification sample
-//' - Y_min is the minimum from the acceptance sample
-//' - Y_mean is the mean of the acceptance sample
-//'
-//' @param n the size of the qualification sample
-//' @param m the size of the acceptance sample
-//' @param t1 the test statistic described above. May be a vector.
-//' @param t2 the test statistic described above. May be a vector.
-//'
-//' @return a vector of p-Values of the same length as t1 and t2
-//'
-//' @export
-// [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector p_equiv_two_sample(int n, int m,
-                                       Rcpp::NumericVector t1,
-                                       Rcpp::NumericVector t2) {
-  if (n < 3 || m < 3) {
-    ::Rf_error("Both n and m must be 3 or greater");
-  }
-  
-  if (t1.size() != t2.size()) {
-    ::Rf_error("t1 and t2 must be of the same length");
-  }
-  const int num_vals = t1.size();
-  for(int i = 0; i < num_vals; ++i) {
-    if(t1[i] < t2[i]) {
-      ::Rf_error("t2 must be less than t1");
-    }
-  }
-  AcceptanceTwoSample an = AcceptanceTwoSample(n, m);
-  Rcpp::NumericVector result = Rcpp::NumericVector(num_vals);
-  
-  for(int i = 0; i < num_vals; ++i) {
-    result[i] = an.calc_p_value(t1[i], t2[i]);
-  }
-
-  return result;
 }
 
   
