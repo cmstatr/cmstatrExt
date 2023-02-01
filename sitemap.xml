@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/404.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/404.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/authors.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/index.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/news/index.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/authors.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/reference/cmstatrExt-package.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/index.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/reference/index.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/news/index.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/reference/k_equiv_two_sample.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/reference/cmstatrExt-package.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/reference/p_equiv.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/reference/p_equiv_two_sample.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.html</loc>
   </url>
   <url>
-    <loc>https://cmstatr.github.io/cmstatrExt/reference/power_sim_dual.html</loc>
+    <loc>https://cmstatrExt.cmstatr.net/reference/p_equiv.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/power_sim_dual.html</loc>
   </url>
 </urlset>
