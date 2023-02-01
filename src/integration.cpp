@@ -3,8 +3,16 @@
 #include "integration.h"
 #include <cmath>
 #include <cfloat>
+
+#ifndef WASM
 #include <Rcpp.h>
 #include <testthat.h>
+#else // WASM
+#include "wasm/nmath/nmath.h"
+#include "wasm/catch.hpp"
+#include "wasm/testthat_catch.h"
+#endif // WASM
+
 #include "testthat-exp.h"
 
 double IntegrationBase::rescale_error(double err, double result_abs,
@@ -265,13 +273,15 @@ Integration::Integration(std::function<double(const double)> const& f,
 }
 
 context("Basic quadrature") {
+  auto f_cos = [](const double x) { return cos(x); };
+  
   test_that("Basic integration of cos") {
-    Integration res = Integration(cos, 0, M_PI / 2.);
+    Integration res = Integration(f_cos, 0, M_PI / 2.);
     expect_almost_eq(res.result, 1, 1e-6);
   }
   
   test_that("Integration of cos with oversampling") {
-    Integration res = Integration(cos, 0, M_PI / 2., true);
+    Integration res = Integration(f_cos, 0, M_PI / 2., true);
     expect_almost_eq(res.result, 1, 1e-6);
   }
 }

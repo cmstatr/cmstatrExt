@@ -23,3 +23,8 @@ size of the qualification sample (\code{n})
 and the size of acceptance sample (\code{m}).
 This test is detailed in a forthcoming paper.
 }
+\references{
+Kloppenborg, S. (2023). Lot acceptance testing using sample mean and
+extremum with finite qualification samples. Journal of Quality Technology,
+https://doi.org/10.1080/00224065.2022.2147884
+}

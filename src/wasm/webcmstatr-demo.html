@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Emscripten-Generated Code</title>
+    <style>
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      textarea.emscripten { font-family: monospace; width: 80%; }
+      div.emscripten { text-align: center; }
+      div.emscripten_border { border: 1px solid black; }
+      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+      canvas.emscripten { border: 0px none; background-color: black; }
+
+      .spinner {
+        height: 50px;
+        width: 50px;
+        margin: 0px auto;
+        -webkit-animation: rotation .8s linear infinite;
+        -moz-animation: rotation .8s linear infinite;
+        -o-animation: rotation .8s linear infinite;
+        animation: rotation 0.8s linear infinite;
+        border-left: 10px solid rgb(0,150,240);
+        border-right: 10px solid rgb(0,150,240);
+        border-bottom: 10px solid rgb(0,150,240);
+        border-top: 10px solid rgb(100,0,200);
+        border-radius: 100%;
+        background-color: rgb(200,100,250);
+      }
+      @-webkit-keyframes rotation {
+        from {-webkit-transform: rotate(0deg);}
+        to {-webkit-transform: rotate(360deg);}
+      }
+      @-moz-keyframes rotation {
+        from {-moz-transform: rotate(0deg);}
+        to {-moz-transform: rotate(360deg);}
+      }
+      @-o-keyframes rotation {
+        from {-o-transform: rotate(0deg);}
+        to {-o-transform: rotate(360deg);}
+      }
+      @keyframes rotation {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
+      }
+
+    </style>
+    <script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script>
+  </head>
+  <body>
+    <hr/>
+    <figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
+    <div class="emscripten" id="status">Downloading...</div>
+    <div class="emscripten">
+      <progress value="0" max="100" id="progress" hidden=1></progress>  
+    </div>
+    <script type='text/javascript'>
+      var statusElement = document.getElementById('status');
+      var progressElement = document.getElementById('progress');
+      var spinnerElement = document.getElementById('spinner');
+
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print: (function() {})(),
+        canvas: (function() {})(),
+        setStatus: function(text) {
+          if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+          if (text === Module.setStatus.last.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+          if (m) {
+            text = m[1];
+            progressElement.value = parseInt(m[2])*100;
+            progressElement.max = parseInt(m[4])*100;
+            progressElement.hidden = false;
+            spinnerElement.hidden = false;
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.hidden = true;
+            if (!text) spinnerElement.hidden = true;
+          }
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        }
+      };
+      Module.setStatus('Downloading...');
+      window.onerror = function() {
+        Module.setStatus('Exception thrown, see JavaScript console');
+        spinnerElement.style.display = 'none';
+        Module.setStatus = function(text) {
+          if (text) console.error('[post-exception status] ' + text);
+        };
+      };
+    </script>
+    <script src=webcmstatrExt.js async></script>
+    <script src="webcmstatrExt-api.js"></script>
+    <br />
+
+    <label for="int-n">Qualification Sample Size (n):</label>
+    <input type="number" id="int-n" min="3" value="18" step="1" required 
+      onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
+    
+    <label for="int-m">Acceptance Sample Size (m):</label>
+    <input type="number" id="int-m" min="3" value="8" step="1" required
+      onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
+    
+    <label for="double-alpha">Significance (alpha):</label>
+    <input type="number" id="double-alpha"
+      value="0.05" step="0.01" required
+      onchange="this.value = Math.max(0.0001, Math.min(0.5, parseFloat(this.value)));" /><br />
+    
+    <button id="mybutton">Run myFunction</button>
+    
+    <br />
+    <textarea id="output" readonly style="width: 400px; height: 100px;"></textarea>
+    <br />
+
+    <label for="keep-power">Keep Power Curves</label>
+    <input type="checkbox" id="keep-power" checked="true" />
+    <br />
+    <div id="power-plot" style="width:600px;height:300px;"></div>
+    
+    <br />
+    <button id="do-test">Run Tests!</button>
+    <br />
+
+    <script type='text/javascript'>
+
+      document.getElementById("int-n").addEventListener("input",
+        (e) => validateSampleSize(e.target));
+      document.getElementById("int-m").addEventListener("input",
+        (e) => validateSampleSize(e.target));
+      document.getElementById("double-alpha").addEventListener("input",
+        (e) => validateSignificance(e.target));
+
+      let power_curves = [];
+      
+      document.getElementById("mybutton").addEventListener("click", async () => {
+        let k1 = 0.;
+        let k2 = 0.;
+        const outArea = document.getElementById("output");
+        const iN = validateSampleSize(document.getElementById("int-n"));
+        const iM = validateSampleSize(document.getElementById("int-m"));
+        const fA = validateSignificance(document.getElementById("double-alpha"));
+
+        outArea.value = "";
+        if(iN === "invalid" || iM === "invalid" || fA === "invalid") {
+          console.log("Invalid input");
+          return;
+        }
+
+        Module.setStatus("Calculating factors... (1/2)");
+
+        // run the rest asyncronously
+        setTimeout(function () {
+          const factor_result = k_equiv_two_sample(Module, iN, iM, fA);
+          k1 = factor_result.k1;
+          k2 = factor_result.k2;
+          
+          // demonstrate p-value function
+          const p_value = p_equiv_two_sample(Module, iN, iM, k1, k2);
+          
+          outArea.value =
+            `n=${iN}\nm=${iM}\nalpha=${fA}\nk1=${k1.toFixed(4)}\nk2=${k2.toFixed(4)}\np-value=${p_value.toFixed(4)}`;
+
+          const power_result = power_mean(Module, iN, iM, k1, k2);
+
+          var trace1 = {
+            x: power_result.power_x,
+            y: power_result.power_y,
+            type: 'lines+markers',
+            name: `n=${iN}, m=${iM}, alpha=${fA}`
+          };
+          
+          const keep_power_elm = document.getElementById("keep-power");
+          if(keep_power_elm.checked !== true) {
+            power_curves = [];
+          }
+          power_curves.push(trace1);
+          var layout = {
+            title: 'Power',
+            xaxis: {
+              title: 'Reduction in Mean (x SD)'
+            },
+            yaxis: {
+              title: 'Rejection Rate'
+            }
+          };
+          Plotly.newPlot('power-plot', power_curves, layout);
+
+          Module.setStatus("");
+        },
+        0);
+      });
+      
+      document.getElementById("do-test").addEventListener("click", () => { do_tests(Module); });
+    </script>
+  </body>
+</html>
