@@ -1,8 +1,8 @@
 Package: cmstatrExt
 Type: Package
 Title: More Statistical Methods for Composite Material Data
-Version: 0.1.0.9000
-Date: 2021-10-12
+Version: 0.1.1
+Date: 2023-01-31
 Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
       role = c("aut", "cre"))

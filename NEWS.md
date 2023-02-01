@@ -1,4 +1,8 @@
 # Version 0.1.0
+- Documentation improvements
+- Added equivalency/acceptance factor calculator to website
+
+# Version 0.1.0
 - Added power simulation function
 - Added documentation website
 - Changed c++ unit test framework to testthat (which uses catch2)
