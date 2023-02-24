@@ -180,12 +180,9 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
       const factor_result = k_equiv_two_sample(Module, iN, iM, fA);
       k1 = factor_result.k1;
       k2 = factor_result.k2;
-      
-      // demonstrate p-value function
-      const p_value = p_equiv_two_sample(Module, iN, iM, k1, k2);
-      
+
       outArea.value =
-        `Factirs for: alpha = ${fA}, n = ${iN}, m = ${iM}\nk1 = ${k1.toFixed(4)}\nk2 = ${k2.toFixed(4)}`;
+        `Factors for: alpha = ${fA}, n = ${iN}, m = ${iM}\nk1 = ${k1.toFixed(4)}\nk2 = ${k2.toFixed(4)}`;
 
       const power_result = power_mean(Module, iN, iM, k1, k2);
 
