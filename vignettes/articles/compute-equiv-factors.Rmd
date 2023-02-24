@@ -71,7 +71,7 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
 <input type="number" id="int-n" min="3" value="18" step="1" required 
   onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
 
-<label for="int-m">Acceptance Sample Size ($m$):</label>
+<label for="int-m">Equivalency Sample Size ($m$):</label>
 <input type="number" id="int-m" min="3" value="8" step="1" required
   onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
 
@@ -217,23 +217,23 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
 
 ## Details {.tabset}
 ### Method Details
-Based on a user selected qualification sample size ($n$), acceptance
+Based on a user selected qualification sample size ($n$), equivalency
 sample size ($m$) and significance level ($\alpha$), the factors
-$k_1$ and $k_2$ are calculated. Acceptance limits are set as:
+$k_1$ and $k_2$ are calculated. Equivalency limits are set as:
 
 $$
 W_{min\,indiv} = \bar{x} - k_1 \cdot s \\
 W_{avg} = \bar{x} - k_2 \cdot s
 $$
 
-The power of this acceptance criteria is investigated through simulation.
+The power of this equivalency criteria is investigated through simulation.
 In this simulation, 2500 qualification samples are drawn from a standard
-normal distribution ($N(\mu, \sigma)$) and acceptance limits are computed
+normal distribution ($N(\mu, \sigma)$) and equivalency limits are computed
 based on each qualification sample.
-Next 2500 acceptance samples are drawn from a
+Next 2500 equivalency samples are drawn from a
 $N(\mu-\delta\sigma, \sigma)$ distribution.
-Each of the acceptance samples are compared against each of the acceptance
-limits and the proportion of acceptance samples rejected are reported.
+Each of the equivalency samples are compared against each of the equivalency
+limits and the proportion of equivalency samples rejected are reported.
 Thus, a total of 6,250,000 comparisons are made. This is repeated for several
 values of $\delta$. 
 
