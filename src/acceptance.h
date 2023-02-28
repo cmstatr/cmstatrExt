@@ -46,6 +46,7 @@ public:
   double dfw(const double w) const;
   double dfv(const double v) const;
   double cpi(const double r1) const;
+  double calc_r1(const double cpi_val) const;
   double calc_r2(const double cpm_val) const;
   double calc_f_joint(const double r1, const double r2) const;
   void calculate_factors(const double alpha);

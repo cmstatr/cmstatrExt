@@ -260,6 +260,15 @@ double AcceptanceTwoSample::cpi(const double r1) const {
   return outer_int.result;
 }
 
+double AcceptanceTwoSample::calc_r1(const double cpi_val) const {
+  const auto f = [this, cpi_val](const double r1) {
+    return cpi(r1) - cpi_val;
+  };
+  double k1;
+  bisection(f, 2, 5, &k1, 500);
+  return k1;
+}
+
 double AcceptanceTwoSample::calc_r2(const double cpm_val) const {
   const double result = R::qt(cpm_val, n - 1., false, false)
     * sqrt(1. / m + 1. / n);
@@ -317,10 +326,12 @@ context("AcceptanceSample") {
   test_that("cpi, n=18, m=5") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
     expect_almost_eq(an.cpi(2.605), 0.05008773, 1e-6);
+    expect_almost_eq(an.calc_r1(0.05), 2.605, 2e-3);
   }
   test_that("cpi, n=5, m=18") {
     AcceptanceTwoSample an = AcceptanceTwoSample(5, 18);
     expect_almost_eq(an.cpi(2.605), 0.2946645, 1e-6);
+    expect_almost_eq(an.calc_r1(0.2946645), 2.605, 1e-3);
   }
   test_that("factors match prototype R code") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
