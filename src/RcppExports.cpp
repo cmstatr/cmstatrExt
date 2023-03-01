@@ -10,6 +10,22 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// iso_equiv_two_sample
+DataFrame iso_equiv_two_sample(const int n, const int m, const double alpha, double t1max, double t2max, const double n_points);
+RcppExport SEXP _cmstatrExt_iso_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP alphaSEXP, SEXP t1maxSEXP, SEXP t2maxSEXP, SEXP n_pointsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< const double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type t1max(t1maxSEXP);
+    Rcpp::traits::input_parameter< double >::type t2max(t2maxSEXP);
+    Rcpp::traits::input_parameter< const double >::type n_points(n_pointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(iso_equiv_two_sample(n, m, alpha, t1max, t2max, n_points));
+    return rcpp_result_gen;
+END_RCPP
+}
 // k_equiv_two_sample
 Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m);
 RcppExport SEXP _cmstatrExt_k_equiv_two_sample(SEXP alphaSEXP, SEXP nSEXP, SEXP mSEXP) {
@@ -70,6 +86,7 @@ END_RCPP
 RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cmstatrExt_iso_equiv_two_sample", (DL_FUNC) &_cmstatrExt_iso_equiv_two_sample, 6},
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
     {"_cmstatrExt_p_equiv", (DL_FUNC) &_cmstatrExt_p_equiv, 3},
     {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
