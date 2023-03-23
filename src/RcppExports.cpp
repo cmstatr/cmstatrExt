@@ -15,7 +15,6 @@ DataFrame iso_equiv_two_sample(const int n, const int m, const double alpha, dou
 RcppExport SEXP _cmstatrExt_iso_equiv_two_sample(SEXP nSEXP, SEXP mSEXP, SEXP alphaSEXP, SEXP t1maxSEXP, SEXP t2maxSEXP, SEXP n_pointsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const int >::type n(nSEXP);
     Rcpp::traits::input_parameter< const int >::type m(mSEXP);
     Rcpp::traits::input_parameter< const double >::type alpha(alphaSEXP);

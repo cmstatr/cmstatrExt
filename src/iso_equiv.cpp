@@ -36,8 +36,56 @@ std::vector<double> open_range(double min, double max, size_t N,
   return range;
 }
 
+//' Calculate t1 and t2 pairs that have the same p-Value
+//'
+//' @description
+//' Calculates pairs of t1 and t2 values, which have the same p-value for the
+//' two-sample equivalency test. See [p_equiv_two_sample()].
+//'
+//' @param n the size of the qualification sample
+//' @param m the size of the equivalency sample
+//' @param alpha the desired p-value
+//' @param t1max the maximum value of t1 (only approximate)
+//' @param t2max the maximum value of t2 (only approximate)
+//' @param n_points the number of returned points is twice n_points
+//'
+//' @details
+//' The values t1 and t2 are based on the transformation:
+//' 
+//' t1 = (X_mean - Y_min) / S
+//'
+//' t2 = (X_mean - Y_mean) / S
+//'
+//' Where:
+//' - X_mean is the mean of the qualification sample
+//' - S is the standard deviation of the qualification sample
+//' - Y_min is the minimum from the acceptance sample
+//' - Y_mean is the mean of the acceptance sample
+//'
+//' @return
+//' A `data.frame` with values of t1 and t2
+//' 
+//' @examples
+//' library(cmstatrExt)
+//' library(tidyverse)
+//' curve <- iso_equiv_two_sample(24, 8, 0.05, 4, 1.5, 10)
+//' curve
+//' 
+//' curve %>% 
+//'   ggplot(aes(x = t1, y = t2)) +
+//'     geom_path() +
+//'     ggtitle("Acceptance criteria for alpha=0.05")
+//' 
+//' @seealso
+//' [p_equiv_two_sample()], [k_equiv_two_sample()]
+//' 
+//' @references
+//' Kloppenborg, S. (2023). Lot acceptance testing using sample mean and
+//' extremum with finite qualification samples. Journal of Quality Technology,
+//' https://doi.org/10.1080/00224065.2022.2147884
+//'
 //' @export
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 DataFrame iso_equiv_two_sample(const int n, const int m, const double alpha,
                                double t1max, double t2max,
                                const double n_points) {
