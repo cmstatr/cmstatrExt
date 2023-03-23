@@ -45,7 +45,7 @@ bool IntegrationBase::subdivision_too_small(double a1, double a2, double b2) {
   return fabs(a1) <= tmp && fabs(b2) <= tmp;
 }
 
-double IntegrationBase::total_error() {
+double IntegrationBase::total_error() const {
   double err = 0;
   for(int i = 0; i < num_segments; ++i) {
     err += segments[i].abserr;
@@ -53,7 +53,7 @@ double IntegrationBase::total_error() {
   return err;
 }
 
-double IntegrationBase::total_area() {
+double IntegrationBase::total_area() const {
   double area = 0;
   for(int i = 0; i < num_segments; ++i) {
     area += segments[i].result;
@@ -61,13 +61,12 @@ double IntegrationBase::total_area() {
   return area;
 }
 
-int IntegrationBase::max_abserr_segment() {
+int IntegrationBase::max_abserr_segment() const {
   double max_err = 0;
   int worst = 0;
-  Segment *s;
   
   for(int i = 0; i < num_segments; ++i) {
-    s = &segments[i];
+    const Segment *s = &segments[i];
     if(s->abserr > max_err) {
       max_err = s->abserr;
       worst = i;
@@ -194,7 +193,7 @@ void IntegrationBase::qags(
 
 void IntegrationBase::integration_qk_mult(
     const std::function<double(const double)>& g,
-    Segment* orig_seg, Segment* new_seg) {
+    const Segment* orig_seg, Segment* new_seg) {
   
   const double half_length = 0.5 * (orig_seg->b - orig_seg->a);
   const double abs_half_length = fabs(half_length);
@@ -233,13 +232,11 @@ void IntegrationBase::integration_qk_mult(
 void IntegrationBase::qags_mult(const std::function<double(const double)>& f,
                                 const std::function<double(const double)>& g,
                                 const double a, const double b,
-                                IntegrationBase *f_result) {
-  Segment *s_orig;
-  
+                                const IntegrationBase *f_result) {
   auto fg = [f, g](double t) { return f(t) * g(t); };
   
   for (int i_orig = 0; i_orig < f_result->num_segments; ++i_orig) {
-    s_orig = &f_result->segments[i_orig];
+    const Segment *s_orig = &f_result->segments[i_orig];
     if (a <= s_orig->a && s_orig->b <= b) {
       // segment is fully within new bounds
       integration_qk_mult(g, &f_result->segments[i_orig], &segments[num_segments++]);
@@ -381,7 +378,8 @@ context("Quadrature with infinite bounds") {
 
 IntegrationMult::IntegrationMult(const std::function<double(const double)>& f,
                                  const std::function<double(const double)>& g,
-                                 Integration *f_result, double a, double b) {
+                                 const Integration *f_result,
+                                 const double a, const double b) {
   message = f_result->message;
   num_segments = 0;
   
@@ -445,7 +443,7 @@ context("Mult quadrature") {
 IntegrationMultOneInf::IntegrationMultOneInf(
   const std::function<double(const double)>& f,
   const std::function<double(const double)>& g,
-  IntegrationBase *f_result, int inf_side, double c) {
+  const IntegrationBase *f_result, const int inf_side, const double c) {
   
   auto f_prime = [f](const double t) {
     return f(tan(t)) * pow(cos(t), -2.);
@@ -512,7 +510,7 @@ context("Mult Quadrature Infinte Range") {
 IntegrationMultDblInf::IntegrationMultDblInf(
   const std::function<double(const double)>& f,
   const std::function<double(const double)>& g,
-  IntegrationBase *f_result) {
+  const IntegrationBase *f_result) {
   
   auto f_prime = [f](const double t) {
     return f(tan(t)) * pow(cos(t), -2.);
