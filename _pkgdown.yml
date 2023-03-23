@@ -8,6 +8,20 @@ template:
       src: "man/figures/logo-240x278.png"
       alt: "More statistical methods for composite material data: cmstatrExt"
 
+navbar:
+ components:
+   articles:
+    text: Articles
+    menu:
+    - text: p-Values for Equivalency
+      href: articles/equivalency-p-values.html
+    - text: -------
+    - text: Calculators
+    - text: Equivalency Factor Calculator
+      href: articles/compute-equiv-factors.html
+    - text: Equivalency p-Value Calculator
+      href: articles/compute-p-value-equiv.html
+
 authors:
   Stefan Kloppenborg:
     href: https://www.kloppenborg.ca
