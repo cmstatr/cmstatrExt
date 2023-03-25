@@ -341,7 +341,15 @@ context("AcceptanceSample") {
   }
   test_that("p-value matches prototype R code") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
-    const double p = an.calc_p_value(2.867903, 1.019985);
+    double p = an.calc_p_value(2.867903, 1.019985);
     expect_almost_eq(p, 0.05, 1e-6);
+    
+    // Make sure that perturbations cause the p value to change in the
+    // correct direction
+    p = an.calc_p_value(2.867903 + 0.001, 1.019985);
+    expect_true(p < 0.05);
+    
+    p = an.calc_p_value(2.867903, 1.019985 + 0.001);
+    expect_true(p < 0.05);
   }
 }
