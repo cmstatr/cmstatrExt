@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="cmstatrExt">
-<title>Equivalency Factor Calculator • cmstatrExt</title>
+<title>Equivalency p-Value Calculator • cmstatrExt</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Equivalency Factor Calculator">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Equivalency p-Value Calculator">
 <meta property="og:description" content="cmstatrExt">
 <meta property="og:image" content="https://cmstatrExt.cmstatr.net/reference/figures/logo-240x278.png">
 <meta property="og:image:alt" content="More statistical methods for composite material data: cmstatrExt">
@@ -83,20 +83,20 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Equivalency Factor Calculator</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Equivalency p-Value Calculator</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatrExt/blob/HEAD/vignettes/articles/compute-equiv-factors.Rmd" class="external-link"><code>vignettes/articles/compute-equiv-factors.Rmd</code></a></small>
-      <div class="d-none name"><code>compute-equiv-factors.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatrExt/blob/HEAD/vignettes/articles/compute-p-value-equiv.Rmd" class="external-link"><code>vignettes/articles/compute-p-value-equiv.Rmd</code></a></small>
+      <div class="d-none name"><code>compute-p-value-equiv.Rmd</code></div>
     </div>
 
     
     
-<p>This page provides an online calculator to determine two-sample
-equivalency factors. This calculator gives the factors <span class="math inline">\(k_1\)</span> and <span class="math inline">\(k_2\)</span> as well as determining the power of
-the test for detecting reduction in mean. The basis of this method is
-the following paper. More details are given at the bottom of this
-page.</p>
+<p>This page provides an online calculator to a p-value for two-sample
+equivalency. Based on the qualification sample statistics and the
+equivalency sample statistics, this calculator computes the p-value. The
+basis of this method is the following paper. More details are given at
+the bottom of this page.</p>
 <p>S. Kloppenborg, “Lot acceptance testing using sample mean and
 extremum with finite qualification samples,” Journal of Quality
 Technology, 2023. <a href="https://doi.org/10.1080/00224065.2022.2147884" class="external-link">DOI:
@@ -148,12 +148,19 @@ Technology, 2023. <a href="https://doi.org/10.1080/00224065.2022.2147884" class=
   }
 
 </style>
-<script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script><p><label for="int-n">Qualification Sample Size (<span class="math inline">\(n\)</span>):</label>
+<script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script><p><label for="double-qual-mean">Qualification Sample Mean (<span class="math inline">\(\bar{x}_{qual}\)</span>):</label>
+<input type="number" id="double-qual-mean" min="0.001" value="100" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));"><br></p>
+<p><label for="double-qual-sd">Qualification Sample Standard Deviation
+(<span class="math inline">\(s_{qual}\)</span>):</label>
+<input type="number" id="double-qual-sd" min="0.001" value="6" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));"><br></p>
+<p><label for="int-n">Qualification Sample Size (<span class="math inline">\(n\)</span>):</label>
 <input type="number" id="int-n" min="3" value="18" step="1" required onchange="this.value = Math.max(3, parseInt(this.value));"><br></p>
+<p><label for="double-equiv-min">Equivalency Sample Minimum (<span class="math inline">\(x_{min\,equiv}\)</span>):</label>
+<input type="number" id="double-equiv-min" min="0.001" value="81.4" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));"><br></p>
+<p><label for="double-equiv-mean">Equivalency Sample Mean (<span class="math inline">\(\bar{x}_{equiv}\)</span>):</label>
+<input type="number" id="double-equiv-mean" min="0.001" value="94.82" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));"><br></p>
 <p><label for="int-m">Equivalency Sample Size (<span class="math inline">\(m\)</span>):</label>
 <input type="number" id="int-m" min="3" value="8" step="1" required onchange="this.value = Math.max(3, parseInt(this.value));"><br></p>
-<p><label for="double-alpha">Significance (<span class="math inline">\(\alpha\)</span>):</label>
-<input type="number" id="double-alpha" value="0.05" step="0.01" required onchange="this.value = Math.max(0.0001, Math.min(0.5, parseFloat(this.value)));"><br></p>
 <figure style="overflow:visible;" id="spinner"><div class="spinner">
 
 </div>
@@ -212,81 +219,65 @@ Downloading…
       if (text) console.error('[post-exception status] ' + text);
     };
   };
-</script><script src="webcmstatrExt.js" async></script><script src="webcmstatrExt-api.js"></script><button id="compute-factors">
-Compute Factors
+</script><script src="webcmstatrExt.js" async></script><script src="webcmstatrExt-api.js"></script><button id="compute-p-value">
+Compute p-Value
 </button>
 <p><br></p>
 </div>
 <div class="section level3">
-<h3 id="factors">Factors<a class="anchor" aria-label="anchor" href="#factors"></a>
+<h3 id="p-value">p-Value<a class="anchor" aria-label="anchor" href="#p-value"></a>
 </h3>
-<textarea id="output" readonly style="width: 400px; height: 100px;"></textarea><p><br></p>
-</div>
-<div class="section level3">
-<h3 id="power-for-reduction-in-mean">Power for Reduction in Mean<a class="anchor" aria-label="anchor" href="#power-for-reduction-in-mean"></a>
-</h3>
-<label for="keep-power">Keep Power Curves</label>
-<input type="checkbox" id="keep-power" checked><br><div id="power-plot" style="width:600px;height:300px;">
-
-</div>
+<textarea id="output" readonly style="width: 400px; height: 150px;"></textarea><p><br></p>
 <script type="text/javascript">
+  document.getElementById("double-qual-mean").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
+  document.getElementById("double-qual-sd").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
   document.getElementById("int-n").addEventListener("input",
     (e) => validateSampleSize(e.target));
+  document.getElementById("double-equiv-min").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
+  document.getElementById("double-equiv-mean").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
   document.getElementById("int-m").addEventListener("input",
     (e) => validateSampleSize(e.target));
-  document.getElementById("double-alpha").addEventListener("input",
-    (e) => validateSignificance(e.target));
 
   let power_curves = [];
   
-  document.getElementById("compute-factors").addEventListener("click", async () => {
+  document.getElementById("compute-p-value").addEventListener("click", async () => {
     let k1 = 0.;
     let k2 = 0.;
     const outArea = document.getElementById("output");
+    const fQualMean = validatePositiveFloat(document.getElementById("double-qual-mean"));
+    const fQualSD = validatePositiveFloat(document.getElementById("double-qual-sd"));
     const iN = validateSampleSize(document.getElementById("int-n"));
+    const fEquivMin = validatePositiveFloat(document.getElementById("double-equiv-min"));
+    const fEquivMean = validatePositiveFloat(document.getElementById("double-equiv-mean"));
     const iM = validateSampleSize(document.getElementById("int-m"));
-    const fA = validateSignificance(document.getElementById("double-alpha"));
 
     outArea.value = "";
-    if(iN === "invalid" || iM === "invalid" || fA === "invalid") {
+    if(fQualMean === "invalid" || fQualSD === "invalid" ||
+        iN === "invalid" ||
+        fEquivMin === "invalid" || fEquivMean === "invalid" ||
+        iM === "invalid") {
       console.log("Invalid input");
+      outArea.value = "Invalid input";
       return;
     }
 
-    Module.setStatus("Calculating factors... (1/2)");
+    Module.setStatus("Calculating p-value... (1/2)");
 
     // run the rest asyncronously
     setTimeout(function () {
-      const factor_result = k_equiv_two_sample(Module, iN, iM, fA);
-      k1 = factor_result.k1;
-      k2 = factor_result.k2;
+      const t1 = (fQualMean - fEquivMin) / fQualSD;
+      const t2 = (fQualMean - fEquivMean) / fQualSD;
+      const p_value = p_equiv_two_sample(Module, iN, iM, t1, t2);
 
       outArea.value =
-        `Factors for: alpha = ${fA}, n = ${iN}, m = ${iM}\nk1 = ${k1.toFixed(4)}\nk2 = ${k2.toFixed(4)}`;
-
-      const power_result = power_mean(Module, iN, iM, k1, k2);
-
-      var trace1 = {
-        x: power_result.power_x,
-        y: power_result.power_y,
-        type: 'lines+markers',
-        name: `n=${iN}, m=${iM}, alpha=${fA}`
-      };
-      
-      const keep_power_elm = document.getElementById("keep-power");
-      if(keep_power_elm.checked !== true) {
-        power_curves = [];
-      }
-      power_curves.push(trace1);
-      var layout = {
-        xaxis: {
-          title: 'Reduction in Mean (x SD)'
-        },
-        yaxis: {
-          title: 'Rejection Rate'
-        }
-      };
-      Plotly.newPlot('power-plot', power_curves, layout);
+`Qualification Sample: mean = ${fQualMean}, SD = ${fQualSD}, n = ${iN}\n` +
+`Equivalency Sample: min = ${fEquivMin}, mean = ${fEquivMean}\n` +
+`t1 = ${t1.toFixed(4)}, t2 = ${t2.toFixed(4)}\n` +
+`p-value = ${p_value.toFixed(4)}`;
 
       Module.setStatus("");
     },
@@ -307,22 +298,13 @@ Compute Factors
 <div class="tab-content">
 <div class="active  tab-pane" id="method-details" role="tabpanel" aria-labelledby="method-details-tab">
 
-<p>Based on a user selected qualification sample size (<span class="math inline">\(n\)</span>), equivalency sample size (<span class="math inline">\(m\)</span>) and significance level (<span class="math inline">\(\alpha\)</span>), the factors <span class="math inline">\(k_1\)</span> and <span class="math inline">\(k_2\)</span> are calculated. Equivalency limits
-are set as:</p>
+<p>Based on a user selected qualification sample statistics (<span class="math inline">\(\bar{x}_{qual}\)</span>, <span class="math inline">\(s_{qual}\)</span>, and <span class="math inline">\(n\)</span>), equivalency sample statistics (<span class="math inline">\(x_{min\,equiv}\)</span>, <span class="math inline">\(\bar{x}_{equiv}\)</span>, and <span class="math inline">\(m\)</span>), the following two statistics are
+computed:</p>
 <p><span class="math display">\[
-W_{min\,indiv} = \bar{x} - k_1 \cdot s \\
-W_{avg} = \bar{x} - k_2 \cdot s
+t_1 = \frac{\bar{x}_{qual} - x_{min\,equiv}}{s_{qual}} \\
+t_2 = \frac{\bar{x}_{qual} - \bar{x}_{equiv}}{s_{qual}}
 \]</span></p>
-<p>The power of this equivalency criteria is investigated through
-simulation. In this simulation, 2500 qualification samples are drawn
-from a standard normal distribution (<span class="math inline">\(N(\mu,
-\sigma)\)</span>) and equivalency limits are computed based on each
-qualification sample. Next 2500 equivalency samples are drawn from a
-<span class="math inline">\(N(\mu-\delta\sigma, \sigma)\)</span>
-distribution. Each of the equivalency samples are compared against each
-of the equivalency limits and the proportion of equivalency samples
-rejected are reported. Thus, a total of 6,250,000 comparisons are made.
-This is repeated for several values of <span class="math inline">\(\delta\)</span>.</p>
+<p>From these statistics, a p-Value is computed.</p>
 </div>
 <div class="tab-pane" id="software-details" role="tabpanel" aria-labelledby="software-details-tab">
 
@@ -331,8 +313,6 @@ is used by the <code>cmstatrExt</code> R package. This code is compiled
 to WebAssembly so that it can run inside a web browser without the user
 installing any special software. This software is licensed under the <a href="https://www.r-project.org/Licenses/AGPL-3" class="external-link">AGPL-3</a> license.
 Source code is available <a href="https://github.com/cmstatr/cmstatrExt" class="external-link">here</a>.</p>
-<p>Graphing is provided by the <a href="https://plotly.com/javascript/" class="external-link">Plotly JavaScript library</a>,
-which is licensed under the MIT license.</p>
 </div>
 </div>
 </div>

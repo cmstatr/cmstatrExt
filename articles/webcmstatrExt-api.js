@@ -27,6 +27,19 @@ const validateSignificance = (elm) => {
   return isValid ? fValue : "invalid";
 };
 
+const validatePositiveFloat = (elm) => {
+  let isValid = false;
+  const fValue = parseFloat(elm.value);
+  if(fValue <= 0) {
+    elm.setCustomValidity("Must be greater than zero");
+  } else {
+    elm.setCustomValidity("");
+    isValid = true;
+  }
+  elm.reportValidity();
+  return isValid ? fValue : "invalid";
+};
+
 
 const k_equiv_two_sample = (Module, n, m, alpha) => {
   const factor_offset = Module._malloc(8 * 2);

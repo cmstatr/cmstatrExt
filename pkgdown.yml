@@ -3,7 +3,9 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   compute-equiv-factors: compute-equiv-factors.html
-last_built: 2023-02-01T05:30Z
+  compute-p-value-equiv: compute-p-value-equiv.html
+  equivalency-p-values: equivalency-p-values.html
+last_built: 2023-03-27T03:23Z
 urls:
   reference: https://cmstatrExt.cmstatr.net/reference
   article: https://cmstatrExt.cmstatr.net/articles

@@ -7,6 +7,12 @@
     <loc>https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.html</loc>
   </url>
   <url>
+    <loc>https://cmstatrExt.cmstatr.net/articles/compute-p-value-equiv.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/articles/equivalency-p-values.html</loc>
+  </url>
+  <url>
     <loc>https://cmstatrExt.cmstatr.net/articles/index.html</loc>
   </url>
   <url>
@@ -23,6 +29,9 @@
   </url>
   <url>
     <loc>https://cmstatrExt.cmstatr.net/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/iso_equiv_two_sample.html</loc>
   </url>
   <url>
     <loc>https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.html</loc>
