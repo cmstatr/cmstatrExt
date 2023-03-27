@@ -55,7 +55,7 @@ As an example, we'll use the RTD warp tension strength from the
 follows:
 
 ```{r}
-dat <- carbon.fabric.2 %>% 
+dat <- carbon.fabric.2 %>%
   filter(condition == "RTD" & test == "WT")
 dat
 ```
@@ -64,7 +64,7 @@ From this sample, we can calculate the following summary statistics for the
 strength:
 
 ```{r}
-qual <- dat %>% 
+qual <- dat %>%
   summarise(n = n(), mean = mean(strength), sd = sd(strength))
 qual
 ```
@@ -164,7 +164,7 @@ We can plot this curve using `ggplot2`, which is part of the `tidyverse`
 package:
 
 ```{r}
-curve %>% 
+curve %>%
   ggplot(aes(x = t1, y = t2)) +
   geom_path() +
   ggtitle("Acceptance criteria for alpha=0.05")
@@ -180,7 +180,7 @@ function as well as the values of `t_1` and `t_2` from the sample that
 we discussed in the previous section.
 
 ```{r}
-curve %>% 
+curve %>%
   ggplot(aes(x = t1, y = t2)) +
   geom_path() +
   geom_hline(yintercept = k[2], color = "red") +
@@ -198,7 +198,7 @@ Or better yet, we can transform this back into engineering units:
 ```{r}
 curve %>%
   mutate(x_min = qual$mean - t1 * qual$sd,
-         x_mean = qual$mean - t2 * qual$sd) %>% 
+         x_mean = qual$mean - t2 * qual$sd) %>%
   ggplot(aes(x = x_min, y = x_mean)) +
   geom_path() +
   geom_hline(yintercept = acceptance_limits[2], color = "red") +
