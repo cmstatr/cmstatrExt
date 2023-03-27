@@ -1,3 +1,9 @@
+# Version 0.2.0
+- Created p-value calculator for website
+- Added `iso_equiv_two_sample` function
+- Created p-value vignette
+- Added more unit and integration tests
+
 # Version 0.1.0
 - Documentation improvements
 - Added equivalency/acceptance factor calculator to website

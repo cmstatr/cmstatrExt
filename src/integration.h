@@ -82,10 +82,11 @@ protected:
     0
   };
   
-  double total_error();
-  double total_area();
-  int max_abserr_segment();
-  static double rescale_error(double err, double result_abs, double result_asc);
+  double total_error() const;
+  double total_area() const;
+  int max_abserr_segment() const;
+  static double rescale_error(double err, double result_abs,
+                              double result_asc);
   static bool subdivision_too_small(double a1, double a2, double b2);
   static void integration_qk(const std::function<double(const double)>& f,
                              double a_seg, double b_seg, Segment *res);
@@ -93,10 +94,11 @@ protected:
   void oversample_quadrature(const std::function<double(const double)> &f);
   void qags(std::function<double(const double)> const& f, bool oversample);
   static void integration_qk_mult(const std::function<double(const double)>& g,
-                                  Segment *orig_seg, Segment *new_seg) ;
+                                  const Segment *orig_seg, Segment *new_seg);
   void qags_mult(const std::function<double(const double)>& f,
                  const std::function<double(const double)>& g,
-                 const double a, const double b, IntegrationBase *f_result);
+                 const double a, const double b,
+                 const IntegrationBase *f_result);
 };
 
 class Integration : public IntegrationBase {
@@ -122,21 +124,22 @@ class IntegrationMult : public IntegrationBase {
 public:
   IntegrationMult(const std::function<double(const double)>& f,
                   const std::function<double(const double)>& g,
-                  Integration *f_result, double a, double b);
+                  const Integration *f_result, const double a, const double b);
 };
 
 class IntegrationMultOneInf : public IntegrationBase {
 public:
   IntegrationMultOneInf(const std::function<double(const double)>& f,
                         const std::function<double(const double)>& g,
-                        IntegrationBase *f_result, int inf_side, double c);
+                        const IntegrationBase *f_result, const int inf_side,
+                        const double c);
 };
 
 class IntegrationMultDblInf : public IntegrationBase {
 public:
   IntegrationMultDblInf(const std::function<double(const double)>& f,
                         const std::function<double(const double)>& g,
-                        IntegrationBase *f_result);
+                        const IntegrationBase *f_result);
 };
 
 #endif //C_CODE_INTEGRATION_H

@@ -1,5 +1,5 @@
 ---
-title: "Equivalency Factor Calculator"
+title: "Equivalency p-Value Calculator"
 resource_files:
 - webcmstatrExt.js
 - webcmstatrExt.wasm
@@ -13,9 +13,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-This page provides an online calculator to determine two-sample equivalency
-factors. This calculator gives the factors $k_1$ and $k_2$ as well as
-determining the power of the test for detecting reduction in mean.
+This page provides an online calculator to a p-value for two-sample equivalency.
+Based on the qualification sample statistics and the equivalency sample
+statistics, this calculator computes the p-value.
 The basis of this method is the following paper. More details are given
 at the bottom of this page.
 
@@ -67,18 +67,29 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
 </style>
 <script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script>
 
+<label for="double-qual-mean">Qualification Sample Mean ($\bar{x}_{qual}$):</label>
+<input type="number" id="double-qual-mean" min="0.001" value="100" step="0.001" required 
+  onchange="this.value = Math.max(0.001, parseFloat(this.value));" /><br />
+  
+<label for="double-qual-sd">Qualification Sample Standard Deviation ($s_{qual}$):</label>
+<input type="number" id="double-qual-sd" min="0.001" value="6" step="0.001" required 
+  onchange="this.value = Math.max(0.001, parseFloat(this.value));" /><br />
+
 <label for="int-n">Qualification Sample Size ($n$):</label>
 <input type="number" id="int-n" min="3" value="18" step="1" required 
   onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
 
+<label for="double-equiv-min">Equivalency Sample Minimum ($x_{min\,equiv}$):</label>
+<input type="number" id="double-equiv-min" min="0.001" value="81.4" step="0.001" required 
+  onchange="this.value = Math.max(0.001, parseFloat(this.value));" /><br />
+  
+<label for="double-equiv-mean">Equivalency Sample Mean ($\bar{x}_{equiv}$):</label>
+<input type="number" id="double-equiv-mean" min="0.001" value="94.82" step="0.001" required 
+  onchange="this.value = Math.max(0.001, parseFloat(this.value));" /><br />
+
 <label for="int-m">Equivalency Sample Size ($m$):</label>
 <input type="number" id="int-m" min="3" value="8" step="1" required
   onchange="this.value = Math.max(3, parseInt(this.value));" /><br />
-
-<label for="double-alpha">Significance ($\alpha$):</label>
-<input type="number" id="double-alpha"
-  value="0.05" step="0.01" required
-  onchange="this.value = Math.max(0.0001, Math.min(0.5, parseFloat(this.value)));" /><br />
 
 <figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
 <div class="emscripten" id="status">Downloading...</div>
@@ -135,78 +146,64 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
 <script src=webcmstatrExt.js async></script>
 <script src="webcmstatrExt-api.js"></script>
 
-<button id="compute-factors">Compute Factors</button><br />
+<button id="compute-p-value">Compute p-Value</button><br />
 
-### Factors
+### p-Value
 
-<textarea id="output" readonly style="width: 400px; height: 100px;"></textarea>
+<textarea id="output" readonly style="width: 400px; height: 150px;"></textarea>
 <br />
 
-### Power for Reduction in Mean
-
-<label for="keep-power">Keep Power Curves</label>
-<input type="checkbox" id="keep-power" checked="true" />
-<br />
-<div id="power-plot" style="width:600px;height:300px;"></div>
 
 <script type='text/javascript'>
+  document.getElementById("double-qual-mean").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
+  document.getElementById("double-qual-sd").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
   document.getElementById("int-n").addEventListener("input",
     (e) => validateSampleSize(e.target));
+  document.getElementById("double-equiv-min").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
+  document.getElementById("double-equiv-mean").addEventListener("input",
+    (e) => validatePositiveFloat(e.target));
   document.getElementById("int-m").addEventListener("input",
     (e) => validateSampleSize(e.target));
-  document.getElementById("double-alpha").addEventListener("input",
-    (e) => validateSignificance(e.target));
 
   let power_curves = [];
   
-  document.getElementById("compute-factors").addEventListener("click", async () => {
+  document.getElementById("compute-p-value").addEventListener("click", async () => {
     let k1 = 0.;
     let k2 = 0.;
     const outArea = document.getElementById("output");
+    const fQualMean = validatePositiveFloat(document.getElementById("double-qual-mean"));
+    const fQualSD = validatePositiveFloat(document.getElementById("double-qual-sd"));
     const iN = validateSampleSize(document.getElementById("int-n"));
+    const fEquivMin = validatePositiveFloat(document.getElementById("double-equiv-min"));
+    const fEquivMean = validatePositiveFloat(document.getElementById("double-equiv-mean"));
     const iM = validateSampleSize(document.getElementById("int-m"));
-    const fA = validateSignificance(document.getElementById("double-alpha"));
 
     outArea.value = "";
-    if(iN === "invalid" || iM === "invalid" || fA === "invalid") {
+    if(fQualMean === "invalid" || fQualSD === "invalid" ||
+        iN === "invalid" ||
+        fEquivMin === "invalid" || fEquivMean === "invalid" ||
+        iM === "invalid") {
       console.log("Invalid input");
+      outArea.value = "Invalid input";
       return;
     }
 
-    Module.setStatus("Calculating factors... (1/2)");
+    Module.setStatus("Calculating p-value... (1/2)");
 
     // run the rest asyncronously
     setTimeout(function () {
-      const factor_result = k_equiv_two_sample(Module, iN, iM, fA);
-      k1 = factor_result.k1;
-      k2 = factor_result.k2;
+      const t1 = (fQualMean - fEquivMin) / fQualSD;
+      const t2 = (fQualMean - fEquivMean) / fQualSD;
+      const p_value = p_equiv_two_sample(Module, iN, iM, t1, t2);
 
       outArea.value =
-        `Factors for: alpha = ${fA}, n = ${iN}, m = ${iM}\nk1 = ${k1.toFixed(4)}\nk2 = ${k2.toFixed(4)}`;
-
-      const power_result = power_mean(Module, iN, iM, k1, k2);
-
-      var trace1 = {
-        x: power_result.power_x,
-        y: power_result.power_y,
-        type: 'lines+markers',
-        name: `n=${iN}, m=${iM}, alpha=${fA}`
-      };
-      
-      const keep_power_elm = document.getElementById("keep-power");
-      if(keep_power_elm.checked !== true) {
-        power_curves = [];
-      }
-      power_curves.push(trace1);
-      var layout = {
-        xaxis: {
-          title: 'Reduction in Mean (x SD)'
-        },
-        yaxis: {
-          title: 'Rejection Rate'
-        }
-      };
-      Plotly.newPlot('power-plot', power_curves, layout);
+`Qualification Sample: mean = ${fQualMean}, SD = ${fQualSD}, n = ${iN}\n` +
+`Equivalency Sample: min = ${fEquivMin}, mean = ${fEquivMean}\n` +
+`t1 = ${t1.toFixed(4)}, t2 = ${t2.toFixed(4)}\n` +
+`p-value = ${p_value.toFixed(4)}`;
 
       Module.setStatus("");
     },
@@ -217,25 +214,17 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
 
 ## Details {.tabset}
 ### Method Details
-Based on a user selected qualification sample size ($n$), equivalency
-sample size ($m$) and significance level ($\alpha$), the factors
-$k_1$ and $k_2$ are calculated. Equivalency limits are set as:
+Based on a user selected qualification sample statistics
+($\bar{x}_{qual}$, $s_{qual}$, and $n$), equivalency
+sample statistics ($x_{min\,equiv}$, $\bar{x}_{equiv}$, and $m$),
+the following two statistics are computed:
 
 $$
-W_{min\,indiv} = \bar{x} - k_1 \cdot s \\
-W_{avg} = \bar{x} - k_2 \cdot s
+t_1 = \frac{\bar{x}_{qual} - x_{min\,equiv}}{s_{qual}} \\
+t_2 = \frac{\bar{x}_{qual} - \bar{x}_{equiv}}{s_{qual}}
 $$
 
-The power of this equivalency criteria is investigated through simulation.
-In this simulation, 2500 qualification samples are drawn from a standard
-normal distribution ($N(\mu, \sigma)$) and equivalency limits are computed
-based on each qualification sample.
-Next 2500 equivalency samples are drawn from a
-$N(\mu-\delta\sigma, \sigma)$ distribution.
-Each of the equivalency samples are compared against each of the equivalency
-limits and the proportion of equivalency samples rejected are reported.
-Thus, a total of 6,250,000 comparisons are made. This is repeated for several
-values of $\delta$. 
+From these statistics, a p-Value is computed.
 
 ### Software Details
 The functionality of this page is provided by the same C++ code that is used
@@ -244,8 +233,3 @@ it can run inside a web browser without the user installing any special
 software. This software is licensed under the
 [AGPL-3](https://www.r-project.org/Licenses/AGPL-3) license.
 Source code is available [here](https://github.com/cmstatr/cmstatrExt).
-
-Graphing is provided by the
-[Plotly JavaScript library](https://plotly.com/javascript/), which is
-licensed under the MIT license.
-

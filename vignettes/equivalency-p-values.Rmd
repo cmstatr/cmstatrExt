@@ -1,0 +1,213 @@
+---
+title: "p-Values for Equivalency"
+author: "Stefan Kloppenborg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{p-Values for Equivalency}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+The dual acceptance criteria used for composite materials accept or reject
+a new lot of material (or a process change) based on the sample minimum and
+sample mean from the new lot of material. Acceptance limits are normally
+set such that under the null hypothesis, there is an equal probability
+of rejecting the lot due to the minimum and rejecting the lot due to the
+mean. These acceptance limits are set so that the probability of rejecting the
+lot (due to *either* the minimum or mean) under the null hypothesis is
+$\alpha$. If we eliminate the constraint that there is an equal probability
+of rejecting a lot due to the minimum or the mean, there is not longer
+unique values for the acceptance limits: instead, we can calculate a p-value
+from the sample minimum and the sample mean and compare this p-value with
+the selected value of $\alpha$.
+
+The `cmstatrExt` package provides functions for computing acceptance limits,
+p-values and curves indicating all values of the minimum and mean that
+result in the same p-value. This vignette demonstrates this functionality.
+The "two-sample" method in which only the sample statistics for the
+qualification data are known.
+
+In this vignette, we'll use the `cmstatrExt` package. We'll also use the
+`tidyverse` package for data manipulation and graphing. Finally, we'll use
+one of the example data sets from the `cmstatr` package.
+
+```{r message=FALSE, warning=FALSE}
+library(cmstatrExt)
+library(tidyverse)
+library(cmstatr)
+```
+
+
+# Example Data
+
+As an example, we'll use the RTD warp tension strength from the
+`carbon.fabric.2` example data set from the `cmstatr` package. This data is as
+follows:
+
+```{r}
+dat <- carbon.fabric.2 %>%
+  filter(condition == "RTD" & test == "WT")
+dat
+```
+
+From this sample, we can calculate the following summary statistics for the
+strength:
+
+```{r}
+qual <- dat %>%
+  summarise(n = n(), mean = mean(strength), sd = sd(strength))
+qual
+```
+
+
+# Acceptance Limits
+
+We can calculate the acceptance factors acceptance sample size of 8 and
+$alpha=0.05$ using the `cmstatrExt` package as follows:
+
+```{r}
+k <- k_equiv_two_sample(0.05, qual$n, 8)
+k
+```
+
+These factors can be transformed into limits using the following
+equations:
+
+$$
+W_{indiv} = \bar{x}_{qual} - k_1 s_{qual} \\
+W_{mean} = \bar{x}_{qual} - k_2 s_{qual}
+$$
+
+Implementing this in R:
+
+```{r}
+acceptance_limits <- qual$mean - k * qual$sd
+acceptance_limits
+```
+
+So, if an acceptance sample has a minimum individual less than
+`r format(acceptance_limits[1], digits = 4)`
+or a mean less than `r format(acceptance_limits[2], digits = 4)`, we would
+reject it.
+
+# p-Value
+You might ask what happens if there's one low value in the acceptance sample
+that's below the acceptance limit for minimum individual, but the mean
+is well above the limit. The naive response would be to reject the sample.
+But, the acceptance limits that we just calculated are based on setting an equal
+probability of rejecting a sample based on the minimum and the mean under
+the null hypothesis --- there are other pairs of minimum and mean values
+that have the same p-value as the acceptance limits that we calculated.
+
+In order to use the p-value function from the `cmstatrExt` package,
+we need to apply the following transformation:
+
+$$
+t_1 = \frac{\bar{x}_{qual} - x_{acceptance\,(1)}}{s_{qual}} \\
+t_2 = \frac{\bar{x}_{qual} - \bar{x}_{acceptance}}{s_{qual}}
+$$
+
+As a demonstration, let's first calculate the p-value of the acceptance limits.
+We should get $p=\alpha$.
+
+```{r}
+p_equiv_two_sample(
+  n = qual$n,
+  m = 8,
+  t1 = (qual$mean - acceptance_limits[1]) / qual$sd,
+  t2 = (qual$mean - acceptance_limits[2]) / qual$sd
+)
+```
+
+This value is very close to $\alpha=0.05$ --- within expected
+numeric precision.
+
+Now, let's consider the case where the sample minimum is 116 and the mean is
+138. The sample minimum is below the acceptance limit (116 < 120), but the
+sample mean is well above the acceptance limit (138 > 134). Let's calculate
+the p-value for this case:
+
+```{r}
+p_equiv_two_sample(
+  n = qual$n,
+  m = 8,
+  t1 = (qual$mean - 116) / qual$sd,
+  t2 = (qual$mean - 138) / qual$sd
+)
+```
+
+Since this value is well above the selected value of $\alpha=0.05$, we would
+accept this sample. This sort of analysis can be useful during site- or
+process-equivalency programs, or for MRB activities.
+
+# Curves of Constant p-Values
+The `cmstatrExt` package provides a function that produces a `data.frame`
+containing values of $t_1$ and $t_2$ that result in the same p-value.
+We can create such a `data.frame` for p-values of 0.05 as follows:
+
+```{r}
+curve <- iso_equiv_two_sample(qual$n, 8, 0.05, 4, 1.5, 10)
+curve
+```
+
+We can plot this curve using `ggplot2`, which is part of the `tidyverse`
+package:
+
+```{r}
+curve %>%
+  ggplot(aes(x = t1, y = t2)) +
+  geom_path() +
+  ggtitle("Acceptance criteria for alpha=0.05")
+```
+
+When you plot this, make sure to use `geom_path` and not `geom_line`.
+The former will plot the points in the order given; the latter
+will plot the points in ascending order of the `x` variable, which
+can cause problems in the vertical portion of the graph.
+
+Let's overlay the acceptance limits calculated by the `k_equiv_two_sample`
+function as well as the values of `t_1` and `t_2` from the sample that
+we discussed in the previous section.
+
+```{r}
+curve %>%
+  ggplot(aes(x = t1, y = t2)) +
+  geom_path() +
+  geom_hline(yintercept = k[2], color = "red") +
+  geom_vline(xintercept = k[1], color = "red") +
+  geom_point(data = data.frame(
+    t1 = (qual$mean - 116) / qual$sd,
+    t2 = (qual$mean - 138) / qual$sd
+  ),
+  shape = "*", size = 5) +
+  ggtitle("Acceptance criteria for alpha=0.05")
+```
+
+Or better yet, we can transform this back into engineering units:
+
+```{r}
+curve %>%
+  mutate(x_min = qual$mean - t1 * qual$sd,
+         x_mean = qual$mean - t2 * qual$sd) %>%
+  ggplot(aes(x = x_min, y = x_mean)) +
+  geom_path() +
+  geom_hline(yintercept = acceptance_limits[2], color = "red") +
+  geom_vline(xintercept = acceptance_limits[1], color = "red") +
+  geom_point(data = data.frame(
+    x_min = 116,
+    x_mean = 138
+  ),
+  shape = "*", size = 5) +
+  ggtitle("Acceptance criteria for alpha=0.05")
+```
+

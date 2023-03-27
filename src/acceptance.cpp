@@ -25,11 +25,11 @@ AcceptanceBase::AcceptanceBase(const double m) :
   a_int.init([this](const double t) { return a_fcn(t); }, true);
 }
 
-double AcceptanceBase::h(const double t) {
+double AcceptanceBase::h(const double t) const {
   return exp(DNORM(t, true) - PNORM(t, false, true));
 }
 
-double AcceptanceBase::a_fcn(const double t) {
+double AcceptanceBase::a_fcn(const double t) const {
   const double hmt = t > 60. ? pow(t, -1.) : h(t) - t;
   return exp(
     - (m - 1.) * (DNORM(t, true) - PNORM(t, false, true)) +
@@ -40,7 +40,7 @@ double AcceptanceBase::a_fcn(const double t) {
 
 
 double AcceptanceBase::calc_lambda(const double t1,
-                                   const double t2, const double x0) {
+                                   const double t2, const double x0) const {
   const auto f = [this, t1, t2](const double lam) {
     return (m - 1.) / m * (h(lam) - lam) - t2 + t1;
   };
@@ -70,7 +70,8 @@ double AcceptanceBase::calc_lambda(const double t1,
   return result;
 }
 
-double AcceptanceBase::calc_f_joint_vangel(const double t1, const double t2) {
+double AcceptanceBase::calc_f_joint_vangel(const double t1,
+                                           const double t2) const {
   const auto a_m = [this](const double t) { return a_fcn(t); };
   const auto f1 = [this, t2](const double t) {
     return 1.;
@@ -93,11 +94,11 @@ double AcceptanceBase::calc_f_joint_vangel(const double t1, const double t2) {
     a_int.result;
 }
 
-double AcceptanceVangel::calc_f_min(const double t1) {
+double AcceptanceVangel::calc_f_min(const double t1) const {
   return 1. - pow(PNORM(t1, false, false), m);
 }
 
-double AcceptanceVangel::calc_f_mean(const double t2) {
+double AcceptanceVangel::calc_f_mean(const double t2) const {
   return PNORM(sqrt(m) * t2, true, false);
 }
 
@@ -125,7 +126,7 @@ void AcceptanceVangel::calculate_factors(const double alpha) {
   k2 = calc_t2(k1);
 }
 
-double AcceptanceVangel::calc_p_value(const double r1, const double r2) {
+double AcceptanceVangel::calc_p_value(const double r1, const double r2) const {
   const double fx1 = calc_f_min(-r1);
   const double fxbar = calc_f_mean(-r2);
   const double fjoint = calc_f_joint_vangel(-r1, -r2);
@@ -206,7 +207,8 @@ void AcceptanceTwoSample::calculate_factors(const double alpha) {
   k2 = calc_r2(cpi_val);
 }
 
-double AcceptanceTwoSample::calc_p_value(const double r1, const double r2) {
+double AcceptanceTwoSample::calc_p_value(const double r1,
+                                         const double r2) const {
   const double cpi_val = cpi(r1);
   const double cpm_val = R::pt(
     r2 / sqrt(1. / this->n + 1. / this->m),
@@ -218,7 +220,7 @@ double AcceptanceTwoSample::calc_p_value(const double r1, const double r2) {
   return cpi_val + cpm_val - cpjoint;
 }
 
-double AcceptanceTwoSample::dfw(const double w) {
+double AcceptanceTwoSample::dfw(const double w) const {
   const double k = n - 1;
   
   return exp(
@@ -229,12 +231,12 @@ double AcceptanceTwoSample::dfw(const double w) {
   );
 }
 
-double AcceptanceTwoSample::dfv(const double v) {
+double AcceptanceTwoSample::dfv(const double v) const {
   const double sqn = sqrt(n);
   return DNORM(v * sqn, false) * sqn;
 }
 
-double AcceptanceTwoSample::cpi(const double r1) {
+double AcceptanceTwoSample::cpi(const double r1) const {
   IntegrationMultDblInf outer_int = IntegrationMultDblInf(
     [this](const double v) { return dfv(v); },
     [r1, this](const double v) {
@@ -258,13 +260,23 @@ double AcceptanceTwoSample::cpi(const double r1) {
   return outer_int.result;
 }
 
-double AcceptanceTwoSample::calc_r2(const double cpi_val) {
-  const double result = R::qt(cpi_val, n - 1., false, false)
+double AcceptanceTwoSample::calc_r1(const double cpi_val) const {
+  const auto f = [this, cpi_val](const double r1) {
+    return cpi(r1) - cpi_val;
+  };
+  double k1;
+  bisection(f, 2, 5, &k1, 500);
+  return k1;
+}
+
+double AcceptanceTwoSample::calc_r2(const double cpm_val) const {
+  const double result = R::qt(cpm_val, n - 1., false, false)
     * sqrt(1. / m + 1. / n);
   return result;
 }
 
-double AcceptanceTwoSample::calc_f_joint(const double r1, const double r2) {
+double AcceptanceTwoSample::calc_f_joint(const double r1,
+                                         const double r2) const {
   IntegrationMultDblInf outer_int = IntegrationMultDblInf(
     [this](const double v) { return dfv(v); },
     [r1, r2, this](const double v) {
@@ -314,10 +326,12 @@ context("AcceptanceSample") {
   test_that("cpi, n=18, m=5") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
     expect_almost_eq(an.cpi(2.605), 0.05008773, 1e-6);
+    expect_almost_eq(an.calc_r1(0.05), 2.605, 2e-3);
   }
   test_that("cpi, n=5, m=18") {
     AcceptanceTwoSample an = AcceptanceTwoSample(5, 18);
     expect_almost_eq(an.cpi(2.605), 0.2946645, 1e-6);
+    expect_almost_eq(an.calc_r1(0.2946645), 2.605, 1e-3);
   }
   test_that("factors match prototype R code") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
@@ -327,7 +341,15 @@ context("AcceptanceSample") {
   }
   test_that("p-value matches prototype R code") {
     AcceptanceTwoSample an = AcceptanceTwoSample(18, 5);
-    const double p = an.calc_p_value(2.867903, 1.019985);
+    double p = an.calc_p_value(2.867903, 1.019985);
     expect_almost_eq(p, 0.05, 1e-6);
+    
+    // Make sure that perturbations cause the p value to change in the
+    // correct direction
+    p = an.calc_p_value(2.867903 + 0.001, 1.019985);
+    expect_true(p < 0.05);
+    
+    p = an.calc_p_value(2.867903, 1.019985 + 0.001);
+    expect_true(p < 0.05);
   }
 }
