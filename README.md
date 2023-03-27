@@ -1,7 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `cmstatrExt`
+# `cmstatrExt` <img src="man/figures/logo.png" align="right" alt="" width="120" />
+
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/cmstatr/cmstatrExt/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatrExt/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 `cmstatrExt` provides statistical methods intended for composite
 material data that are not included in CMH-17-1G.
