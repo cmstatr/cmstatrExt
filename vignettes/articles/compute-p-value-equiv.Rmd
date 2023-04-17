@@ -22,6 +22,9 @@ at the bottom of this page.
 S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with finite qualification samples," Journal of Quality Technology, 2023.
 [DOI: 10.1080/00224065.2022.2147884](https://doi.org/10.1080/00224065.2022.2147884)
 
+*This calculator is provided as-is without any warranty. Users are advised
+to review the code to verify correctness.*
+
 ## Calculator
 ### Input
 <style>
