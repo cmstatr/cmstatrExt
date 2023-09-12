@@ -13,3 +13,4 @@
 ^src/wasm/*
 ^vignettes/articles$
 ^logo.svg$
+^data-raw$
