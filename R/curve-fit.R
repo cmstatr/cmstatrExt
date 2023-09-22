@@ -82,6 +82,29 @@ average_curve <- function(data, coupon_var, model, n_bins = 100) {
   y_var <- as.name(all.vars(f_lhs(model)))
   x_var <- as.name(all.vars(f_rhs(model)))
 
+  binned_dat <- average_curve_bin_data(data, {{ coupon_var }},
+                                       {{ x_var }}, {{ y_var }}, n_bins)
+
+  fit <- lm(model, data = binned_dat$binned_dat)
+  fit$call <- match.call()
+
+  res <- list(
+    data = data,
+    binned_data = binned_dat$binned_dat,
+    fit_lm = fit,
+    n_bins = n_bins,
+    max_x = binned_dat$max_x,
+    y_var = y_var,
+    x_var = x_var
+  )
+  class(res) <- "average_curve"
+  res
+}
+
+#' @importFrom dplyr mutate if_else summarise ungroup group_by select n filter
+#' @importFrom dplyr n_groups
+#' @importFrom rlang `:=` f_lhs f_rhs warn .data
+average_curve_bin_data <- function(data, coupon_var, x_var, y_var, n_bins) {
   max_x <- group_by(data, {{coupon_var}})
   max_x <- summarise(max_x, "maxx" = max({{x_var}}), "minx" = min({{x_var}}))
   max_x <- select(max_x, c({{coupon_var}}, "maxx", "minx"))
@@ -121,21 +144,12 @@ average_curve <- function(data, coupon_var, model, n_bins = 100) {
   }
   binned_dat <- select(binned_dat, -c(".bin", ".n"))
 
-  fit <- lm(model, data = binned_dat)
-  fit$call <- match.call()
-
-  res <- list(
-    data = data,
-    binned_data = binned_dat,
-    fit_lm = fit,
-    n_bins = n_bins,
-    max_x = max_x,
-    y_var = y_var,
-    x_var = x_var
+  list(
+    binned_dat = binned_dat,
+    max_x = max_x
   )
-  class(res) <- "average_curve"
-  res
 }
+
 
 #' Print an `average_curve` object
 #'

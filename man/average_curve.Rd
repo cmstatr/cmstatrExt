@@ -53,7 +53,7 @@ if you want to include a quadratic term, you need to write \code{I(X^2)}
 (replacing \code{X} with the appropriate variable from your \code{data.frame}).
 }
 \examples{
-# using the `pa12_tension` dataset and fitting a cubic polynomial with 
+# using the `pa12_tension` dataset and fitting a cubic polynomial with
 # zero intercept:
 curve_fit <- average_curve(
   pa12_tension,
