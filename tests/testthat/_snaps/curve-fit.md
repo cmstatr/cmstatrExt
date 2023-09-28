@@ -1,4 +1,4 @@
-# average_curve produces expected output
+# average_curve_lm produces expected output
 
     Code
       print(res)
@@ -7,7 +7,7 @@
       Range: ` Strain ` in  [ 0,  0.1409409 ]
       
       Call:
-      average_curve(data = ., coupon_var = Sample, model = Stress ~ 
+      average_curve_lm(data = ., coupon_var = Sample, model = Stress ~ 
           I(Strain) + I(Strain^2) + I(Strain^3) + 0, n_bins = 100)
       
       Coefficients:
@@ -25,7 +25,7 @@
       n_bins =  100 
       
       Call:
-      average_curve(data = ., coupon_var = Sample, model = Stress ~ 
+      average_curve_lm(data = ., coupon_var = Sample, model = Stress ~ 
           I(Strain) + I(Strain^2) + I(Strain^3) + 0, n_bins = 100)
       
       Residuals:
@@ -44,4 +44,22 @@
       Multiple R-squared:  0.9997,	Adjusted R-squared:  0.9997 
       F-statistic: 3.985e+05 on 3 and 397 DF,  p-value: < 2.2e-16
       
+
+# average_curve_optim produces expected output
+
+    Code
+      print(res_opt)
+    Output
+      
+      Range: ` Strain ` in  [ 0,  0.1409409 ]
+      
+      Call:
+      average_curve_optim(data = pa12_tension, coupon_var = Sample, 
+          x_var = Strain, y_var = Stress, fn = function(strain, par) {
+              sum(par * c(strain, strain^2, strain^3))
+          }, par = c(c1 = 1, c2 = 1, c3 = 1), n_bins = 100)
+      
+      Parameters:
+             c1        c2        c3 
+       1174.372 -8783.106 20585.898 
 
