@@ -253,3 +253,21 @@ curve_bilinear %>%
   geom_line(aes(y = .fit))
 ```
 
+## Plots for Publication
+
+The last part of this vignette will focus on creating plots for publication
+in reports. We'll use the cubic model from a previous section. ....
+
+```{r}
+curve_cubic %>%
+  augment() %>%
+  ggplot(aes(x = Strain)) +
+  geom_point(aes(y = Stress, color = Sample)) +
+  geom_line(aes(y = .fit)) +
+  scale_y_continuous(
+    "Stress [MPa]",
+    sec.axis = sec_axis(~ . * 0.1450377377, name = "Stress [ksi]")
+  )
+```
+
+
