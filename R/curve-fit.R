@@ -202,7 +202,7 @@ average_curve_optim <- function(data, coupon_var, x_var, y_var,
     sum((y_prime - y_vec) ^ 2)
   }
 
-  optim_res <- optim(par, fn_ss, method = "L-BFGS-B", ...)
+  optim_res <- optim(par, fn_ss, method = method, ...)
 
   if (optim_res$convergence != 0) {
     warn(paste0("`optim` failed to converge: ", optim_res$message))
