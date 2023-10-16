@@ -1,3 +1,6 @@
+# Version 0.2.1
+- Update to p-value vignette
+
 # Version 0.2.0
 - Created p-value calculator for website
 - Added `iso_equiv_two_sample` function

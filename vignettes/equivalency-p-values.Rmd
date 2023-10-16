@@ -37,6 +37,16 @@ result in the same p-value. This vignette demonstrates this functionality.
 The "two-sample" method in which only the sample statistics for the
 qualification data are known.
 
+**Caution:** If the true mean of the population from which the acceptance
+sample is drawn is higher than the population mean for the qualification
+distribution, then using the p-value method here may declare an acceptance
+sample as equivalent even if the standard deviation is larger.
+This is due to the fact that this statistical test is a one-sided test.
+Similarly, if the acceptance population has a much lower standard deviation
+than the qualification population, this test may allow for an undesirable
+decrease in mean. As such, considerable judgement is required when using
+this method.
+
 In this vignette, we'll use the `cmstatrExt` package. We'll also use the
 `tidyverse` package for data manipulation and graphing. Finally, we'll use
 one of the example data sets from the `cmstatr` package.
