@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">cmstatrExt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
                         <h4 data-toc-skip class="author">Stefan
 Kloppenborg</h4>
             
-            <h4 data-toc-skip class="date">2023-04-17</h4>
+            <h4 data-toc-skip class="date">2023-10-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatrExt/blob/HEAD/vignettes/equivalency-p-values.Rmd" class="external-link"><code>vignettes/equivalency-p-values.Rmd</code></a></small>
       <div class="d-none name"><code>equivalency-p-values.Rmd</code></div>
@@ -116,6 +116,15 @@ acceptance limits, p-values and curves indicating all values of the
 minimum and mean that result in the same p-value. This vignette
 demonstrates this functionality. The “two-sample” method in which only
 the sample statistics for the qualification data are known.</p>
+<p><strong>Caution:</strong> If the true mean of the population from
+which the acceptance sample is drawn is higher than the population mean
+for the qualification distribution, then using the p-value method here
+may declare an acceptance sample as equivalent even if the standard
+deviation is larger. This is due to the fact that this statistical test
+is a one-sided test. Similarly, if the acceptance population has a much
+lower standard deviation than the qualification population, this test
+may allow for an undesirable decrease in mean. As such, considerable
+judgement is required when using this method.</p>
 <p>In this vignette, we’ll use the <code>cmstatrExt</code> package.
 We’ll also use the <code>tidyverse</code> package for data manipulation
 and graphing. Finally, we’ll use one of the example data sets from the
