@@ -57,7 +57,7 @@ if you want to include a quadratic term, you need to write \code{I(X^2)}
 # zero intercept:
 curve_fit <- average_curve_lm(
   pa12_tension,
-  Sample,
+  Coupon,
   Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0,
   n_bins = 100
 )
@@ -65,7 +65,7 @@ print(curve_fit)
 ## Range: ` Strain ` in  [ 0,  0.1409409 ]
 ##
 ## Call:
-##   average_curve_lm(data = pa12_tension, coupon_var = Sample,
+##   average_curve_lm(data = pa12_tension, coupon_var = Coupon,
 ##                    model = Stress ~ I(Strain) + I(Strain^2) + I(Strain^3)
 ##                    + 0, n_bins = 100)
 ##

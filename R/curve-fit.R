@@ -46,7 +46,7 @@
 #' # zero intercept:
 #' curve_fit <- average_curve_lm(
 #'   pa12_tension,
-#'   Sample,
+#'   Coupon,
 #'   Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0,
 #'   n_bins = 100
 #' )
@@ -54,7 +54,7 @@
 #' ## Range: ` Strain ` in  [ 0,  0.1409409 ]
 #' ##
 #' ## Call:
-#' ##   average_curve_lm(data = pa12_tension, coupon_var = Sample,
+#' ##   average_curve_lm(data = pa12_tension, coupon_var = Coupon,
 #' ##                    model = Stress ~ I(Strain) + I(Strain^2) + I(Strain^3)
 #' ##                    + 0, n_bins = 100)
 #' ##
@@ -154,7 +154,7 @@ average_curve_lm <- function(data, coupon_var, model, n_bins = 100) {
 #' # zero intercept:
 #' curve_fit <- average_curve_optim(
 #'   pa12_tension,
-#'   Sample,
+#'   Coupon,
 #'   Strain,
 #'   Stress,
 #'   function(strain, par) {
@@ -166,7 +166,7 @@ average_curve_lm <- function(data, coupon_var, model, n_bins = 100) {
 #' ## Range: ` Strain ` in  [ 0,  0.1409409 ]
 #' ##
 #' ## Call:
-#' ## average_curve_optim(data = pa12_tension, coupon_var = Sample,
+#' ## average_curve_optim(data = pa12_tension, coupon_var = Coupon,
 #' ##                     x_var = Strain, y_var = Stress,
 #' ##                     fn = function(strain, par) {
 #' ##                       sum(par * c(strain, strain^2, strain^3))
@@ -349,24 +349,24 @@ summary.average_curve_lm <- function(object, ...) {
 #' @examples
 #' curve_fit <- average_curve_lm(
 #'   pa12_tension,
-#'   Sample,
+#'   Coupon,
 #'   Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0,
 #'   n_bins = 100
 #' )
 #' augment(curve_fit)
 #' ## # A tibble: 3,105 × 6
-#' ##    Sample     Strain  Stress  .fit .extrapolate .residual
+#' ##    Coupon     Strain  Stress  .fit .extrapolate .residual
 #' ##    <chr>       <dbl>   <dbl> <dbl> <lgl>            <dbl>
-#' ##  1 Sample 4 0        -0.353  0     FALSE          -0.353
-#' ##  2 Sample 4 0.000200 -0.0604 0.235 FALSE          -0.295
-#' ##  3 Sample 4 0.000400  0.283  0.469 FALSE          -0.185
-#' ##  4 Sample 4 0.000601  0.475  0.702 FALSE          -0.228
-#' ##  5 Sample 4 0.000801  0.737  0.935 FALSE          -0.198
-#' ##  6 Sample 4 0.00100   0.803  1.17  FALSE          -0.364
-#' ##  7 Sample 4 0.00120   1.25   1.40  FALSE          -0.151
-#' ##  8 Sample 4 0.00140   1.32   1.63  FALSE          -0.305
-#' ##  9 Sample 4 0.00160   1.53   1.86  FALSE          -0.325
-#' ## 10 Sample 4 0.00180   2.01   2.09  FALSE          -0.0735
+#' ##  1 Coupon 4 0        -0.353  0     FALSE          -0.353
+#' ##  2 Coupon 4 0.000200 -0.0604 0.235 FALSE          -0.295
+#' ##  3 Coupon 4 0.000400  0.283  0.469 FALSE          -0.185
+#' ##  4 Coupon 4 0.000601  0.475  0.702 FALSE          -0.228
+#' ##  5 Coupon 4 0.000801  0.737  0.935 FALSE          -0.198
+#' ##  6 Coupon 4 0.00100   0.803  1.17  FALSE          -0.364
+#' ##  7 Coupon 4 0.00120   1.25   1.40  FALSE          -0.151
+#' ##  8 Coupon 4 0.00140   1.32   1.63  FALSE          -0.305
+#' ##  9 Coupon 4 0.00160   1.53   1.86  FALSE          -0.325
+#' ## 10 Coupon 4 0.00180   2.01   2.09  FALSE          -0.0735
 #' ## # ℹ 3,095 more row
 #' ## # ℹ Use `print(n = ...)` to see more rows
 #'
@@ -417,7 +417,7 @@ augment.average_curve_lm <- function(x, newdata = NULL, extrapolate = FALSE,
 #' @examples
 #' curve_fit <- average_curve_optim(
 #'   pa12_tension,
-#'   Sample,
+#'   Coupon,
 #'   Strain,
 #'   Stress,
 #'   function(strain, par) {
@@ -428,18 +428,18 @@ augment.average_curve_lm <- function(x, newdata = NULL, extrapolate = FALSE,
 #' )
 #' augment(curve_fit)
 #' ## # A tibble: 3,105 × 6
-#' ## Sample     Strain  Stress  .fit .extrapolate .residual
+#' ## Coupon     Strain  Stress  .fit .extrapolate .residual
 #' ##    <chr>       <dbl>   <dbl> <dbl> <lgl>            <dbl>
-#' ##  1 Sample 4 0        -0.353  0     FALSE          -0.353
-#' ##  2 Sample 4 0.000200 -0.0604 0.235 FALSE          -0.295
-#' ##  3 Sample 4 0.000400  0.283  0.469 FALSE          -0.185
-#' ##  4 Sample 4 0.000601  0.475  0.702 FALSE          -0.228
-#' ##  5 Sample 4 0.000801  0.737  0.935 FALSE          -0.198
-#' ##  6 Sample 4 0.00100   0.803  1.17  FALSE          -0.364
-#' ##  7 Sample 4 0.00120   1.25   1.40  FALSE          -0.151
-#' ##  8 Sample 4 0.00140   1.32   1.63  FALSE          -0.305
-#' ##  9 Sample 4 0.00160   1.53   1.86  FALSE          -0.325
-#' ## 10 Sample 4 0.00180   2.01   2.09  FALSE          -0.0735
+#' ##  1 Coupon 4 0        -0.353  0     FALSE          -0.353
+#' ##  2 Coupon 4 0.000200 -0.0604 0.235 FALSE          -0.295
+#' ##  3 Coupon 4 0.000400  0.283  0.469 FALSE          -0.185
+#' ##  4 Coupon 4 0.000601  0.475  0.702 FALSE          -0.228
+#' ##  5 Coupon 4 0.000801  0.737  0.935 FALSE          -0.198
+#' ##  6 Coupon 4 0.00100   0.803  1.17  FALSE          -0.364
+#' ##  7 Coupon 4 0.00120   1.25   1.40  FALSE          -0.151
+#' ##  8 Coupon 4 0.00140   1.32   1.63  FALSE          -0.305
+#' ##  9 Coupon 4 0.00160   1.53   1.86  FALSE          -0.325
+#' ## 10 Coupon 4 0.00180   2.01   2.09  FALSE          -0.0735
 #' ## # ℹ 3,095 more rows
 #' ## # ℹ Use `print(n = ...)` to see more rows
 #'

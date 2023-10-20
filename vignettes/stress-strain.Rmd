@@ -58,7 +58,7 @@ Let's plot the `pa12_tension` example data.
 
 ```{r}
 pa12_tension %>%
-  ggplot(aes(x = Strain, y = Stress, color = Sample)) +
+  ggplot(aes(x = Strain, y = Stress, color = Coupon)) +
   geom_point()
 ```
 
@@ -98,7 +98,7 @@ Let's run this function and then execute the `summary` method on the result:
 
 ```{r}
 curve_quadratic <- average_curve_lm(
-  pa12_tension, Sample,
+  pa12_tension, Coupon,
   Stress ~ I(Strain) + I(Strain^2) + 0
 )
 summary(curve_quadratic)
@@ -119,7 +119,7 @@ pass the result to `ggplot`.
 curve_quadratic %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
-  geom_point(aes(y = Stress, color = Sample)) +
+  geom_point(aes(y = Stress, color = Coupon)) +
   geom_line(aes(y = .fit))
 ```
 
@@ -128,7 +128,7 @@ poor. We can do better. Let's try a cubic function next.
 
 ```{r}
 curve_cubic <- average_curve_lm(
-  pa12_tension, Sample,
+  pa12_tension, Coupon,
   Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0
 )
 summary(curve_cubic)
@@ -139,7 +139,7 @@ summary(curve_cubic)
 curve_cubic %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
-  geom_point(aes(y = Stress, color = Sample)) +
+  geom_point(aes(y = Stress, color = Coupon)) +
   geom_line(aes(y = .fit))
 ```
 
@@ -154,12 +154,12 @@ need to be the dependent variable. We could fit a model with these reversed.
 
 ```{r}
 average_curve_lm(
-  pa12_tension, Sample,
+  pa12_tension, Coupon,
   Strain ~ I(Stress) + I(Stress^2) + I(Stress^3) + I(Stress^4) + 0
 ) %>%
   augment() %>%
   ggplot(aes(y = Stress)) +
-  geom_point(aes(x = Strain, color = Sample)) +
+  geom_point(aes(x = Strain, color = Coupon)) +
   geom_line(aes(x = .fit))
 ```
 
@@ -220,7 +220,7 @@ We'll call this function:
 ```{r}
 curve_bilinear <- average_curve_optim(
   pa12_tension,
-  Sample, Strain, Stress,
+  Coupon, Strain, Stress,
   bilinear_fn,
   c(1, 1, 0.04) # the initial guess
 )
@@ -234,7 +234,7 @@ We can specify upper and lower bounds on the parameters as follows:
 ```{r}
 curve_bilinear <- average_curve_optim(
   pa12_tension,
-  Sample, Strain, Stress,
+  Coupon, Strain, Stress,
   bilinear_fn,
   c(1, 1, 0.04),
   lower = c(0, 0, 0.025),
@@ -249,7 +249,7 @@ We can now plot the curve fit over laid with the original data.
 curve_bilinear %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
-  geom_point(aes(y = Stress, color = Sample)) +
+  geom_point(aes(y = Stress, color = Coupon)) +
   geom_line(aes(y = .fit))
 ```
 
@@ -262,7 +262,7 @@ in reports. We'll use the cubic model from a previous section. ....
 curve_cubic %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
-  geom_point(aes(y = Stress, color = Sample)) +
+  geom_point(aes(y = Stress, color = Coupon)) +
   geom_line(aes(y = .fit)) +
   scale_y_continuous(
     "Stress [MPa]",

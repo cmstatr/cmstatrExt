@@ -3,7 +3,7 @@ suppressMessages(library(dplyr))
 test_that("average_curve_lm produces expected output", {
   res <- pa12_tension %>%
     average_curve_lm(
-      Sample,
+      Coupon,
       Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0,
       n_bins = 100
     )
@@ -56,7 +56,7 @@ test_that("average_curve_lm produces expected output", {
   )
 
   dat <- pa12_tension %>%
-    filter(`Sample` == "Sample 1")
+    filter(`Coupon` == "Coupon 1")
   augmented_dat <- augment(res, newdata = dat, extrapolate = TRUE)
   expect_equal(nrow(augmented_dat), nrow(dat))
   expect_length(augmented_dat, 6)  # original 3 columns and 3 more
@@ -98,35 +98,35 @@ test_that("average_curve_lm produces expected errors and warnings", {
   )
 
   expect_error(
-    average_curve_lm(pa12_tension, Sample, Strain ~ Strain),
+    average_curve_lm(pa12_tension, Coupon, Strain ~ Strain),
     "different variable"
   )
 
   expect_warning(
     pa12_tension %>%
       filter(Strain < 0.1 | Strain > 0.12) %>%
-      average_curve_lm(Sample, Stress ~ Strain),
+      average_curve_lm(Coupon, Stress ~ Strain),
     "empty"
   )
 
   expect_warning(
     pa12_tension %>%
-      filter(!(Sample == "Sample 1" & (Strain > 0.1 & Strain < 0.12))) %>%
-      average_curve_lm(Sample, Stress ~ Strain),
+      filter(!(Coupon == "Coupon 1" & (Strain > 0.1 & Strain < 0.12))) %>%
+      average_curve_lm(Coupon, Stress ~ Strain),
     "empty"
   )
 
   expect_error(
     pa12_tension %>%
       mutate(Strain = -Strain) %>%
-      average_curve_lm(Sample, Stress ~ Strain),
+      average_curve_lm(Coupon, Stress ~ Strain),
     "No positive"
   )
 
   expect_warning(
     pa12_tension %>%
       mutate(Strain = Strain - 0.001) %>%
-      average_curve_lm(Sample, Stress ~ Strain),
+      average_curve_lm(Coupon, Stress ~ Strain),
     "ignored"
   )
 })
@@ -134,7 +134,7 @@ test_that("average_curve_lm produces expected errors and warnings", {
 test_that("average_curve_optim produces expected output", {
   res_opt <- average_curve_optim(
     pa12_tension,
-    Sample,
+    Coupon,
     Strain,
     Stress,
     function(strain, par) {
@@ -155,7 +155,7 @@ test_that("average_curve_optim produces expected output", {
 test_that("average_curve_optim and average_curve_lm produce similar results", {
   res_opt <- average_curve_optim(
     pa12_tension,
-    Sample,
+    Coupon,
     Strain,
     Stress,
     function(strain, par) {
@@ -167,7 +167,7 @@ test_that("average_curve_optim and average_curve_lm produce similar results", {
 
   res_lm <- average_curve_lm(
     pa12_tension,
-    Sample,
+    Coupon,
     Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0,
     n_bins = 100
   )

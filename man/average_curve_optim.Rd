@@ -78,7 +78,7 @@ for an example.
 # zero intercept:
 curve_fit <- average_curve_optim(
   pa12_tension,
-  Sample,
+  Coupon,
   Strain,
   Stress,
   function(strain, par) {
@@ -90,7 +90,7 @@ curve_fit <- average_curve_optim(
 ## Range: ` Strain ` in  [ 0,  0.1409409 ]
 ##
 ## Call:
-## average_curve_optim(data = pa12_tension, coupon_var = Sample,
+## average_curve_optim(data = pa12_tension, coupon_var = Coupon,
 ##                     x_var = Strain, y_var = Stress,
 ##                     fn = function(strain, par) {
 ##                       sum(par * c(strain, strain^2, strain^3))
