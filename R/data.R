@@ -11,7 +11,7 @@
 #' @format ## `pa12_tension`
 #' A data frame with 3,212 rows and 3 columns:
 #' \describe{
-#'   \item{Sample}{the coupon}
+#'   \item{Coupon}{the coupon ID}
 #'   \item{Strain}{the strain measurement `[mm/mm]`}
 #'   \item{Stress}{the stress measurement `[MPa]`}
 #' }
@@ -20,3 +20,22 @@
 #'         structure. Smart Materials and Structures. 28.
 #'         10.1088/1361-665X/ab0dd6.
 "pa12_tension"
+
+#' Example shear stress-shear strain data
+#'
+#' Example shear stress-strain data. This data was collected using a novel
+#' shear test method. Coupons were made using a thermoset via
+#' Fused Filament Fabrication (FFF).
+#' This data requires some clean-up, including removal of the "toe", offsetting
+#' the strain, and removal of the post-failure data points. These procedures
+#' are demonstrated in the `stress-strain` vignette. See:
+#' \code{vignette("stress-strain", package = "cmstatrExt")}
+#'
+#' @format ## `fff_shear`
+#' A data frame with 2,316 rows and 3 columns:
+#' \describe{
+#'   \item{Coupon}{the coupon ID}
+#'   \item{Stress}{the shear stress measurement `[psi]`}
+#'   \item{Strain}{the shear strain measurement `[in/in]`}
+#' }
+"fff_shear"

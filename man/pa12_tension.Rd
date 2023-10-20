@@ -9,7 +9,7 @@
 
 A data frame with 3,212 rows and 3 columns:
 \describe{
-\item{Sample}{the coupon}
+\item{Coupon}{the coupon ID}
 \item{Strain}{the strain measurement \verb{[mm/mm]}}
 \item{Stress}{the stress measurement \verb{[MPa]}}
 }
