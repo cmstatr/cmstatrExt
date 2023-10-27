@@ -5,7 +5,8 @@ articles:
   compute-equiv-factors: compute-equiv-factors.html
   compute-p-value-equiv: compute-p-value-equiv.html
   equivalency-p-values: equivalency-p-values.html
-last_built: 2023-10-16T02:36Z
+  stress-strain: stress-strain.html
+last_built: 2023-10-27T03:45Z
 urls:
   reference: https://cmstatrExt.cmstatr.net/reference
   article: https://cmstatrExt.cmstatr.net/articles

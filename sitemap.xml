@@ -16,6 +16,9 @@
     <loc>https://cmstatrExt.cmstatr.net/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://cmstatrExt.cmstatr.net/articles/stress-strain.html</loc>
+  </url>
+  <url>
     <loc>https://cmstatrExt.cmstatr.net/authors.html</loc>
   </url>
   <url>
@@ -25,7 +28,22 @@
     <loc>https://cmstatrExt.cmstatr.net/news/index.html</loc>
   </url>
   <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/augment.average_curve_lm.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/augment.average_curve_optim.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/average_curve_lm.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/average_curve_optim.html</loc>
+  </url>
+  <url>
     <loc>https://cmstatrExt.cmstatr.net/reference/cmstatrExt-package.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/fff_shear.html</loc>
   </url>
   <url>
     <loc>https://cmstatrExt.cmstatr.net/reference/index.html</loc>
@@ -43,6 +61,21 @@
     <loc>https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.html</loc>
   </url>
   <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/pa12_tension.html</loc>
+  </url>
+  <url>
     <loc>https://cmstatrExt.cmstatr.net/reference/power_sim_dual.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/print.average_curve_lm.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/print.average_curve_optim.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>https://cmstatrExt.cmstatr.net/reference/summary.average_curve_lm.html</loc>
   </url>
 </urlset>
