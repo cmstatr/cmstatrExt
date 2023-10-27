@@ -1,3 +1,9 @@
+# Version 0.3.0
+- Added functions for creating average stress-strain curves
+  (`average_curve_lm` and `average_curve_optim`)
+- Added example stress-strain data (`pa12_tension` and `fff_shear`)
+- Added vignette with examples of fitting average curves to stress-strain data
+
 # Version 0.2.1
 - Update to p-value vignette
 
