@@ -23,9 +23,9 @@
 #'                    distribution function. The simulation is repeated with
 #'                    the parameters specified in each row of the data.frame.
 #' @param k1 a factor for determining the acceptance criterion for sample
-#'           minimum, which is calculated as mean_{qual} - k1 * sd_{qual}
+#'           minimum, which is calculated as `mean_qual - k1 * sd_qual`
 #' @param k2 a factor for determining the acceptance criterion for sample
-#'           average, which is calculated as mean_{qual} - k2 * sd_{qual}
+#'           average, which is calculated as `mean_qual - k2 * sd_qual`
 #'
 #' @details
 #' This function performs simulation to estimate the performance of the

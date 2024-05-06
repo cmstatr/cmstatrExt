@@ -44,8 +44,8 @@ augment(curve_fit)
 ##  8 Coupon 4 0.00140   1.32   1.63  FALSE          -0.305
 ##  9 Coupon 4 0.00160   1.53   1.86  FALSE          -0.325
 ## 10 Coupon 4 0.00180   2.01   2.09  FALSE          -0.0735
-## # ℹ 3,095 more row
-## # ℹ Use `print(n = ...)` to see more rows
+## # i 3,095 more row
+## # i Use `print(n = ...)` to see more rows
 
 }
 \seealso{

@@ -14,7 +14,7 @@ CMH-17.
 Useful links:
 \itemize{
   \item \url{https://github.com/cmstatr/cmstatrExt}
-  \item \url{https://cmstatr.github.io/cmstatrExt/}
+  \item \url{https://cmstatrExt.cmstatr.net}
   \item Report bugs at \url{https://github.com/cmstatr/cmstatrExt/issues}
 }
 
