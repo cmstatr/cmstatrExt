@@ -43,6 +43,12 @@ minimum, which is calculated as \code{mean_qual - k1 * sd_qual}}
 \item{k2}{a factor for determining the acceptance criterion for sample
 average, which is calculated as \code{mean_qual - k2 * sd_qual}}
 }
+\value{
+A \code{data.frame}. The first column(s) are duplicate of the \code{data.frame}
+passed in the argument \code{param_equiv}. The last column is named
+\verb{Rejection Rate} and has a value equal to the number of samples rejected
+for each simulation run.
+}
 \description{
 Performs Monte Carlo simulation to determine the rejection rate of a
 dual acceptance criteria (based on sample minimum and mean). By specifying

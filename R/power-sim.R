@@ -27,6 +27,12 @@
 #' @param k2 a factor for determining the acceptance criterion for sample
 #'           average, which is calculated as `mean_qual - k2 * sd_qual`
 #'
+#' @returns
+#' A `data.frame`. The first column(s) are duplicate of the `data.frame`
+#' passed in the argument `param_equiv`. The last column is named
+#' `Rejection Rate` and has a value equal to the number of samples rejected
+#' for each simulation run.
+#'
 #' @details
 #' This function performs simulation to estimate the performance of the
 #' dual acceptance criteria commonly used for composite materials in

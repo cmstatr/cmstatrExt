@@ -42,16 +42,18 @@ Where:
 }
 }
 \examples{
-\dontrun{
-library(cmstatrExt)
-library(tidyverse)
-curve <- iso_equiv_two_sample(24, 8, 0.05, 4, 1.5, 10)
-curve
+\donttest{
+if(requireNamespace("tidyverse")){
+  library(cmstatrExt)
+  library(tidyverse)
+  curve <- iso_equiv_two_sample(24, 8, 0.05, 4, 1.5, 10)
+  curve
 
-curve \%>\%
-  ggplot(aes(x = t1, y = t2)) +
-    geom_path() +
-    ggtitle("Acceptance criteria for alpha=0.05")
+  curve \%>\%
+    ggplot(aes(x = t1, y = t2)) +
+      geom_path() +
+      ggtitle("Acceptance criteria for alpha=0.05")
+}
 }
 
 }
