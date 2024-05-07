@@ -82,7 +82,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP run_testthat_tests(void *);
+RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cmstatrExt_iso_equiv_two_sample", (DL_FUNC) &_cmstatrExt_iso_equiv_two_sample, 6},

@@ -38,10 +38,16 @@ distribution function. The simulation is repeated with
 the parameters specified in each row of the data.frame.}
 
 \item{k1}{a factor for determining the acceptance criterion for sample
-minimum, which is calculated as mean_{qual} - k1 * sd_{qual}}
+minimum, which is calculated as \code{mean_qual - k1 * sd_qual}}
 
 \item{k2}{a factor for determining the acceptance criterion for sample
-average, which is calculated as mean_{qual} - k2 * sd_{qual}}
+average, which is calculated as \code{mean_qual - k2 * sd_qual}}
+}
+\value{
+A \code{data.frame}. The first column(s) are duplicate of the \code{data.frame}
+passed in the argument \code{param_equiv}. The last column is named
+\verb{Rejection Rate} and has a value equal to the number of samples rejected
+for each simulation run.
 }
 \description{
 Performs Monte Carlo simulation to determine the rejection rate of a

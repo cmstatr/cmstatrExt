@@ -13,11 +13,10 @@ material data that are not included in CMH-17-1G.
 
 # Installation
 
-This package is not yet ready to be submitted to CRAN. You can, however,
-install it from GitHub using the following code:
+You can install this package from CRAN as follows:
 
 ``` r
-devtools::install_github("cmstatr/cmstatrExt")
+install.packages("cmstatrExt")
 ```
 
 # Example Usage
@@ -65,8 +64,7 @@ power_sim_dual(
 
 # Development
 
-This package is under active development. If you have a suggestion or
-question, please create an [issue on
+If you have a suggestion or question, please create an [issue on
 GitHub](https://github.com/cmstatr/cmstatrExt/issues).
 
 If you want to contribute to this package, Pull Requests are welcome!

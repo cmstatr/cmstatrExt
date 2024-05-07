@@ -13,6 +13,8 @@ navbar:
    articles:
     text: Articles
     menu:
+    - text: Stress-Strain Curves
+      href: articles/stress-strain.html
     - text: p-Values for Equivalency
       href: articles/equivalency-p-values.html
     - text: -------
