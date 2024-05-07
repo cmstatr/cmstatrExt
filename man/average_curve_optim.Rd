@@ -102,5 +102,6 @@ curve_fit <- average_curve_optim(
 
 }
 \seealso{
-\code{\link[stats:optim]{optim()}}
+\code{\link[stats:optim]{optim()}}, \code{\link[=average_curve_lm]{average_curve_lm()}},
+\code{\link[=print.average_curve_optim]{print.average_curve_optim()}}, \code{\link[=augment.average_curve_optim]{augment.average_curve_optim()}}
 }

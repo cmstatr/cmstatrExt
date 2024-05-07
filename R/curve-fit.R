@@ -62,7 +62,9 @@
 #' ##    I(Strain)   I(Strain^2)   I(Strain^3)
 #' ##        1174         -8783         20586
 #'
-#' @seealso [`~`][base::~], [`I()`][base::I()], [`lm()`][stats::lm()]
+#' @seealso [`~`][base::~], [`I()`][base::I()], [`lm()`][stats::lm()],
+#'          [average_curve_optim()], [print.average_curve_lm()],
+#'          [summary.average_curve_lm()], [augment.average_curve_lm()]
 #'
 #' @importFrom dplyr mutate if_else summarise ungroup group_by select n filter
 #' @importFrom dplyr n_groups
@@ -176,7 +178,8 @@ average_curve_lm <- function(data, coupon_var, model, n_bins = 100) {
 #' ##       c1        c2        c3
 #' ## 1174.372 -8783.106 20585.898
 #'
-#' @seealso [`optim()`][stats::optim()]
+#' @seealso [`optim()`][stats::optim()], [average_curve_lm()],
+#'          [print.average_curve_optim()], [augment.average_curve_optim()]
 #'
 #' @importFrom dplyr mutate if_else summarise ungroup group_by select n filter
 #' @importFrom dplyr n_groups
@@ -367,8 +370,8 @@ summary.average_curve_lm <- function(object, ...) {
 #' ##  8 Coupon 4 0.00140   1.32   1.63  FALSE          -0.305
 #' ##  9 Coupon 4 0.00160   1.53   1.86  FALSE          -0.325
 #' ## 10 Coupon 4 0.00180   2.01   2.09  FALSE          -0.0735
-#' ## # ℹ 3,095 more row
-#' ## # ℹ Use `print(n = ...)` to see more rows
+#' ## # i 3,095 more row
+#' ## # i Use `print(n = ...)` to see more rows
 #'
 #' @seealso [average_curve_lm()]
 #'
@@ -440,8 +443,8 @@ augment.average_curve_lm <- function(x, newdata = NULL, extrapolate = FALSE,
 #' ##  8 Coupon 4 0.00140   1.32   1.63  FALSE          -0.305
 #' ##  9 Coupon 4 0.00160   1.53   1.86  FALSE          -0.325
 #' ## 10 Coupon 4 0.00180   2.01   2.09  FALSE          -0.0735
-#' ## # ℹ 3,095 more rows
-#' ## # ℹ Use `print(n = ...)` to see more rows
+#' ## # i 3,095 more rows
+#' ## # i Use `print(n = ...)` to see more rows
 #'
 #' @seealso [average_curve_lm()]
 #'

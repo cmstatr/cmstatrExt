@@ -1,3 +1,7 @@
+# Version 0.4.0
+- First release on CRAN
+- Minor documentation improvements
+
 # Version 0.3.0
 - Added functions for creating average stress-strain curves
   (`average_curve_lm` and `average_curve_optim`)

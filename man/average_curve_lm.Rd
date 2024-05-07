@@ -75,5 +75,7 @@ print(curve_fit)
 
 }
 \seealso{
-\code{\link[base:tilde]{~}}, \code{\link[base:AsIs]{I()}}, \code{\link[stats:lm]{lm()}}
+\code{\link[base:tilde]{~}}, \code{\link[base:AsIs]{I()}}, \code{\link[stats:lm]{lm()}},
+\code{\link[=average_curve_optim]{average_curve_optim()}}, \code{\link[=print.average_curve_lm]{print.average_curve_lm()}},
+\code{\link[=summary.average_curve_lm]{summary.average_curve_lm()}}, \code{\link[=augment.average_curve_lm]{augment.average_curve_lm()}}
 }
