@@ -15,3 +15,5 @@
 ^logo.svg$
 ^data-raw$
 ^tests/_snaps/*
+^cran-comments.md$
+^CRAN-SUBMISSION$
