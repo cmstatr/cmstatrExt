@@ -4,9 +4,7 @@
 # `cmstatrExt` <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
-
-[![CRAN
-status](https://www.r-pkg.org/badges/version/cmstatrExt)](https://CRAN.R-project.org/package=cmstatrExt)
+[![CRAN status](https://www.r-pkg.org/badges/version/cmstatrExt)](https://CRAN.R-project.org/package=cmstatrExt)
 [![R-CMD-check](https://github.com/cmstatr/cmstatrExt/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatrExt/actions/workflows/R-CMD-check.yaml)
 [![](https://cranlogs.r-pkg.org/badges/cmstatrExt)](https://cran.r-project.org/package=cmstatrExt)
 <!-- badges: end -->
