@@ -140,7 +140,7 @@ test_that("average_curve_optim produces expected output", {
     function(strain, par) {
       sum(par * c(strain, strain^2, strain^3))
     },
-    c(c1 = 1, c2 = 1, c3 = 1),  # TODO: Document this
+    c(c1 = 1000, c2 = -9000, c3 = 20000),  # TODO: Document this
     n_bins = 100
   )
 
