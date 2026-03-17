@@ -52,26 +52,26 @@ bool power_sim_dual_normal(
     std::vector<double> &reject_rate) {
   
   if(n_qual <= 0 || m_equiv <= 0) {
-    Rf_error("n_qual and m_equiv must both be at least 1 (are %i and %i)\n",
+    _Rf_error("n_qual and m_equiv must both be at least 1 (are %i and %i)\n",
              n_qual, m_equiv);
     return false;
   }
   int rep_qual = 0;
   int rep_equiv = 0;
   if(replicates <= 0) {
-    Rf_error("Number of replicates must be greater than zero (is %i)\n",
+    _Rf_error("Number of replicates must be greater than zero (is %i)\n",
              replicates);
     return false;
   }
   rep_qual = replicates;
   rep_equiv = replicates;
   if(mu_pop_equiv.size() != sd_pop_equiv.size()) {
-    Rf_error("mu_pop_equiv and sd_pop_equiv must be the same length (%i != %i)\n",
+    _Rf_error("mu_pop_equiv and sd_pop_equiv must be the same length (%i != %i)\n",
              mu_pop_equiv.size(), sd_pop_equiv.size());
     return false;
   }
   if(reject_rate.size() != mu_pop_equiv.size()) {
-    Rf_error("reject_rate is the wrong size(%i != %i).\n",
+    _Rf_error("reject_rate is the wrong size(%i != %i).\n",
              reject_rate.size(), mu_pop_equiv.size());
     return false;
   }

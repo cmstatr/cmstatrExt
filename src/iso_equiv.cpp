@@ -9,6 +9,8 @@ using namespace Rcpp;
 #include <Rcpp.h>
 #include <testthat.h>
 
+#define _Rf_error Rcpp::stop
+
 #else // WASM
 
 #include "wasm/nmath/nmath.h"
@@ -116,7 +118,7 @@ DataFrame iso_equiv_two_sample(const int n, const int m, const double alpha,
     double x;
     int retval = bisection(f, 0., 1., &x);
     if(retval != ROOT_RESULT_SUCCESS) {
-      ::Rf_error("Failed to find root");
+      _Rf_error("Failed to find root");
     }
     result_t1.push_back(t_interpolate(x, t1max, t1b));
     result_t2.push_back(t_interpolate(x, t2max, t2b));
@@ -132,7 +134,7 @@ DataFrame iso_equiv_two_sample(const int n, const int m, const double alpha,
     double x;
     int retval = bisection(f, 0., 1., &x);
     if(retval != ROOT_RESULT_SUCCESS) {
-      ::Rf_error("Failed to find root");
+      _Rf_error("Failed to find root");
     }
     result_t1.push_back(t_interpolate(x, t1max, t1b));
     result_t2.push_back(t_interpolate(x, t2max, t2b));

@@ -1,13 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#define _Rf_error Rcpp::stop
 
 
 void check_columns(DataFrame param, std::string name,
                    std::vector<std::string> columns) {
   for (const std::string& col : columns) {
     if(!param.containsElementNamed(col.c_str())) {
-      ::Rf_error("%s must contain the column %s", name.c_str(), col.c_str());
+      _Rf_error("%s must contain the column %s", name.c_str(), col.c_str());
     }
   }
 }
@@ -23,27 +24,27 @@ DataFrame power_sim_dual_generic(
     const double k1, const double k2) {
   
   if(n_qual <= 0 || m_equiv <= 0) {
-    ::Rf_error("n_qual and m_equiv must both be at least 1");
+    _Rf_error("n_qual and m_equiv must both be at least 1");
   }
   int rep_qual = 0;
   int rep_equiv = 0;
   if(replicates.length() == 1) {
     if(replicates[0] <= 0) {
-      ::Rf_error("Number of replicates must be greater than zero");
+      _Rf_error("Number of replicates must be greater than zero");
     }
     rep_qual = replicates[0];
     rep_equiv = replicates[0];
   } else if(replicates.length() == 2) {
     if(replicates[0] <= 0 || replicates[1] <= 0) {
-      ::Rf_error("Number of replicates must be greater than zero");
+      _Rf_error("Number of replicates must be greater than zero");
     }
     rep_qual = replicates[0];
     rep_equiv = replicates[1];
   } else {
-    ::Rf_error("replicates must be a single number or a vector of length 2");
+    _Rf_error("replicates must be a single number or a vector of length 2");
   }
   if(param_qual.rows() != 1) {
-    ::Rf_error("`param_qual` must have exactly one row");
+    _Rf_error("`param_qual` must have exactly one row");
   }
   
   std::function<NumericVector(const int, const DataFrame, const int)>
@@ -61,7 +62,7 @@ DataFrame power_sim_dual_generic(
       return dist_function(param, i);
     };
   } else {  // TODO: add other distributions
-    ::Rf_error("Unsupported distribution function");
+    _Rf_error("Unsupported distribution function");
   }
   
   NumericVector min_equiv = NumericVector(rep_equiv);

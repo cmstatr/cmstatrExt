@@ -35,7 +35,7 @@ int main() {
 EXTERN EMSCRIPTEN_KEEPALIVE int k_equiv_two_sample(int n, int m, double alpha,
                                                    double* factors) {
   if (n < 3 || m < 3) {
-    Rf_error("Both n and m must be 3 or greater (are %i and %i)", n, m);
+    _Rf_error("Both n and m must be 3 or greater (are %i and %i)", n, m);
     return -1;
   }
   
@@ -91,12 +91,12 @@ EXTERN EMSCRIPTEN_KEEPALIVE int power_mean(int n, int m, double k1, double k2,
 EXTERN EMSCRIPTEN_KEEPALIVE double p_equiv_two_sample(int n, int m,
                                                       double t1, double t2) {
   if (n < 3 || m < 3) {
-    Rf_error("Both n and m must be 3 or greater (are %i and %i)", n, m);
+    _Rf_error("Both n and m must be 3 or greater (are %i and %i)", n, m);
     return -1.;
   }
   
   if(t1 < t2) {
-    Rf_error("t2 must be less than t1 (are %f and %f)", t1, t2);
+    _Rf_error("t2 must be less than t1 (are %f and %f)", t1, t2);
     return -1.;
   }
   AcceptanceTwoSample an = AcceptanceTwoSample(n, m);
