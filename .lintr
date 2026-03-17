@@ -2,5 +2,6 @@ exclusions: list(
     "R/RcppExports.R"
   )
 linters: linters_with_defaults(
-    pipe_consistency_linter(pipe = "%>%")
+    pipe_consistency_linter(pipe = "%>%"),
+    return_linter = NULL
   )
