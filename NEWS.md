@@ -1,3 +1,7 @@
+# Version 0.4.1
+- Minor update to call Rcpp::stop in lieu of Rf_error due to an upcoming
+  change to the Rcpp package. No changed in functionality.
+
 # Version 0.4.0
 - First release on CRAN
 - Minor documentation improvements
