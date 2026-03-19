@@ -57,7 +57,7 @@
       average_curve_optim(data = pa12_tension, coupon_var = Coupon, 
           x_var = Strain, y_var = Stress, fn = function(strain, par) {
               sum(par * c(strain, strain^2, strain^3))
-          }, par = c(c1 = 1, c2 = 1, c3 = 1), n_bins = 100)
+          }, par = c(c1 = 1000, c2 = -9000, c3 = 20000), n_bins = 100)
       
       Parameters:
              c1        c2        c3 

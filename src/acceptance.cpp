@@ -7,6 +7,8 @@
 #include <Rcpp.h>
 #include <testthat.h>
 
+#define _Rf_error Rcpp::stop
+
 #else // WASM
 
 #include "wasm/nmath/nmath.h"
@@ -62,7 +64,7 @@ double AcceptanceBase::calc_lambda(const double t1,
   {
     const int retval_bisection = bisection(f, -1000, 1000, &result, 1000);
     if (retval_bisection != ROOT_RESULT_SUCCESS) {
-      Rf_error("Root failed. (Newton code=%i, bisection code=%i)",
+      _Rf_error("Root failed. (Newton code=%i, bisection code=%i)",
                retval, retval_bisection);
     }
   }

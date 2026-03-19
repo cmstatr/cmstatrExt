@@ -1,4 +1,7 @@
 #include <Rcpp.h>
+
+#define _Rf_error Rcpp::stop
+
 // #include <cmath>
 // #include "root.h"
 // #include "integration.h"
@@ -31,7 +34,7 @@
 // [[Rcpp::export(rng = false)]]
 Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m) {
   if (n < 3 || m < 3) {
-    ::Rf_error("Both n and m must be 3 or greater");
+    _Rf_error("Both n and m must be 3 or greater");
   }
   
   AcceptanceTwoSample an = AcceptanceTwoSample(n, m);

@@ -1,4 +1,7 @@
 #include <Rcpp.h>
+
+#define _Rf_error Rcpp::stop
+
 // #include <cmath>
 // #include "root.h"
 // #include "integration.h"
@@ -37,16 +40,16 @@
 Rcpp::NumericVector p_equiv(int m,
                             Rcpp::NumericVector t1, Rcpp::NumericVector t2) {
   if (m < 3) {
-    ::Rf_error("Both m must be 3 or greater");
+    _Rf_error("Both m must be 3 or greater");
   }
   
   if (t1.size() != t2.size()) {
-    ::Rf_error("t1 and t2 must be of the same length");
+    _Rf_error("t1 and t2 must be of the same length");
   }
   const int num_vals = t1.size();
   for(int i = 0; i < num_vals; ++i) {
     if(t1[i] < t2[i]) {
-      ::Rf_error("t2 must be less than t1");
+      _Rf_error("t2 must be less than t1");
     }
   }
   AcceptanceVangel an = AcceptanceVangel(m);
