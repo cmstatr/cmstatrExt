@@ -1,81 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/404.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/articles/compute-p-value-equiv.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/articles/equivalency-p-values.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/articles/stress-strain.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/index.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/augment.average_curve_lm.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/augment.average_curve_optim.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/average_curve_lm.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/average_curve_optim.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/cmstatrExt-package.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/fff_shear.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/iso_equiv_two_sample.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/p_equiv.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/pa12_tension.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/power_sim_dual.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/print.average_curve_lm.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/print.average_curve_optim.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>https://cmstatrExt.cmstatr.net/reference/summary.average_curve_lm.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://cmstatrExt.cmstatr.net/404.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/articles/compute-p-value-equiv.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/articles/equivalency-p-values.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/articles/index.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/articles/stress-strain.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/authors.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/index.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/news/index.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/augment.average_curve_lm.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/augment.average_curve_optim.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/average_curve_lm.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/average_curve_optim.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/cmstatrExt-package.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/fff_shear.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/index.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/iso_equiv_two_sample.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/p_equiv.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/pa12_tension.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/power_sim_dual.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/print.average_curve_lm.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/print.average_curve_optim.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/reexports.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/summary.average_curve_lm.html</loc></url>
 </urlset>
+
