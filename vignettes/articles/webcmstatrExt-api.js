@@ -1,3 +1,7 @@
+// Only the copy of this file in the src/wasm folder should be edited.
+// All other copies of this file are copied from that file.
+// The copy in the vignettes/articles folder is copied by src/wasm/Makefile.
+// The copy in docs/articles is copied by pkgdown
 
 const validateSampleSize = (elm) => {
   let isValid = false;
@@ -116,6 +120,32 @@ const p_equiv_two_sample = (Module, n, m, t1, t2) => {
     [n,        m,        t1,       t2]
   );
   return result;
+};
+
+const k_equiv_one_sample = (Module, m, alpha) => {
+  const factor_offset = Module._malloc(8 * 2);
+  const factor_array = Module.HEAPF64.subarray(factor_offset/8, factor_offset/8 + 2);
+  
+  const result = Module.ccall(
+      "k_equiv_one_sample", // name of C function
+      "number", // return type
+      ["number", "number", "number"], // argument types
+      [m, alpha, factor_offset] // arguments
+  );
+  
+  const k1 = factor_array[0];
+  const k2 = factor_array[1];
+  
+  Module._free(factor_offset);
+  
+  if(result < 0) {
+    throw "Invalid return value when calculating factors.";
+  }
+  
+  return {
+    k1: k1,
+    k2: k2
+  }
 };
 
 

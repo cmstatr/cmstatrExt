@@ -47,6 +47,27 @@ EXTERN EMSCRIPTEN_KEEPALIVE int k_equiv_two_sample(int n, int m, double alpha,
 }
 
 
+#ifdef __cplusplus
+#define EXTERN extern "C"
+#else
+#define EXTERN
+#endif
+EXTERN EMSCRIPTEN_KEEPALIVE int k_equiv_one_sample(int m, double alpha,
+                                                   double* factors) {
+  if (m < 3) {
+    _Rf_error("`m` must be 3 or greater (is %i)", m);
+    return -1;
+  }
+  
+  AcceptanceVangel an = AcceptanceVangel(m);
+  an.calculate_factors(alpha);
+  factors[0] = an.k1;
+  factors[1] = an.k2;
+  return 0;
+}
+
+
+
 std::vector<double> range(double min, double max, size_t N) {
   std::vector<double> range;
   double delta = (max - min) / double(N - 1);
