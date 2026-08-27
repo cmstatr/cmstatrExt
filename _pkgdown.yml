@@ -21,6 +21,8 @@ navbar:
     - text: Calculators
     - text: Equivalency Factor Calculator
       href: articles/compute-equiv-factors.html
+    - text: Equivalency Threshold Calculator
+      href: articles/compute-equiv-threshold.html
     - text: Equivalency p-Value Calculator
       href: articles/compute-p-value-equiv.html
 

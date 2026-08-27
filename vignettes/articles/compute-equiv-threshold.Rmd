@@ -1,0 +1,401 @@
+---
+title: "Equivalency Threshold Calculator"
+resource_files:
+- webcmstatrExt.js
+- webcmstatrExt.wasm
+- "webcmstatrExt-api.js"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This page provides an online calculator to determine one- and two-sample
+equivalency factors and thresholds.
+This calculator gives the factors $k_1$ and $k_2$ as well as
+determining the power of the test for detecting reduction in mean.
+The one-sample factors and thresholds are based on the paper by Vangel below
+and the two-sample factors and thresholds are based on the paper by
+Kloppenborg below. More details are given
+at the bottom of this page.
+
+M. Vangel, “Lot Acceptance and Compliance Testing Using the Sample Mean and an Extremum,” Technometrics, vol. 44, no. 3. pp. 242--249, Aug-2002.
+
+S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with finite qualification samples," Journal of Quality Technology, 2023.
+[DOI: 10.1080/00224065.2022.2147884](https://doi.org/10.1080/00224065.2022.2147884)
+
+*This calculator is provided as-is without any warranty. Users are advised
+to review the code to verify correctness.*
+
+## Calculator
+<style>
+  .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+  textarea.emscripten { font-family: monospace; width: 80%; }
+  div.emscripten { text-align: center; }
+  div.emscripten_border { border: 1px solid black; }
+  /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+  canvas.emscripten { border: 0px none; background-color: black; }
+
+  .spinner {
+    height: 50px;
+    width: 50px;
+    margin: 0px auto;
+    -webkit-animation: rotation .8s linear infinite;
+    -moz-animation: rotation .8s linear infinite;
+    -o-animation: rotation .8s linear infinite;
+    animation: rotation 0.8s linear infinite;
+    border-left: 10px solid rgb(0,150,240);
+    border-right: 10px solid rgb(0,150,240);
+    border-bottom: 10px solid rgb(0,150,240);
+    border-top: 10px solid rgb(100,0,200);
+    border-radius: 100%;
+    background-color: rgb(200,100,250);
+  }
+  @-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+  }
+  @-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(360deg);}
+  }
+  @-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(360deg);}
+  }
+  @keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
+
+</style>
+
+<figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
+<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten">
+  <progress value="0" max="100" id="progress" hidden=1></progress>  
+</div>
+
+<div id="equivalencyapp" hidden="true">
+<table class="table table-bordered">
+  <tr>
+    <th>Material & Property</th>
+    <td colspan="2">
+      <textarea style="width: -webkit-fill-available;"></textarea>
+    </td>
+  </tr>
+  <tr>
+    <th></th>
+    <th>Qualification Sample</th>
+    <th>Equivalency Sample</th>
+  </tr>
+  <tr>
+    <td>Mean</td>
+    <td>
+      <label for="double-qual-mean">$\bar{x}_{qual}$</label>
+      <input type="number" id="double-qual-mean" min="0.001" value="100" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));">
+    </td>
+    <td>
+      <label for="double-equiv-mean">$\bar{x}_{equiv}$</label>
+      <input type="number" id="double-equiv-mean" min="0.001" value="94.82" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));">
+    </td>
+  </tr>
+  <tr>
+    <td>Standard Deviation</td>
+    <td>
+      <label for="double-qual-sd">$s_{qual}$</label>
+      <input type="number" id="double-qual-sd" min="0.001" value="6" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));">
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Sample Size</td>
+    <td>
+      <label for="int-n">$n$</label>
+      <input type="number" id="int-n" min="3" value="24" step="1" required onchange="this.value = Math.max(3, parseInt(this.value));"><br></p>
+    </td>
+    <td>
+      <label for="int-m">$m$</label>
+      <input type="number" id="int-m" min="3" value="8" step="1" required onchange="this.value = Math.max(3, parseInt(this.value));">
+    </td>
+  </tr>
+  <tr>
+    <td>Minimum</td>
+    <td></td>
+    <td>
+      <label for="double-equiv-min">$x_{min\,equiv}$</label>
+      <input type="number" id="double-equiv-min" min="0.001" value="81.4" step="0.001" required onchange="this.value = Math.max(0.001, parseFloat(this.value));">
+    </td>
+  </tr>
+  <tr>
+    <th colspan="2">
+      <label for="double-alpha">Significance ($\alpha$):</label>
+    </th>
+    <td>
+      <input type="number" id="double-alpha"
+        value="0.05" step="0.01" required
+        onchange="this.value = Math.max(0.0001, Math.min(0.5, parseFloat(this.value)));" />
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <button id="compute-factors" align="center">Compute</button>
+    </td>
+  </tr>
+  <tr>
+    <th colspan="3">One-Sample Method</th>
+  </tr>
+  <tr>
+    <td>k-Factors</td>
+    <td>
+      <label for="out-one-sample-k1">$k_1$</label>
+      <input type="text" id="out-one-sample-k1" readonly="true">
+    </td>
+    <td>
+      <label for="out-one-sample-k2">$k_2$</label>
+      <input type="text" id="out-one-sample-k2" readonly="true">
+    </td>
+  </tr>
+  <tr>
+    <td>Thresholds</td>
+    <td>
+      <label for="out-one-sample-w1">Minimum Individual<br />$W_1 = \bar{x}_{qual} - k_1 s_{qual}$</label>
+      <input type="text" id="out-one-sample-w1" readonly="true">
+    </td>
+    <td>
+      <label for="out-one-sample-w2">Minimum Average<br />$W_2 = \bar{x}_{qual} - k_2 s_{qual}$</label>
+      <input type="text" id="out-one-sample-w2" readonly="true">
+    </td>
+  </tr>
+  <tr>
+    <td>Result</td>
+    <td colspan="2">
+      <center>
+        <input
+          type="text"
+          id="out-one-sample-result"
+          readonly="true"
+          style="width: -webkit-fill-available;">
+      </center>
+    </td>
+  </tr>
+  <tr>
+    <th colspan="3">Two-Sample Method</th>
+  </tr>
+  <tr>
+    <td>k-Factors</td>
+    <td>
+      <label for="out-two-sample-k1">$k_1$</label>
+      <input type="text" id="out-two-sample-k1" readonly="true">
+    </td>
+    <td>
+      <label for="out-two-sample-k2">$k_2$</label>
+      <input type="text" id="out-two-sample-k2" readonly="true">
+    </td>
+  </tr>
+  <tr>
+    <td>Thresholds</td>
+    <td>
+      <label for="out-two-sample-w1">Minimum Individual<br />$W_1 = \bar{x}_{qual} - k_1 s_{qual}$</label>
+      <input type="text" id="out-two-sample-w1" readonly="true">
+    </td>
+    <td>
+      <label for="out-two-sample-w2">Minimum Average<br />$W_2 = \bar{x}_{qual} - k_2 s_{qual}$</label>
+      <input type="text" id="out-two-sample-w2" readonly="true">
+    </td>
+  </tr>
+  <tr>
+    <td>Result</td>
+    <td colspan="2">
+      <center>
+        <input
+          type="text"
+          id="out-two-sample-result"
+          readonly="true"
+          style="width: -webkit-fill-available;">
+      </center>
+    </td>
+  </tr>
+</table>
+</div>
+
+
+<script type='text/javascript'>
+  var statusElement = document.getElementById('status');
+  var progressElement = document.getElementById('progress');
+  var spinnerElement = document.getElementById('spinner');
+  var appElement = document.getElementById('equivalencyapp');
+
+  var Module = {
+    preRun: [],
+    postRun: [],
+    print: (function() {})(),
+    canvas: (function() {})(),
+    setStatus: function(text) {
+      if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+      if (text === Module.setStatus.last.text) return;
+      var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+      var now = Date.now();
+      if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+      Module.setStatus.last.time = now;
+      Module.setStatus.last.text = text;
+      if (m) {
+        text = m[1];
+        progressElement.value = parseInt(m[2])*100;
+        progressElement.max = parseInt(m[4])*100;
+        progressElement.hidden = false;
+        spinnerElement.hidden = false;
+        appElement.hidden = true;
+      } else {
+        progressElement.value = null;
+        progressElement.max = null;
+        progressElement.hidden = true;
+        if (!text) {
+          spinnerElement.hidden = true;
+          appElement.hidden = false;
+        }
+      }
+      statusElement.innerHTML = text;
+    },
+    totalDependencies: 0,
+    monitorRunDependencies: function(left) {
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+    }
+  };
+  Module.setStatus('Downloading...');
+  window.onerror = function() {
+    Module.setStatus('Exception thrown, see JavaScript console');
+    spinnerElement.style.display = 'none';
+    Module.setStatus = function(text) {
+      if (text) console.error('[post-exception status] ' + text);
+    };
+  };
+</script>
+<script src=webcmstatrExt.js async></script>
+<script src="webcmstatrExt-api.js"></script>
+
+
+<script type='text/javascript'>
+  document.getElementById("int-n").addEventListener("input",
+    (e) => validateSampleSize(e.target));
+  document.getElementById("int-m").addEventListener("input",
+    (e) => validateSampleSize(e.target));
+  document.getElementById("double-alpha").addEventListener("input",
+    (e) => validateSignificance(e.target));
+  
+  const clear_outputs = (e) => {
+    const fields = [
+      "out-one-sample-k1",
+      "out-one-sample-k2",
+      "out-one-sample-w1",
+      "out-one-sample-w2",
+      "out-one-sample-result",
+      "out-two-sample-k1",
+      "out-two-sample-k2",
+      "out-two-sample-w1",
+      "out-two-sample-w2",
+      "out-two-sample-result"
+    ];
+    fields.forEach(id => document.getElementById(id).value = "");
+    fields.forEach(id => document.getElementById(id).style.background = "initial");
+  };
+  
+  document.getElementById("double-qual-mean").addEventListener("input", clear_outputs);
+  document.getElementById("double-equiv-mean").addEventListener("input", clear_outputs);
+  document.getElementById("double-qual-sd").addEventListener("input", clear_outputs);
+  document.getElementById("int-n").addEventListener("input", clear_outputs);
+  document.getElementById("int-m").addEventListener("input", clear_outputs);
+  document.getElementById("double-equiv-min").addEventListener("input", clear_outputs);
+  document.getElementById("double-alpha").addEventListener("input", clear_outputs);
+  
+  document.getElementById("compute-factors").addEventListener("click", async () => {
+    let one_k1 = 0.;
+    let one_k2 = 0.;
+    let two_k1 = 0.;
+    let two_k2 = 0.;
+    // Inputs
+    const iN = validateSampleSize(document.getElementById("int-n"));
+    const fqX = validatePositiveFloat(document.getElementById("double-qual-mean"));
+    const fqS = validatePositiveFloat(document.getElementById("double-qual-sd"));
+    const feX = validatePositiveFloat(document.getElementById("double-equiv-mean"));
+    const feMin = validatePositiveFloat(document.getElementById("double-equiv-min"));
+    const iM = validateSampleSize(document.getElementById("int-m"));
+    const fA = validateSignificance(document.getElementById("double-alpha"));
+    //
+    if(iN === "invalid" || iM === "invalid" || fA === "invalid" ||
+       fqX === "invalid" || fqS === "invalid" || feX === "invalid" ||
+       feMin === "invalid") {
+      console.log("Invalid input");
+      return;
+    }
+    //
+    Module.setStatus("Calculating factors...");
+    //
+    const do_calculation = (k1, k2, id_k1, id_k2, id_w1, id_w2, id_out) => {
+      const w1 = fqX - k1 * fqS;
+      const w2 = fqX - k2 * fqS;
+      //
+      document.getElementById(id_k1).value = k1;
+      document.getElementById(id_k2).value = k2;
+      document.getElementById(id_w1).value = w1;
+      document.getElementById(id_w2).value = w2;
+      //
+      let result_msg = feMin < w1 ? "minimum individual" : "";
+      if (feX < w2) {
+        result_msg += result_msg==="" ? "" : " and ";
+        result_msg += "minimum average";
+      }
+      const res_output = document.getElementById(id_out);
+      if (result_msg==="") {
+        result_msg = "Passed";
+        res_output.style.background = "lightgreen";
+      } else {
+        result_msg = "Failed due to " + result_msg;
+        res_output.style.background = "red";
+      }
+      res_output.value = result_msg;
+    };
+    // run the rest asynchronously
+    setTimeout(function () {
+      const two_factor_result = k_equiv_two_sample(Module, iN, iM, fA);
+      do_calculation(
+        two_factor_result.k1,
+        two_factor_result.k2,
+        "out-two-sample-k1",
+        "out-two-sample-k2",
+        "out-two-sample-w1",
+        "out-two-sample-w2",
+        "out-two-sample-result"
+      )
+      //
+      const one_factor_result = k_equiv_one_sample(Module, iM, fA);
+      do_calculation(
+        one_factor_result.k1,
+        one_factor_result.k2,
+        "out-one-sample-k1",
+        "out-one-sample-k2",
+        "out-one-sample-w1",
+        "out-one-sample-w2",
+        "out-one-sample-result"
+      )
+      // Reset module status
+      Module.setStatus("");
+    },
+    0);
+  });
+</script>
+
+
+## Details {.tabset}
+### Software Details
+The functionality of this page is provided by the same C++ code that is used
+by the `cmstatrExt` R package. This code is compiled to WebAssembly so that
+it can run inside a web browser without the user installing any special
+software. This software is licensed under the
+[AGPL-3](https://www.r-project.org/Licenses/AGPL-3) license.
+Source code is available [here](https://github.com/cmstatr/cmstatrExt).
+
