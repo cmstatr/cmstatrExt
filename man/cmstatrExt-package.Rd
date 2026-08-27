@@ -22,5 +22,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Stefan Kloppenborg \email{stefan@kloppenborg.ca}
 
+Authors:
+\itemize{
+  \item Stefan Kloppenborg \email{stefan@kloppenborg.ca}
+}
+
 }
 \keyword{internal}
