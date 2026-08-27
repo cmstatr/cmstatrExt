@@ -13,6 +13,38 @@ knitr::opts_chunk$set(
 )
 ```
 
+<style>
+@media print {
+  .col-md-3 {
+    display: none;
+  }
+  .noprint {
+    display: none;
+  }
+  #calculator {
+    display: none;
+  }
+  :root {
+    --bs-body-font-size: 0.7rem;
+  }
+  .navbar {
+    padding-botton: 0px;
+    padding-top: 0px;
+    --bs-navbar-brand-font-size: 0.75rem; 
+  }
+  .page-header {
+    margin-top: 0.5rem;
+  }
+  .table {
+    margin-bottom: 0px;
+  }
+  footer {
+    margin: 0px;
+  }
+}
+</style>
+
+<div class="noprint">
 This page provides an online calculator to determine one- and two-sample
 equivalency factors and thresholds.
 This calculator gives the factors $k_1$ and $k_2$ as well as
@@ -29,6 +61,7 @@ S. Kloppenborg, "Lot acceptance testing using sample mean and extremum with fini
 
 *This calculator is provided as-is without any warranty. Users are advised
 to review the code to verify correctness.*
+</div>
 
 ## Calculator
 <style>
@@ -140,7 +173,7 @@ to review the code to verify correctness.*
         onchange="this.value = Math.max(0.0001, Math.min(0.5, parseFloat(this.value)));" />
     </td>
   </tr>
-  <tr>
+  <tr class="noprint">
     <td colspan="3">
       <button id="compute-factors" align="center">Compute</button>
     </td>
@@ -390,6 +423,7 @@ to review the code to verify correctness.*
 </script>
 
 
+<div class="noprint">
 ## Details {.tabset}
 ### Software Details
 The functionality of this page is provided by the same C++ code that is used
@@ -398,4 +432,4 @@ it can run inside a web browser without the user installing any special
 software. This software is licensed under the
 [AGPL-3](https://www.r-project.org/Licenses/AGPL-3) license.
 Source code is available [here](https://github.com/cmstatr/cmstatrExt).
-
+</div>
