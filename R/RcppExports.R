@@ -102,6 +102,9 @@ k_equiv_two_sample <- function(alpha, n, m) {
 #' - sigma is the standard deviation of the population
 #' - Y_min is the minimum from the acceptance sample
 #' - Y_mean is the mean of the acceptance sample
+#' 
+#' This function replaces `p_equiv()`, which will be removed in
+#' a future version of this package.
 #'
 #' @param m the size of the acceptance sample
 #' @param t1 the test statistic described above. May be a vector.
@@ -110,8 +113,8 @@ k_equiv_two_sample <- function(alpha, n, m) {
 #' @return a vector of p-Values of the same length as t1 and t2
 #'
 #' @export
-p_equiv <- function(m, t1, t2) {
-    .Call(`_cmstatrExt_p_equiv`, m, t1, t2)
+p_equiv_one_sample <- function(m, t1, t2) {
+    .Call(`_cmstatrExt_p_equiv_one_sample`, m, t1, t2)
 }
 
 #' p-Value for two-sample equivalency

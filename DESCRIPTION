@@ -19,6 +19,7 @@ License: AGPL-3
 Imports: 
     dplyr,
     generics,
+    lifecycle,
     Rcpp,
     rlang (>= 0.4.0),
     stats
