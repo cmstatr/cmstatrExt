@@ -18,6 +18,7 @@ BugReports: https://github.com/cmstatr/cmstatrExt/issues
 License: AGPL-3
 Imports: 
     dplyr,
+    cli,
     generics,
     lifecycle,
     Rcpp,
