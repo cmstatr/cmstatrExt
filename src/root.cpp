@@ -17,7 +17,7 @@ int root(std::function<double(const double)> const& f,
          double x0,
          double* root, int max_itt) {
   
-  const double abstol = pow(DBL_EPSILON, 0.25);
+  const double abstol = pow(DBL_EPSILON, 0.5);
   int i;
   double f0, f_prime_0, x1;
   
