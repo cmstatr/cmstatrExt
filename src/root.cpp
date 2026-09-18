@@ -58,7 +58,7 @@ context("root") {
 int bisection(std::function<double(const double)> const& f,
               double x1, double x2, double* root, int max_itt) {
   
-  const double abstol = pow(DBL_EPSILON, 0.25);
+  const double abstol = pow(DBL_EPSILON, 0.5);
   int i;
   double f1 = f(x1);
   double f2 = f(x2);

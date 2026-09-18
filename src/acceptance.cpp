@@ -124,7 +124,11 @@ void AcceptanceVangel::calculate_factors(const double alpha) {
     return fx1 + fxbar - fjoint - alpha;
   };
   
-  bisection(f, -0.1, 1, &k1, 100);
+  int retval_bisection = bisection(f, -0.1, 1, &k1, 100);
+  if(retval_bisection != 0) {
+    _Rf_error("Root failed for factor k1. (bisection code=%i)",
+               retval_bisection);
+  }
   k2 = calc_t2(k1);
 }
 

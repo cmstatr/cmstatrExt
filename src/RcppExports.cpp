@@ -25,6 +25,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// k_equiv_one_sample
+Rcpp::NumericVector k_equiv_one_sample(double alpha, int m);
+RcppExport SEXP _cmstatrExt_k_equiv_one_sample(SEXP alphaSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(k_equiv_one_sample(alpha, m));
+    return rcpp_result_gen;
+END_RCPP
+}
 // k_equiv_two_sample
 Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m);
 RcppExport SEXP _cmstatrExt_k_equiv_two_sample(SEXP alphaSEXP, SEXP nSEXP, SEXP mSEXP) {
@@ -86,6 +97,7 @@ RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cmstatrExt_iso_equiv_two_sample", (DL_FUNC) &_cmstatrExt_iso_equiv_two_sample, 6},
+    {"_cmstatrExt_k_equiv_one_sample", (DL_FUNC) &_cmstatrExt_k_equiv_one_sample, 2},
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
     {"_cmstatrExt_p_equiv_one_sample", (DL_FUNC) &_cmstatrExt_p_equiv_one_sample, 3},
     {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
