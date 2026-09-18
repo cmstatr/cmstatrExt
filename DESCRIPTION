@@ -35,7 +35,8 @@ Suggests:
     lintr,
     xml2,
     rmarkdown,
-    knitr
+    knitr,
+    tidyr
 Config/testthat/parallel: true
 Config/testthat/edition: 3
 VignetteBuilder: knitr
