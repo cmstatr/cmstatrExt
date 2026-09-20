@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^README.Rmd$
 ^profiling.R$
-^NEWS.md$
 ^.lintr
 ^.vscode/*
 ^baseline-power-speed.R$
