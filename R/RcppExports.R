@@ -58,6 +58,33 @@ iso_equiv_two_sample <- function(n, m, alpha, t1max, t2max, n_points) {
     .Call(`_cmstatrExt_iso_equiv_two_sample`, n, m, alpha, t1max, t2max, n_points)
 }
 
+#' Calculate the factors for a one-sample acceptance test
+#'
+#' @description
+#' Calculates the factors k1 and k2, which are used for setting acceptance
+#' values for lot acceptance. These factors consider 
+#' the size of acceptance sample (`m`).
+#'
+#' @param alpha the nominal significance of the test
+#' @param m the size of the acceptance sample
+#'
+#' @return
+#' A vector of length 2 with the contents `c(k1, k2)`
+#' 
+#' @details
+#' This function is equivalent to [cmstatr::k_equiv()], but is implemented
+#' in C++ instead of in R, and is hence slightly faster.
+#' 
+#' @references
+#' Vangel, M. (2002). Lot Acceptance and Compliance Testing Using the
+#' Sample Mean and an Extremum.
+#' Technometrics. https://doi.org/10.1198/004017002188618428
+#'
+#' @export
+k_equiv_one_sample <- function(alpha, m) {
+    .Call(`_cmstatrExt_k_equiv_one_sample`, alpha, m)
+}
+
 #' Calculate the factors for a two-sample acceptance test
 #'
 #' @description
@@ -102,6 +129,9 @@ k_equiv_two_sample <- function(alpha, n, m) {
 #' - sigma is the standard deviation of the population
 #' - Y_min is the minimum from the acceptance sample
 #' - Y_mean is the mean of the acceptance sample
+#' 
+#' This function replaces `p_equiv()`, which will be removed in
+#' a future version of this package.
 #'
 #' @param m the size of the acceptance sample
 #' @param t1 the test statistic described above. May be a vector.
@@ -110,8 +140,8 @@ k_equiv_two_sample <- function(alpha, n, m) {
 #' @return a vector of p-Values of the same length as t1 and t2
 #'
 #' @export
-p_equiv <- function(m, t1, t2) {
-    .Call(`_cmstatrExt_p_equiv`, m, t1, t2)
+p_equiv_one_sample <- function(m, t1, t2) {
+    .Call(`_cmstatrExt_p_equiv_one_sample`, m, t1, t2)
 }
 
 #' p-Value for two-sample equivalency

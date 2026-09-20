@@ -25,6 +25,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// k_equiv_one_sample
+Rcpp::NumericVector k_equiv_one_sample(double alpha, int m);
+RcppExport SEXP _cmstatrExt_k_equiv_one_sample(SEXP alphaSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(k_equiv_one_sample(alpha, m));
+    return rcpp_result_gen;
+END_RCPP
+}
 // k_equiv_two_sample
 Rcpp::NumericVector k_equiv_two_sample(double alpha, int n, int m);
 RcppExport SEXP _cmstatrExt_k_equiv_two_sample(SEXP alphaSEXP, SEXP nSEXP, SEXP mSEXP) {
@@ -37,15 +48,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// p_equiv
-Rcpp::NumericVector p_equiv(int m, Rcpp::NumericVector t1, Rcpp::NumericVector t2);
-RcppExport SEXP _cmstatrExt_p_equiv(SEXP mSEXP, SEXP t1SEXP, SEXP t2SEXP) {
+// p_equiv_one_sample
+Rcpp::NumericVector p_equiv_one_sample(int m, Rcpp::NumericVector t1, Rcpp::NumericVector t2);
+RcppExport SEXP _cmstatrExt_p_equiv_one_sample(SEXP mSEXP, SEXP t1SEXP, SEXP t2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type t1(t1SEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type t2(t2SEXP);
-    rcpp_result_gen = Rcpp::wrap(p_equiv(m, t1, t2));
+    rcpp_result_gen = Rcpp::wrap(p_equiv_one_sample(m, t1, t2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -86,8 +97,9 @@ RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cmstatrExt_iso_equiv_two_sample", (DL_FUNC) &_cmstatrExt_iso_equiv_two_sample, 6},
+    {"_cmstatrExt_k_equiv_one_sample", (DL_FUNC) &_cmstatrExt_k_equiv_one_sample, 2},
     {"_cmstatrExt_k_equiv_two_sample", (DL_FUNC) &_cmstatrExt_k_equiv_two_sample, 3},
-    {"_cmstatrExt_p_equiv", (DL_FUNC) &_cmstatrExt_p_equiv, 3},
+    {"_cmstatrExt_p_equiv_one_sample", (DL_FUNC) &_cmstatrExt_p_equiv_one_sample, 3},
     {"_cmstatrExt_p_equiv_two_sample", (DL_FUNC) &_cmstatrExt_p_equiv_two_sample, 4},
     {"_cmstatrExt_power_sim_dual_generic", (DL_FUNC) &_cmstatrExt_power_sim_dual_generic, 9},
     {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 1},

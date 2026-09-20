@@ -28,6 +28,9 @@
 //' - sigma is the standard deviation of the population
 //' - Y_min is the minimum from the acceptance sample
 //' - Y_mean is the mean of the acceptance sample
+//' 
+//' This function replaces `p_equiv()`, which will be removed in
+//' a future version of this package.
 //'
 //' @param m the size of the acceptance sample
 //' @param t1 the test statistic described above. May be a vector.
@@ -37,8 +40,9 @@
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector p_equiv(int m,
-                            Rcpp::NumericVector t1, Rcpp::NumericVector t2) {
+Rcpp::NumericVector p_equiv_one_sample(int m,
+                                       Rcpp::NumericVector t1,
+                                       Rcpp::NumericVector t2) {
   if (m < 3) {
     _Rf_error("Both m must be 3 or greater");
   }

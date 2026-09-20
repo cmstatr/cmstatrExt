@@ -4,7 +4,9 @@
 # `cmstatrExt` <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/cmstatrExt)](https://CRAN.R-project.org/package=cmstatrExt)
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/cmstatrExt)](https://CRAN.R-project.org/package=cmstatrExt)
 [![R-CMD-check](https://github.com/cmstatr/cmstatrExt/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatrExt/actions/workflows/R-CMD-check.yaml)
 [![](https://cranlogs.r-pkg.org/badges/cmstatrExt)](https://cran.r-project.org/package=cmstatrExt)
 <!-- badges: end -->
@@ -40,7 +42,7 @@ k <- k_equiv_two_sample(
   m = 6    # size of the acceptance sample
 )
 k
-#> [1] 2.9594727 0.9541395
+#> [1] 2.9594440 0.9541253
 ```
 
 The power of this test for detecting reduction in mean can be computed

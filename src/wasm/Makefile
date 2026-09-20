@@ -39,6 +39,7 @@ HEADERS=\
 #		-Wcast-align \
 #		-Wover-aligned \
 
+all: webcmstatrExt.js deploy
 
 webcmstatrExt.js: $(SRC) $(HEADERS) $(NMATH_SRC)
 	( \
@@ -60,7 +61,7 @@ webcmstatrExt.js: $(SRC) $(HEADERS) $(NMATH_SRC)
 			-s "EXPORTED_RUNTIME_METHODS=['ccall']" \
 			-s EXPORTED_FUNCTIONS="['_malloc', '_free', '_main', '_do_tests', \
 			                        '_k_equiv_two_sample', '_power_mean', \
-			                        '_p_equiv_two_sample']" \
+			                        '_p_equiv_two_sample', '_k_equiv_one_sample']" \
 	)
 
 deploy: webcmstatrExt.js webcmstatrExt.wasm webcmstatrExt-api.js
@@ -71,4 +72,11 @@ deploy: webcmstatrExt.js webcmstatrExt.wasm webcmstatrExt-api.js
 devserver:
 	python3 -m http.server
 
-.PHONY: devserver deploy
+clean:
+	rm webcmstatrExt.js
+	rm ../../vignettes/articles/webcmstatrExt.js
+	rm webcmstatrExt.wasm
+	rm ../../vignettes/articles/webcmstatrExt.wasm
+	rm ../../vignettes/articles/webcmstatrExt-api.js
+
+.PHONY: devserver deploy clean all

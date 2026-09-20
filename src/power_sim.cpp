@@ -26,8 +26,8 @@ DataFrame power_sim_dual_generic(
   if(n_qual <= 0 || m_equiv <= 0) {
     _Rf_error("n_qual and m_equiv must both be at least 1");
   }
-  int rep_qual = 0;
-  int rep_equiv = 0;
+  unsigned long long rep_qual = 0;
+  unsigned long long rep_equiv = 0;
   if(replicates.length() == 1) {
     if(replicates[0] <= 0) {
       _Rf_error("Number of replicates must be greater than zero");
@@ -68,33 +68,34 @@ DataFrame power_sim_dual_generic(
   NumericVector min_equiv = NumericVector(rep_equiv);
   NumericVector avg_equiv = NumericVector(rep_equiv);
   const int step_count = param_equiv.rows();
-  IntegerVector accept_count = IntegerVector(step_count);
+  unsigned long long cur_accept_count;
   NumericVector reject_rate = NumericVector(step_count);
   
   for(int j_param = 0; j_param < step_count; ++j_param) {
+    cur_accept_count = 0;
     
-    for(int j_equiv = 0; j_equiv < rep_equiv; ++j_equiv) {
+    for(unsigned long long j_equiv = 0; j_equiv < rep_equiv; ++j_equiv) {
       const NumericVector x_equiv = rgenerate(m_equiv, param_equiv, j_param);
       min_equiv[j_equiv] = ::min(x_equiv);
       avg_equiv[j_equiv] = ::mean(x_equiv);
     }
     
-    for(int j_qual = 0; j_qual < rep_qual; ++j_qual) {
+    for(unsigned long long j_qual = 0; j_qual < rep_qual; ++j_qual) {
       const NumericVector x_qual = rgenerate(n_qual, param_qual, 0);
       const double avg_qual = ::mean(x_qual);
       const double sd_qual = ::sd(x_qual);
       
-      for(int j_equiv = 0; j_equiv < rep_equiv; ++j_equiv) {
+      for(unsigned long long j_equiv = 0; j_equiv < rep_equiv; ++j_equiv) {
         if(min_equiv[j_equiv] > avg_qual - k1 * sd_qual &&
            avg_equiv[j_equiv] > avg_qual - k2 * sd_qual) {
-          accept_count[j_param]++;
+          cur_accept_count++;
         }
       }
     }
     
-    reject_rate[j_param] = (double)
-      (rep_qual * rep_equiv - accept_count[j_param]) /
-      (rep_qual * rep_equiv);
+    reject_rate[j_param] = 
+      (double)(rep_qual * rep_equiv - cur_accept_count) /
+      (double)(rep_qual * rep_equiv);
   }
   
   DataFrame retVal = Rcpp::clone(param_equiv);
