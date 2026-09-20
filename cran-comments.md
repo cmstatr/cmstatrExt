@@ -1,10 +1,9 @@
-Submission of package `cmstatrExt` is a minor update in preparation for an
-upcoming change to the Rcpp package. Calls to Rf_error have been replaced
-with Rcpp::stop.
+Submission of package `cmstatrExt` adds new functionality and improves the
+accuracy of certain existing functions.
 
 ## Test environments
 - win-builder (`devel`, `release`, `oldrelease`)
-- local Ubuntu 24.04, R 4.5.2
+- local Ubuntu 24.04, R 4.6.1
 - GitHub Action runners:
   - MacOS, R `release`
   - Windows, R `release`
