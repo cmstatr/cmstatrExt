@@ -5,7 +5,7 @@ to see their documentation.
 
 - generics:
 
-  [`augment`](https://generics.r-lib.org/reference/augment.html)
+  [`augment()`](https://generics.r-lib.org/reference/augment.html)
 
 ## See also
 

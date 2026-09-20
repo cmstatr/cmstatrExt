@@ -1,12 +1,13 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/compute-equiv-factors: compute-equiv-factors.html
+  articles/compute-equiv-threshold: compute-equiv-threshold.html
   articles/compute-p-value-equiv: compute-p-value-equiv.html
   equivalency-p-values: equivalency-p-values.html
   stress-strain: stress-strain.html
-last_built: 2026-03-19T11:59Z
+last_built: 2026-09-20T14:21Z
 urls:
   reference: https://cmstatrExt.cmstatr.net/reference
   article: https://cmstatrExt.cmstatr.net/articles

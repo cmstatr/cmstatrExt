@@ -17,3 +17,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Stefan Kloppenborg <stefan@kloppenborg.ca>
+
+Authors:
+
+- Stefan Kloppenborg <stefan@kloppenborg.ca>

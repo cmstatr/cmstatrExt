@@ -28,11 +28,17 @@
 - [`iso_equiv_two_sample()`](https://cmstatrExt.cmstatr.net/reference/iso_equiv_two_sample.md)
   : Calculate t1 and t2 pairs that have the same p-Value
 
+- [`k_equiv_one_sample()`](https://cmstatrExt.cmstatr.net/reference/k_equiv_one_sample.md)
+  : Calculate the factors for a one-sample acceptance test
+
 - [`k_equiv_two_sample()`](https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.md)
   : Calculate the factors for a two-sample acceptance test
 
-- [`p_equiv()`](https://cmstatrExt.cmstatr.net/reference/p_equiv.md) :
-  p-Value for one-sample equivalency
+- [`p_equiv()`](https://cmstatrExt.cmstatr.net/reference/p_equiv.md)
+  **\[deprecated\]** : p-Value for one-sample equivalency
+
+- [`p_equiv_one_sample()`](https://cmstatrExt.cmstatr.net/reference/p_equiv_one_sample.md)
+  : p-Value for one-sample equivalency
 
 - [`p_equiv_two_sample()`](https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.md)
   : p-Value for two-sample equivalency

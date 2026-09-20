@@ -8,6 +8,7 @@ material data that are not included in CMH-17-1G.
 You can install this package from CRAN as follows:
 
 ``` r
+
 install.packages("cmstatrExt")
 ```
 
@@ -16,6 +17,7 @@ install.packages("cmstatrExt")
 In these examples we’ll use the following packages:
 
 ``` r
+
 library(cmstatrExt)
 library(tidyverse)
 ```
@@ -25,19 +27,21 @@ equivalency tests. Factors for a two-sample dual-acceptance criteria can
 be calculated as follows:
 
 ``` r
+
 k <- k_equiv_two_sample(
   alpha = 0.05,
   n = 18,  # size of the qualification sample
   m = 6    # size of the acceptance sample
 )
 k
-#> [1] 2.9594727 0.9541395
+#> [1] 2.9594440 0.9541253
 ```
 
 The power of this test for detecting reduction in mean can be computed
 as follows:
 
 ``` r
+
 power_sim_dual(
   n_qual = 18,
   m_equiv = 6,
@@ -91,11 +95,17 @@ If you want to contribute to this package, Pull Requests are welcome!
 - [`iso_equiv_two_sample()`](https://cmstatrExt.cmstatr.net/reference/iso_equiv_two_sample.md)
   : Calculate t1 and t2 pairs that have the same p-Value
 
+- [`k_equiv_one_sample()`](https://cmstatrExt.cmstatr.net/reference/k_equiv_one_sample.md)
+  : Calculate the factors for a one-sample acceptance test
+
 - [`k_equiv_two_sample()`](https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.md)
   : Calculate the factors for a two-sample acceptance test
 
-- [`p_equiv()`](https://cmstatrExt.cmstatr.net/reference/p_equiv.md) :
-  p-Value for one-sample equivalency
+- [`p_equiv()`](https://cmstatrExt.cmstatr.net/reference/p_equiv.md)
+  **\[deprecated\]** : p-Value for one-sample equivalency
+
+- [`p_equiv_one_sample()`](https://cmstatrExt.cmstatr.net/reference/p_equiv_one_sample.md)
+  : p-Value for one-sample equivalency
 
 - [`p_equiv_two_sample()`](https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.md)
   : p-Value for two-sample equivalency
@@ -127,6 +137,8 @@ If you want to contribute to this package, Pull Requests are welcome!
 
 - [Equivalency Factor
   Calculator](https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.md):
+- [Equivalency Threshold
+  Calculator](https://cmstatrExt.cmstatr.net/articles/compute-equiv-threshold.md):
 - [Equivalency p-Value
   Calculator](https://cmstatrExt.cmstatr.net/articles/compute-p-value-equiv.md):
 - [p-Values for

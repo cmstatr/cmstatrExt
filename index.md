@@ -8,6 +8,7 @@ material data that are not included in CMH-17-1G.
 You can install this package from CRAN as follows:
 
 ``` r
+
 install.packages("cmstatrExt")
 ```
 
@@ -16,6 +17,7 @@ install.packages("cmstatrExt")
 In these examples we’ll use the following packages:
 
 ``` r
+
 library(cmstatrExt)
 library(tidyverse)
 ```
@@ -25,19 +27,21 @@ equivalency tests. Factors for a two-sample dual-acceptance criteria can
 be calculated as follows:
 
 ``` r
+
 k <- k_equiv_two_sample(
   alpha = 0.05,
   n = 18,  # size of the qualification sample
   m = 6    # size of the acceptance sample
 )
 k
-#> [1] 2.9594727 0.9541395
+#> [1] 2.9594440 0.9541253
 ```
 
 The power of this test for detecting reduction in mean can be computed
 as follows:
 
 ``` r
+
 power_sim_dual(
   n_qual = 18,
   m_equiv = 6,

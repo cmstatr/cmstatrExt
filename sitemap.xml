@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://cmstatrExt.cmstatr.net/404.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/articles/compute-equiv-threshold.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/articles/compute-p-value-equiv.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/articles/equivalency-p-values.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/articles/index.html</loc></url>
@@ -16,8 +17,10 @@
 <url><loc>https://cmstatrExt.cmstatr.net/reference/fff_shear.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/index.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/iso_equiv_two_sample.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/k_equiv_one_sample.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/k_equiv_two_sample.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/p_equiv.html</loc></url>
+<url><loc>https://cmstatrExt.cmstatr.net/reference/p_equiv_one_sample.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/p_equiv_two_sample.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/pa12_tension.html</loc></url>
 <url><loc>https://cmstatrExt.cmstatr.net/reference/power_sim_dual.html</loc></url>

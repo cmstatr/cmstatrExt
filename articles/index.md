@@ -4,6 +4,8 @@
 
 - [Equivalency Factor
   Calculator](https://cmstatrExt.cmstatr.net/articles/compute-equiv-factors.md):
+- [Equivalency Threshold
+  Calculator](https://cmstatrExt.cmstatr.net/articles/compute-equiv-threshold.md):
 - [Equivalency p-Value
   Calculator](https://cmstatrExt.cmstatr.net/articles/compute-p-value-equiv.md):
 - [p-Values for

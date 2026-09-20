@@ -18,17 +18,17 @@ advised to review the code to verify correctness.*
 
 ### Input
 
-Qualification Sample Mean (${\bar{x}}_{qual}$):  
+Qualification Sample Mean ($`\bar{x}_{qual}`$):  
 
-Qualification Sample Standard Deviation ($s_{qual}$):  
+Qualification Sample Standard Deviation ($`s_{qual}`$):  
 
-Qualification Sample Size ($n$):  
+Qualification Sample Size ($`n`$):  
 
-Equivalency Sample Minimum ($x_{min\, equiv}$):  
+Equivalency Sample Minimum ($`x_{min\,equiv}`$):  
 
-Equivalency Sample Mean (${\bar{x}}_{equiv}$):  
+Equivalency Sample Mean ($`\bar{x}_{equiv}`$):  
 
-Equivalency Sample Size ($m$):  
+Equivalency Sample Size ($`m`$):  
 
 **emscripten**
 
@@ -48,9 +48,9 @@ Compute p-Value
 - Software Details
 
 Based on a user selected qualification sample statistics
-(${\bar{x}}_{qual}$, $s_{qual}$, and $n$), equivalency sample statistics
-($x_{min\, equiv}$, ${\bar{x}}_{equiv}$, and $m$), the following two
-statistics are computed:
+($`\bar{x}_{qual}`$, $`s_{qual}`$, and $`n`$), equivalency sample
+statistics ($`x_{min\,equiv}`$, $`\bar{x}_{equiv}`$, and $`m`$), the
+following two statistics are computed:
 
 \$\$ t_1 = \frac{\bar{x}\_{qual} - x\_{min\\equiv}}{s\_{qual}} \\ t_2 =
 \frac{\bar{x}\_{qual} - \bar{x}\_{equiv}}{s\_{qual}} \$\$

@@ -9,12 +9,12 @@ are normally set such that under the null hypothesis, there is an equal
 probability of rejecting the lot due to the minimum and rejecting the
 lot due to the mean. These acceptance limits are set so that the
 probability of rejecting the lot (due to *either* the minimum or mean)
-under the null hypothesis is $\alpha$. If we eliminate the constraint
+under the null hypothesis is $`\alpha`$. If we eliminate the constraint
 that there is an equal probability of rejecting a lot due to the minimum
 or the mean, there is not longer unique values for the acceptance
 limits: instead, we can calculate a p-value from the sample minimum and
 the sample mean and compare this p-value with the selected value of
-$\alpha$.
+$`\alpha`$.
 
 The `cmstatrExt` package provides functions for computing acceptance
 limits, p-values and curves indicating all values of the minimum and
@@ -37,6 +37,7 @@ In this vignette, we’ll use the `cmstatrExt` package. We’ll also use the
 use one of the example data sets from the `cmstatr` package.
 
 ``` r
+
 library(cmstatrExt)
 library(tidyverse)
 library(cmstatr)
@@ -49,6 +50,7 @@ As an example, we’ll use the RTD warp tension strength from the
 is as follows:
 
 ``` r
+
 dat <- carbon.fabric.2 %>%
   filter(condition == "RTD" & test == "WT")
 dat
@@ -87,6 +89,7 @@ From this sample, we can calculate the following summary statistics for
 the strength:
 
 ``` r
+
 qual <- dat %>%
   summarise(n = n(), mean = mean(strength), sd = sd(strength))
 qual
@@ -97,12 +100,13 @@ qual
 ## Acceptance Limits
 
 We can calculate the acceptance factors acceptance sample size of 8 and
-$alpha = 0.05$ using the `cmstatrExt` package as follows:
+$`alpha=0.05`$ using the `cmstatrExt` package as follows:
 
 ``` r
+
 k <- k_equiv_two_sample(0.05, qual$n, 8)
 k
-#> [1] 2.9462891 0.7972005
+#> [1] 2.9465723 0.7973293
 ```
 
 These factors can be transformed into limits using the following
@@ -114,9 +118,10 @@ equations:
 Implementing this in R:
 
 ``` r
+
 acceptance_limits <- qual$mean - k * qual$sd
 acceptance_limits
-#> [1] 119.8383 134.2717
+#> [1] 119.8364 134.2708
 ```
 
 So, if an acceptance sample has a minimum individual less than 119.8 or
@@ -140,19 +145,20 @@ need to apply the following transformation:
 t_2 = \frac{\bar{x}\_{qual} - \bar{x}\_{acceptance}}{s\_{qual}} \$\$
 
 As a demonstration, let’s first calculate the p-value of the acceptance
-limits. We should get $p = \alpha$.
+limits. We should get $`p=\alpha`$.
 
 ``` r
+
 p_equiv_two_sample(
   n = qual$n,
   m = 8,
   t1 = (qual$mean - acceptance_limits[1]) / qual$sd,
   t2 = (qual$mean - acceptance_limits[2]) / qual$sd
 )
-#> [1] 0.05003139
+#> [1] 0.04999999
 ```
 
-This value is very close to $\alpha = 0.05$ — within expected numeric
+This value is very close to $`\alpha=0.05`$ — within expected numeric
 precision.
 
 Now, let’s consider the case where the sample minimum is 116 and the
@@ -161,6 +167,7 @@ mean is 138. The sample minimum is below the acceptance limit (116 \<
 134). Let’s calculate the p-value for this case:
 
 ``` r
+
 p_equiv_two_sample(
   n = qual$n,
   m = 8,
@@ -170,47 +177,49 @@ p_equiv_two_sample(
 #> [1] 0.2771053
 ```
 
-Since this value is well above the selected value of $\alpha = 0.05$, we
+Since this value is well above the selected value of $`\alpha=0.05`$, we
 would accept this sample. This sort of analysis can be useful during
 site- or process-equivalency programs, or for MRB activities.
 
 ## Curves of Constant p-Values
 
 The `cmstatrExt` package provides a function that produces a
-`data.frame` containing values of $t_{1}$ and $t_{2}$ that result in the
+`data.frame` containing values of $`t_1`$ and $`t_2`$ that result in the
 same p-value. We can create such a `data.frame` for p-values of 0.05 as
 follows:
 
 ``` r
+
 curve <- iso_equiv_two_sample(qual$n, 8, 0.05, 4, 1.5, 10)
 curve
 #>          t1        t2
-#> 1  4.000000 0.6876226
-#> 2  3.870890 0.6892186
-#> 3  3.742796 0.6924106
-#> 4  3.616481 0.6971987
-#> 5  3.492200 0.7027848
-#> 6  3.372239 0.7115630
-#> 7  3.258124 0.7235332
-#> 8  3.152269 0.7394934
-#> 9  3.056580 0.7594437
-#> 10 2.975250 0.7849802
-#> 11 2.880451 0.8321028
-#> 12 2.825808 0.8732404
-#> 13 2.782601 0.9266275
-#> 14 2.749561 0.9895908
-#> 15 2.726687 1.0602149
-#> 16 2.713980 1.1365848
-#> 17 2.706355 1.2156679
-#> 18 2.701272 1.2961076
-#> 19 2.701272 1.3776646
-#> 20 2.698730 1.4591417
+#> 1  4.000000 0.6874720
+#> 2  3.870924 0.6895648
+#> 3  3.742809 0.6925780
+#> 4  3.616275 0.6968928
+#> 5  3.492271 0.7030221
+#> 6  3.372190 0.7116257
+#> 7  3.257964 0.7234883
+#> 8  3.152056 0.7394225
+#> 9  3.057208 0.7600541
+#> 10 2.975859 0.7855179
+#> 11 2.880298 0.8321169
+#> 12 2.826546 0.8737334
+#> 13 2.781978 0.9264243
+#> 14 2.748917 0.9894083
+#> 15 2.726932 1.0603689
+#> 16 2.713623 1.1365412
+#> 17 2.706145 1.2156667
+#> 18 2.702191 1.2962840
+#> 19 2.700206 1.3775835
+#> 20 2.699258 1.4591647
 ```
 
 We can plot this curve using `ggplot2`, which is part of the `tidyverse`
 package:
 
 ``` r
+
 curve %>%
   ggplot(aes(x = t1, y = t2)) +
   geom_path() +
@@ -229,6 +238,7 @@ Let’s overlay the acceptance limits calculated by the
 from the sample that we discussed in the previous section.
 
 ``` r
+
 curve %>%
   ggplot(aes(x = t1, y = t2)) +
   geom_path() +
@@ -247,6 +257,7 @@ curve %>%
 Or better yet, we can transform this back into engineering units:
 
 ``` r
+
 curve %>%
   mutate(x_min = qual$mean - t1 * qual$sd,
          x_mean = qual$mean - t2 * qual$sd) %>%

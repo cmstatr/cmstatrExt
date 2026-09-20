@@ -20,15 +20,16 @@ discontinuities. Both will be discussed in more detail in this vignette.
 In this example, the following packages need to be loaded:
 
 ``` r
+
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 library(cmstatrExt)
 library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.2.0     ✔ readr     2.2.0
+#> ✔ dplyr     1.2.1     ✔ readr     2.2.0
 #> ✔ forcats   1.0.1     ✔ stringr   1.6.0
-#> ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+#> ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
 #> ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-#> ✔ purrr     1.2.1     
+#> ✔ purrr     1.2.2     
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
@@ -41,6 +42,7 @@ The `cmstatrExt` package comes with some example stress-strain data. The
 first few rows of this data are:
 
 ``` r
+
 head(pa12_tension)
 #> # A tibble: 6 × 3
 #>   Coupon     Strain Stress
@@ -63,6 +65,7 @@ any name you wish, the data will need to be in this type of format.
 Let’s plot the `pa12_tension` example data.
 
 ``` r
+
 pa12_tension %>%
   ggplot(aes(x = Strain, y = Stress, color = Coupon)) +
   geom_point()
@@ -74,14 +77,17 @@ pa12_tension %>%
 
 For the first example, we’ll fit the following quadratic model:
 
-$$\sigma = c_{1}\epsilon + c_{2}\epsilon^{2}$$ where $\sigma$ is the
-stress, $\epsilon$ is the strain and $c_{1}$ and $c_{2}$ are constants
-that we’ll find. We need to write this as an `R` `formula`, which has
-slightly different notation. The stress and strain variables in our data
-are `Stress` and `Strain`, respectively, so we’ll use those variable
-names in the formula.
+``` math
+\sigma = c_1 \epsilon + c_2 \epsilon^2
+```
+where $`\sigma`$ is the stress, $`\epsilon`$ is the strain and $`c_1`$
+and $`c_2`$ are constants that we’ll find. We need to write this as an
+`R` `formula`, which has slightly different notation. The stress and
+strain variables in our data are `Stress` and `Strain`, respectively, so
+we’ll use those variable names in the formula.
 
 ``` r
+
 Stress ~ I(Strain) + I(Strain^2) + 0
 ```
 
@@ -91,8 +97,8 @@ side inside the identity function
 [`I()`](https://rdrr.io/r/base/AsIs.html): the reason for this is that
 `lm` will treat `Strain^2` as an interaction, rather than squaring the
 value of `Strain`, while `I(Strain^2)` will actually square the value of
-`Strain`. The formula doesn’t need coefficients (e.g. $c_{1}$ and
-$c_{2}$). Finally, notice that we’ve included the term `+0`, which tells
+`Strain`. The formula doesn’t need coefficients (e.g. $`c_1`$ and
+$`c_2`$). Finally, notice that we’ve included the term `+0`, which tells
 `lm` that we want the intercept to be zero, which will normally be
 desirable due to the physical notion that stress ought to be zero at
 zero strain.
@@ -108,6 +114,7 @@ Let’s run this function and then execute the `summary` method on the
 result:
 
 ``` r
+
 curve_quadratic <- average_curve_lm(
   pa12_tension, Coupon,
   Stress ~ I(Strain) + I(Strain^2) + 0
@@ -148,6 +155,7 @@ Next, let’s plot the original data and the curve fit. We’ll use the
 the result to `ggplot`.
 
 ``` r
+
 curve_quadratic %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
@@ -161,6 +169,7 @@ Due to the polynomial model that we chose (quadratic), this curve fit is
 poor. We can do better. Let’s try a cubic function next.
 
 ``` r
+
 curve_cubic <- average_curve_lm(
   pa12_tension, Coupon,
   Stress ~ I(Strain) + I(Strain^2) + I(Strain^3) + 0
@@ -192,6 +201,7 @@ summary(curve_cubic)
 ```
 
 ``` r
+
 curve_cubic %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
@@ -204,13 +214,16 @@ curve_cubic %>%
 This cubic model is a much better fit. The equation for this curve fit
 is:
 
-$$\sigma = 1174\,\epsilon - 8783\,\epsilon^{2} + 20586\,\epsilon^{3}$$
+``` math
+\sigma = 1174 \, \epsilon - 8783 \, \epsilon^2 + 20586 \, \epsilon^3
+```
 
 Strain does not need to be the independent variable and stress does not
 need to be the dependent variable. We could fit a model with these
 reversed.
 
 ``` r
+
 average_curve_lm(
   pa12_tension, Coupon,
   Strain ~ I(Stress) + I(Stress^2) + I(Stress^3) + I(Stress^4) + 0
@@ -234,20 +247,25 @@ variable on the right hand side of the formula).
 Next, we turn our attention to fitting a model that cannot be
 represented by an `R` `formula`. We’ll fit the following model:
 
-$$\sigma = \left\{ \begin{matrix}
-{c_{1}\epsilon} & {{\text{if}\mspace{6mu}}\epsilon \leq \epsilon_{1}} \\
-{c_{2}\left( \epsilon - \epsilon_{1} \right) + c_{1}\epsilon_{1}} & \text{otherwise}
-\end{matrix} \right.$$
+``` math
+\sigma = \left\{
+\begin{matrix}
+c_1 \epsilon & \text{if }\epsilon \le \epsilon_1 \\
+c_2 \left(\epsilon - \epsilon_1\right) + c_1\epsilon_1 & \text{otherwise}
+\end{matrix}
+\right.
+```
 
 This model will thus be a straight line starting from the origin
-extending to an unknown value of strain ($\epsilon_{1}$), then
+extending to an unknown value of strain ($`\epsilon_1`$), then
 continuing with a different slope. In order to use this model with
 `average_curve_optim`, we need to write this as an `R` function where
 the first argument is the independent variable (strain in our case) and
 the second argument is a vector of parameters. In this case, there are
-three parameters, $c_{1}$, $c_{2}$ and $\epsilon_{1}$.
+three parameters, $`c_1`$, $`c_2`$ and $`\epsilon_1`$.
 
 ``` r
+
 bilinear_fn <- function(strain, par) {
   c1 <- par[1]
   c2 <- par[2]
@@ -279,6 +297,7 @@ The function `average_curve_optim` takes nine arguments:
 We’ll call this function:
 
 ``` r
+
 curve_bilinear <- average_curve_optim(
   pa12_tension,
   Coupon, Strain, Stress,
@@ -298,12 +317,13 @@ curve_bilinear
 #> [1] 265.6498522 316.1356934  -0.3258095
 ```
 
-The value of the third parameter, $\epsilon_{1}$ is well outside the
+The value of the third parameter, $`\epsilon_1`$ is well outside the
 range we’d expect. We’d expect that the “knee” to be somewhere in the
 range of 0.025-0.100. We can specify upper and lower bounds on the
 parameters as follows:
 
 ``` r
+
 curve_bilinear <- average_curve_optim(
   pa12_tension,
   Coupon, Strain, Stress,
@@ -323,12 +343,13 @@ curve_bilinear
 #>         0.1))
 #> 
 #> Parameters:
-#> [1] 873.46774319  79.60813130   0.05093549
+#> [1] 873.4621854  79.5753943   0.0509375
 ```
 
 We can now plot the curve fit over laid with the original data.
 
 ``` r
+
 curve_bilinear %>%
   augment() %>%
   ggplot(aes(x = Strain)) +
@@ -349,6 +370,7 @@ more typical data that does require pre-processing. Let’s start by
 plotting this data.
 
 ``` r
+
 fff_shear %>%
   ggplot(aes(x = Strain, y = Stress, color = Specimen)) +
   geom_point()
@@ -390,6 +412,7 @@ code will use the
 [`map()`](https://purrr.tidyverse.org/reference/map.html) pattern.
 
 ``` r
+
 fff_shear %>%
   filter(Stress > 1000 & Stress < 3000) %>%
   group_by(Specimen) %>%
@@ -415,6 +438,7 @@ appropriate `Specimen`). We’ll use
 rows for brevity.
 
 ``` r
+
 fff_shear %>%
   filter(Stress > 1000 & Stress < 3000) %>%
   group_by(Specimen) %>%
@@ -442,6 +466,7 @@ to obtain the corrected data (and delete the unneeded `x_intercept`
 column).
 
 ``` r
+
 fff_shear_offset <- fff_shear %>%
   filter(Stress > 1000 & Stress < 3000) %>%
   group_by(Specimen) %>%
@@ -458,6 +483,7 @@ fff_shear_offset <- fff_shear %>%
 We’ll plot this now.
 
 ``` r
+
 fff_shear_offset %>%
   ggplot(aes(x = Strain, y = Stress, color = Specimen)) +
   geom_point()
@@ -479,6 +505,7 @@ appropriate threshold using iteration for how negative a slope should
 cause a point to be removed.
 
 ``` r
+
 fff_shear_offset %>%
   group_by(Specimen) %>%
   mutate(Lead_Stress = lead(Stress, 5),
@@ -498,6 +525,7 @@ each curve, as soon as a single data point is removed, all subsequent
 data points will also be removed.
 
 ``` r
+
 fff_shear_offset %>%
   group_by(Specimen) %>%
   mutate(Lead_Stress = lead(Stress, 5),
@@ -516,6 +544,7 @@ out the points that we intend to remove and drop the unneeded temporary
 variables.
 
 ``` r
+
 fff_shear_truncated <- fff_shear_offset %>%
   group_by(Specimen) %>%
   mutate(Lead_Stress = lead(Stress, 5),
@@ -533,6 +562,7 @@ stress of somewhat less than 1000 `psi`, so we’ll remove the “toe” by
 simply removing all the data with a stress less than 1000 `psi`.
 
 ``` r
+
 fff_shear_truncated_no_toe <- fff_shear_truncated %>%
   filter(Stress > 1000)
 ```
@@ -540,6 +570,7 @@ fff_shear_truncated_no_toe <- fff_shear_truncated %>%
 Now, let’s plot this pre-processed data.
 
 ``` r
+
 fff_shear_truncated_no_toe %>%
   ggplot(aes(x = Strain, y = Stress, color = Specimen)) +
   geom_point() +
@@ -552,6 +583,7 @@ fff_shear_truncated_no_toe %>%
 Now, let’s try fitting an averaged curve to this data.
 
 ``` r
+
 curve_fff_shear <- fff_shear_truncated_no_toe %>%
   average_curve_lm(
     Specimen,
@@ -575,6 +607,7 @@ offset corrected (leaving the “toe” and the post-failure behavior
 intact).
 
 ``` r
+
 curve_fff_shear %>%
   augment(fff_shear) %>%
   ggplot(aes(x = Strain)) +
@@ -604,6 +637,7 @@ of the `pa12_tension` data frame with the stress scaled. Before stacking
 these data frames, we’ll add a new column for condition.
 
 ``` r
+
 pa12_tension_conditions <-
   bind_rows(
     pa12_tension %>%
@@ -619,6 +653,7 @@ We already have a cubic model for the original `pa12_tension` data, but
 that model was missing the `Condition` column, so we’ll fit it again.
 
 ``` r
+
 curve_cubic_rta <- pa12_tension_conditions %>%
   filter(Condition == "RTA") %>%
   average_curve_lm(
@@ -641,6 +676,7 @@ curve_cubic_rta
 We’ll do the same for the “Fake ETA” data.
 
 ``` r
+
 curve_cubic_fake_eta <- pa12_tension_conditions %>%
   filter(Condition == "Fake ETA") %>%
   average_curve_lm(
@@ -663,6 +699,7 @@ curve_cubic_fake_eta
 Now, we can plot the two curves.
 
 ``` r
+
 bind_rows(
   augment(curve_cubic_rta),
   augment(curve_cubic_fake_eta)
@@ -679,6 +716,7 @@ to
 [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html).
 
 ``` r
+
 bind_rows(
   augment(curve_cubic_rta),
   augment(curve_cubic_fake_eta)
@@ -697,6 +735,7 @@ we’ll use a call to
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)
 
 ``` r
+
 bind_rows(
   augment(curve_cubic_rta),
   augment(curve_cubic_fake_eta)
@@ -717,6 +756,7 @@ for example,
 your own custom theme.
 
 ``` r
+
 bind_rows(
   augment(curve_cubic_rta),
   augment(curve_cubic_fake_eta)

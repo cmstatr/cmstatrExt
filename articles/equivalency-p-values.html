@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="p-Values for Equivalency">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">cmstatrExt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Calculators</h6></li>
     <li><a class="dropdown-item" href="../articles/compute-equiv-factors.html">Equivalency Factor Calculator</a></li>
+    <li><a class="dropdown-item" href="../articles/compute-equiv-threshold.html">Equivalency Threshold Calculator</a></li>
     <li><a class="dropdown-item" href="../articles/compute-p-value-equiv.html">Equivalency p-Value Calculator</a></li>
   </ul>
 </li>
@@ -69,7 +70,7 @@
                         <h4 data-toc-skip class="author">Stefan
 Kloppenborg</h4>
             
-            <h4 data-toc-skip class="date">2026-03-19</h4>
+            <h4 data-toc-skip class="date">2026-09-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatrExt/blob/master/vignettes/equivalency-p-values.Rmd" class="external-link"><code>vignettes/equivalency-p-values.Rmd</code></a></small>
       <div class="d-none name"><code>equivalency-p-values.Rmd</code></div>
@@ -176,7 +177,7 @@ using the <code>cmstatrExt</code> package as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/k_equiv_two_sample.html">k_equiv_two_sample</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="va">qual</span><span class="op">$</span><span class="va">n</span>, <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="va">k</span></span>
-<span><span class="co">#&gt; [1] 2.9462891 0.7972005</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 2.9465723 0.7973293</span></span></code></pre></div>
 <p>These factors can be transformed into limits using the following
 equations:</p>
 <p><span class="math display">$$
@@ -187,7 +188,7 @@ $$</span></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acceptance_limits</span> <span class="op">&lt;-</span> <span class="va">qual</span><span class="op">$</span><span class="va">mean</span> <span class="op">-</span> <span class="va">k</span> <span class="op">*</span> <span class="va">qual</span><span class="op">$</span><span class="va">sd</span></span>
 <span><span class="va">acceptance_limits</span></span>
-<span><span class="co">#&gt; [1] 119.8383 134.2717</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 119.8364 134.2708</span></span></code></pre></div>
 <p>So, if an acceptance sample has a minimum individual less than 119.8
 or a mean less than 134.3, we would reject it.</p>
 </div>
@@ -218,7 +219,7 @@ acceptance limits. We should get
 <span>  t1 <span class="op">=</span> <span class="op">(</span><span class="va">qual</span><span class="op">$</span><span class="va">mean</span> <span class="op">-</span> <span class="va">acceptance_limits</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">qual</span><span class="op">$</span><span class="va">sd</span>,</span>
 <span>  t2 <span class="op">=</span> <span class="op">(</span><span class="va">qual</span><span class="op">$</span><span class="va">mean</span> <span class="op">-</span> <span class="va">acceptance_limits</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">qual</span><span class="op">$</span><span class="va">sd</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.05003139</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.04999999</span></span></code></pre></div>
 <p>This value is very close to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha=0.05</annotation></semantics></math>
 — within expected numeric precision.</p>
@@ -253,26 +254,26 @@ that result in the same p-value. We can create such a
 <code class="sourceCode R"><span><span class="va">curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/iso_equiv_two_sample.html">iso_equiv_two_sample</a></span><span class="op">(</span><span class="va">qual</span><span class="op">$</span><span class="va">n</span>, <span class="fl">8</span>, <span class="fl">0.05</span>, <span class="fl">4</span>, <span class="fl">1.5</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">curve</span></span>
 <span><span class="co">#&gt;          t1        t2</span></span>
-<span><span class="co">#&gt; 1  4.000000 0.6876226</span></span>
-<span><span class="co">#&gt; 2  3.870890 0.6892186</span></span>
-<span><span class="co">#&gt; 3  3.742796 0.6924106</span></span>
-<span><span class="co">#&gt; 4  3.616481 0.6971987</span></span>
-<span><span class="co">#&gt; 5  3.492200 0.7027848</span></span>
-<span><span class="co">#&gt; 6  3.372239 0.7115630</span></span>
-<span><span class="co">#&gt; 7  3.258124 0.7235332</span></span>
-<span><span class="co">#&gt; 8  3.152269 0.7394934</span></span>
-<span><span class="co">#&gt; 9  3.056580 0.7594437</span></span>
-<span><span class="co">#&gt; 10 2.975250 0.7849802</span></span>
-<span><span class="co">#&gt; 11 2.880451 0.8321028</span></span>
-<span><span class="co">#&gt; 12 2.825808 0.8732404</span></span>
-<span><span class="co">#&gt; 13 2.782601 0.9266275</span></span>
-<span><span class="co">#&gt; 14 2.749561 0.9895908</span></span>
-<span><span class="co">#&gt; 15 2.726687 1.0602149</span></span>
-<span><span class="co">#&gt; 16 2.713980 1.1365848</span></span>
-<span><span class="co">#&gt; 17 2.706355 1.2156679</span></span>
-<span><span class="co">#&gt; 18 2.701272 1.2961076</span></span>
-<span><span class="co">#&gt; 19 2.701272 1.3776646</span></span>
-<span><span class="co">#&gt; 20 2.698730 1.4591417</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  4.000000 0.6874720</span></span>
+<span><span class="co">#&gt; 2  3.870924 0.6895648</span></span>
+<span><span class="co">#&gt; 3  3.742809 0.6925780</span></span>
+<span><span class="co">#&gt; 4  3.616275 0.6968928</span></span>
+<span><span class="co">#&gt; 5  3.492271 0.7030221</span></span>
+<span><span class="co">#&gt; 6  3.372190 0.7116257</span></span>
+<span><span class="co">#&gt; 7  3.257964 0.7234883</span></span>
+<span><span class="co">#&gt; 8  3.152056 0.7394225</span></span>
+<span><span class="co">#&gt; 9  3.057208 0.7600541</span></span>
+<span><span class="co">#&gt; 10 2.975859 0.7855179</span></span>
+<span><span class="co">#&gt; 11 2.880298 0.8321169</span></span>
+<span><span class="co">#&gt; 12 2.826546 0.8737334</span></span>
+<span><span class="co">#&gt; 13 2.781978 0.9264243</span></span>
+<span><span class="co">#&gt; 14 2.748917 0.9894083</span></span>
+<span><span class="co">#&gt; 15 2.726932 1.0603689</span></span>
+<span><span class="co">#&gt; 16 2.713623 1.1365412</span></span>
+<span><span class="co">#&gt; 17 2.706145 1.2156667</span></span>
+<span><span class="co">#&gt; 18 2.702191 1.2962840</span></span>
+<span><span class="co">#&gt; 19 2.700206 1.3775835</span></span>
+<span><span class="co">#&gt; 20 2.699258 1.4591647</span></span></code></pre></div>
 <p>We can plot this curve using <code>ggplot2</code>, which is part of
 the <code>tidyverse</code> package:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -331,7 +332,7 @@ in the previous section.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>
