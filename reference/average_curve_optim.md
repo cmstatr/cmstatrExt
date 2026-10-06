@@ -125,6 +125,7 @@ curve_fit <- average_curve_optim(
   c(c1 = 1, c2 = 1, c3 = 1),
   n_bins = 100
 )
+#> Warning: `optim` failed to converge: ERROR: ABNORMAL_TERMINATION_IN_LNSRCH
 ## Range: ` Strain ` in  [ 0,  0.1409409 ]
 ##
 ## Call:

@@ -50,6 +50,7 @@ curve_fit <- average_curve_optim(
   c(c1 = 1, c2 = 1, c3 = 1),
   n_bins = 100
 )
+#> Warning: `optim` failed to converge: ERROR: ABNORMAL_TERMINATION_IN_LNSRCH
 augment(curve_fit)
 #> # A tibble: 3,105 × 6
 #>    Coupon     Strain Stress  .fit .extrapolate .residual

@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/cmstatr/cmstatrExt/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/cmstatr/cmstatrExt/blob/0.5.0/DESCRIPTION)
 
 Kloppenborg S (2026). *cmstatrExt: More Statistical Methods for
 Composite Material Data*. R package version 0.5.0,

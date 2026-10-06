@@ -38,7 +38,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Augment a <code>data.frame</code> with the results from <code>average_curve_optim</code></h1>
-      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatrExt/blob/master/R/curve-fit.R" class="external-link"><code>R/curve-fit.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatrExt/blob/0.5.0/R/curve-fit.R" class="external-link"><code>R/curve-fit.R</code></a></small>
       <div class="d-none name"><code>augment.average_curve_optim.Rd</code></div>
     </div>
 
@@ -96,6 +96,7 @@ the data within the original fitted range. Default: FALSE</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>c1 <span class="op">=</span> <span class="fl">1</span>, c2 <span class="op">=</span> <span class="fl">1</span>, c3 <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  n_bins <span class="op">=</span> <span class="fl">100</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`optim` failed to converge: ERROR: ABNORMAL_TERMINATION_IN_LNSRCH</span>
 <span class="r-in"><span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">augment</a></span><span class="op">(</span><span class="va">curve_fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,105 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Coupon     Strain Stress  .fit .extrapolate .residual</span>

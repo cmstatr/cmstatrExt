@@ -343,7 +343,7 @@ curve_bilinear
 #>         0.1))
 #> 
 #> Parameters:
-#> [1] 873.4621854  79.5753943   0.0509375
+#> [1] 873.46774319  79.60813130   0.05093549
 ```
 
 We can now plot the curve fit over laid with the original data.
